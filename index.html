@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DiffusionGemma: How to Run Google's Diffusion LLM Locally</title>
+  <meta name="description" content="DiffusionGemma is a 26B MoE diffusion language model that generates 256-token blocks in parallel for 4x faster inference. Run it with vLLM, llama.cpp, or Unsloth.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <meta property="og:title" content="DiffusionGemma: How to Run Google's Diffusion LLM Locally">
+  <meta property="og:description" content="DiffusionGemma is a 26B MoE diffusion language model that generates 256-token blocks in parallel for 4x faster inference. Run it with vLLM, llama.cpp, or Unsloth.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://diffusiongemma.dev">
+  <meta property="og:site_name" content="DiffusionGemma Guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DiffusionGemma: How to Run Google's Diffusion LLM Locally">
+  <meta name="twitter:description" content="DiffusionGemma is a 26B MoE diffusion language model that generates 256-token blocks in parallel for 4x faster inference. Run it with vLLM, llama.cpp, or Unsloth.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://diffusiongemma.dev">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234285F4' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='sans-serif' font-weight='bold'%3EDG%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <nav id="nav" class="nav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">DiffusionGemma Guide</a>
+      <ul class="nav-links">
+        <li><a href="#what">What</a></li>
+        <li><a href="#why">Why</a></li>
+        <li><a href="#run">Run</a></li>
+        <li><a href="#benchmark">Benchmark</a></li>
+        <li><a href="#use-cases">Use Cases</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero -->
+    <section id="hero" class="hero">
+      <div class="container">
+        <div class="hero-badge">Google DeepMind · Apache 2.0</div>
+        <h1>DiffusionGemma: Run Google's Diffusion LLM Locally</h1>
+        <p class="hero-subtitle">A 26B MoE model that generates 256-token blocks in parallel — 4x faster than autoregressive. Fits on a single 24GB GPU with quantization.</p>
+        <div class="hero-actions">
+          <a href="#run" class="btn btn-primary">Get Started</a>
+          <a href="#what" class="btn btn-outline">How It Works</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><strong>1,000+</strong> tokens/s on H100</div>
+          <div class="hero-stat"><strong>700+</strong> tokens/s on RTX 5090</div>
+          <div class="hero-stat"><strong>18 GB</strong> VRAM with quantization</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 1: What Is DiffusionGemma -->
+    <section id="what" class="section section-alt">
+      <div class="container">
+        <h2>What Is DiffusionGemma</h2>
+        <p class="section-lead">DiffusionGemma generates text like an image diffusion model: instead of typing one word at a time left-to-right, it fills in a whole 256-token block at once through iterative denoising — imagine a paragraph that "comes into focus" over multiple passes rather than being typed letter by letter.</p>
+        <p>It's a 26B-parameter Mixture of Experts (MoE) model built on the Gemma 4 backbone that activates only 3.8B parameters during inference. The paradigm shift isn't model size or dataset — it's the <strong>generation algorithm</strong>. Standard autoregressive LLMs (GPT, Llama, Qwen, Gemma) are causal — each token depends only on previous tokens. DiffusionGemma uses <strong>bidirectional attention</strong> during generation, meaning every token in a 256-token canvas can attend to every other token simultaneously. This enables self-correction: if the model becomes less confident about a token mid-generation, it can "re-noise" and replace it — something autoregressive models cannot do because they commit each token permanently.</p>
+        <p>Google released it under Apache 2.0 on June 10, 2026. Weights are on HuggingFace at <code>google/diffusiongemma-26B-A4B-it</code>. It supports text, image, and video inputs (multimodal), a 256K token context window, and 140+ languages.</p>
+      </div>
+    </section>
+
+    <!-- Module 2: Why It Matters -->
+    <section id="why" class="section">
+      <div class="container">
+        <h2>Why DiffusionGemma Matters</h2>
+        <div class="reasons-grid">
+          <div class="reason-card">
+            <h3>1. It changes the inference bottleneck</h3>
+            <p>Autoregressive models are memory-bandwidth-bound — the GPU spends most of its time loading weights just to generate 1 token at a time. DiffusionGemma drafts and refines 256 tokens in parallel, keeping tensor cores busy and hitting 700–1,000+ tokens/s on dedicated GPUs.</p>
+            <p class="reason-note">This speed comes with a quality tradeoff. Google is explicit: <em>"DiffusionGemma's overall output quality is lower than standard Gemma 4."</em> The value prop is NOT "better LLM" — it's "4x faster at acceptable quality for specific workloads."</p>
+          </div>
+          <div class="reason-card">
+            <h3>2. Runs on 18GB VRAM with quantization</h3>
+            <p>A 26B-class model fitting on a single consumer GPU at 4-bit, running at potentially 200–700+ tokens/s, opens a practical speed tier that didn't exist before. Comparable autoregressive 25–30B models need 24GB+ and run at 50–80 tokens/s.</p>
+            <p class="reason-note">Not all hardware benefits equally. Apple Silicon Macs and low-compute GPUs (RTX 3060, 4060) won't see the speedup — the compute-bound advantage disappears when the bottleneck shifts back to memory bandwidth.</p>
+          </div>
+          <div class="reason-card">
+            <h3>3. Apache 2.0 — truly permissive</h3>
+            <p>Unlike Llama's custom license or Gemma 3's restrictive terms, Apache 2.0 means you can build products on this, fine-tune it, and distribute it commercially without restriction. The real constraint isn't the license — it's that this is a new paradigm with less mature tooling.</p>
+          </div>
+          <div class="reason-card">
+            <h3>4. Local-first design</h3>
+            <p>DiffusionGemma is optimized for single-user, low-concurrency local inference. In high-QPS cloud serving, autoregressive models can batch users efficiently — so DiffusionGemma's advantage paradoxically narrows in cloud deployment. For individual developers or small teams running locally, this is where it shines.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 3: How to Run -->
+    <section id="run" class="section section-alt">
+      <div class="container">
+        <h2>How to Run DiffusionGemma Locally</h2>
+
+        <h3>Prerequisites: Hardware</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Quantization</th><th>VRAM</th><th>Tested GPUs</th><th>Expected Speed</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>4-bit (Q4_K_M)</td><td>15–17 GB</td><td>RTX 4090, 5090, 3090 (24GB)</td><td>~200–400 tokens/s</td></tr>
+              <tr><td>8-bit (Q8_0)</td><td>27–29 GB</td><td>RTX 5090 (32GB), A6000</td><td>~500–700+ tokens/s</td></tr>
+              <tr><td>FP16 / BF16</td><td>52 GB</td><td>H100, A100, H200, dual 4090</td><td>1,000+ tokens/s</td></tr>
+              <tr><td>NVFP4 (NVIDIA 4-bit)</td><td>~15 GB</td><td>Blackwell (5090, RTX PRO)</td><td>700+ tokens/s</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Cards with limited compute (RTX 3060, RTX 4060, laptop GPUs) and Apple Silicon Macs will see significantly reduced speedups.</p>
+
+        <!-- Method 1: vLLM -->
+        <h3>Method 1: vLLM <span class="badge badge-green">Recommended</span></h3>
+        <p>vLLM has day-zero support with optimized block denoising kernels. This is the fastest path — and the only one with independently verified speed numbers (1,288 tokens/s on H200).</p>
+        <pre><code class="language-bash">pip install vllm>=0.12.0</code></pre>
+        <pre><code class="language-python">from vllm import LLM, SamplingParams
+
+llm = LLM(
+    model="google/diffusiongemma-26B-A4B-it",
+    trust_remote_code=True,
+    tensor_parallel_size=1,
+    max_model_len=65536,
+)
+
+sampling_params = SamplingParams(
+    temperature=0.7,
+    max_tokens=2048,
+)
+
+outputs = llm.generate(["Explain how diffusion language models work."], sampling_params)
+for output in outputs:
+    print(output.outputs[0].text)</code></pre>
+
+        <!-- Method 2: llama.cpp -->
+        <h3>Method 2: llama.cpp <span class="badge badge-yellow">Bleeding Edge</span></h3>
+        <p>llama.cpp support is via <strong>unmerged PR #24427</strong>. Clone and checkout the PR branch:</p>
+        <pre><code class="language-bash">git clone https://github.com/ggml-ai/llama.cpp
+cd llama.cpp
+git fetch origin pull/24427/head:diffusiongemma
+git checkout diffusiongemma
+
+# Build with CUDA
+cmake -B build -DGGML_CUDA=ON
+cmake --build build --config Release
+
+# Run with GGUF quantized weights
+./build/bin/llama-cli \
+  -m DiffusionGemma-26B-A4B-it-Q4_K_M.gguf \
+  -p "Explain how diffusion language models work." \
+  -n 512 \
+  -ngl 99</code></pre>
+        <p class="note">This is bleeding edge — expect bugs. Check PR #24427 for latest status before using in production.</p>
+
+        <!-- Method 3: Unsloth -->
+        <h3>Method 3: Unsloth</h3>
+        <pre><code class="language-bash">pip install unsloth
+pip install flash-attn --no-build-isolation  # optional</code></pre>
+        <pre><code class="language-python">from unsloth import FastModel
+
+model, tokenizer = FastModel.from_pretrained(
+    model_name="google/diffusiongemma-26B-A4B-it",
+    max_seq_length=65536,
+    load_in_4bit=True,  # fits in ~16GB
+)</code></pre>
+        <p>Unsloth provides a hardware-requirements table at <a href="https://unsloth.ai/docs/models/diffusiongemma" target="_blank" rel="noopener">unsloth.ai/docs/models/diffusiongemma</a> with VRAM estimates for all quantization levels.</p>
+
+        <!-- Method 4: HF Transformers -->
+        <h3>Method 4: HuggingFace Transformers</h3>
+        <p>Simplest path for a quick first test:</p>
+        <pre><code class="language-bash">pip install transformers>=4.55.0 accelerate</code></pre>
+        <pre><code class="language-python">from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+
+model_id = "google/diffusiongemma-26B-A4B-it"
+
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    torch_dtype=torch.bfloat16,
+    device_map="auto",
+    trust_remote_code=True,
+)
+
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+inputs = tokenizer("Explain diffusion language models in one paragraph.", return_tensors="pt").to("cuda")
+outputs = model.generate(**inputs, max_new_tokens=512)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))</code></pre>
+
+        <!-- Quantization -->
+        <h3>Quantization for Consumer GPUs</h3>
+
+        <h4>NVFP4 (Blackwell GPUs only: RTX 5090 / RTX PRO 6000)</h4>
+        <pre><code class="language-python">model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    torch_dtype=nvfp4,
+    device_map="auto",
+    trust_remote_code=True,
+)</code></pre>
+
+        <h4>Bitsandbytes 4-bit (Ampere+: RTX 3090, 4090)</h4>
+        <pre><code class="language-python">from transformers import BitsAndBytesConfig
+
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_compute_dtype=torch.bfloat16,
+    bnb_4bit_use_double_quant=True,
+)
+
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    quantization_config=bnb_config,
+    device_map="auto",
+    trust_remote_code=True,
+)</code></pre>
+
+        <h4>GGUF Q4_K_M (llama.cpp path)</h4>
+        <p>Download community-converted GGUF files from HuggingFace. ~16GB VRAM, ~200–400 tokens/s on RTX 4090 (community estimate).</p>
+
+        <!-- Troubleshooting -->
+        <h3>Troubleshooting</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>trust_remote_code=True</code> required</td><td>Custom diffusion attention modules not in standard transformers</td><td>Add <code>trust_remote_code=True</code> to all <code>from_pretrained()</code> calls</td></tr>
+              <tr><td>OOM on 16GB GPU at 4-bit</td><td>Bitsandbytes 4-bit estimates optimistic for 26B-class</td><td>Try GGUF Q4_K_M via llama.cpp PR #24427, or use <code>device_map="sequential"</code></td></tr>
+              <tr><td><code>KeyError: 'denoising_steps'</code></td><td>Using standard <code>model.generate()</code> without diffusion params</td><td>Check model card for <code>num_denoising_steps</code>, <code>denoising_temperature</code></td></tr>
+              <tr><td>Slow on RTX 3060/4060/laptop GPU</td><td>Compute-limited cards can't saturate tensor cores</td><td>Speed advantage requires high-CUDA-core GPUs. Consider autoregressive models.</td></tr>
+              <tr><td>Apple Silicon: no speedup</td><td>Unified memory shifts bottleneck back to bandwidth</td><td>Google explicitly warns about this. Expect autoregressive-comparable performance.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 4: Real Performance -->
+    <section id="benchmark" class="section">
+      <div class="container">
+        <h2>Real Performance &amp; Honest Assessment</h2>
+
+        <h3>Speed Benchmarks</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Hardware</th><th>Tokens/s</th><th>Quantization</th><th>Source</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>H200</td><td>1,288</td><td>BF16 (vLLM)</td><td>vLLM blog — independently verified</td></tr>
+              <tr><td>H100</td><td>~1,000+</td><td>BF16</td><td>Google (self-reported) — not independently confirmed</td></tr>
+              <tr><td>RTX 5090</td><td>~700+</td><td>NVFP4</td><td>Google (self-reported) — not independently confirmed</td></tr>
+              <tr><td>RTX 4090</td><td>~200–400</td><td>Q4_K_M (GGUF)</td><td>Community estimate — no published benchmarks yet</td></tr>
+              <tr><td>RTX 3090</td><td>~150–300</td><td>Q4_K_M (GGUF)</td><td>Community estimate — no published benchmarks yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note"><strong>Speed honesty note:</strong> Only the H200 1,288 tokens/s figure has independent verification (from vLLM's own blog). The 1,000+ H100 and 700+ RTX 5090 numbers are Google's self-reported benchmarks. Community benchmarks will emerge over the next 1–2 weeks.</p>
+
+        <h3>Quality vs. Autoregressive Models</h3>
+        <div class="compare-grid">
+          <div>
+            <h4>Where it's competitive</h4>
+            <ul>
+              <li>Short-form text generation (1–2 paragraphs)</li>
+              <li>Summarization &amp; factual extraction</li>
+              <li>Translation (140+ languages)</li>
+              <li>Data augmentation / synthetic text</li>
+              <li>Chat / basic Q&amp;A</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Where it falls short</h4>
+            <ul>
+              <li>Complex reasoning (math, logic, multi-hop)</li>
+              <li>Long-form creative writing (3+ paragraphs)</li>
+              <li>Code generation (multi-function/multi-file)</li>
+              <li>Nuanced instruction following</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Current Limitations</h3>
+        <div class="limitations-grid">
+          <div class="limit-card">
+            <h4>Quality drop is real and permanent</h4>
+            <p>Google is honest: DiffusionGemma is not and will not be "Gemma 4 quality at 4x speed." It's a different tradeoff. Accept it or choose a different model.</p>
+          </div>
+          <div class="limit-card">
+            <h4>Tooling is bleeding edge</h4>
+            <p>llama.cpp support is an unmerged PR. Ollama doesn't work. Community GGUF quantizations may vary in quality. The ecosystem will mature, but in June 2026, you're an early adopter.</p>
+          </div>
+          <div class="limit-card">
+            <h4>Hardware pickiness</h4>
+            <p>The speed advantage collapses on low-compute GPUs (3060, 4060, laptops) and Apple Silicon. Check your hardware before getting excited about those 700+ tokens/s numbers.</p>
+          </div>
+          <div class="limit-card">
+            <h4>Fine-tuning is uncharted territory</h4>
+            <p>No established LoRA/QLoRA recipes, no community adapter ecosystem. Tuning a diffusion model is conceptually different from autoregressive — you're tuning denoising behavior, not next-token prediction.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 5: Use Cases -->
+    <section id="use-cases" class="section section-alt">
+      <div class="container">
+        <h2>Use Cases</h2>
+        <div class="usecases-grid">
+          <div class="usecase-card">
+            <h3>Local LLM Enthusiast with a 24GB GPU</h3>
+            <p>On an RTX 4090 or 3090, DiffusionGemma at 4-bit fits in ~16GB VRAM and delivers potentially 200–400 tokens/s — a speed tier no autoregressive 20B+ model can touch on consumer hardware. For comparison: Qwen 2.5 32B at Q4 runs at ~40–60 tokens/s on a 4090.</p>
+          </div>
+          <div class="usecase-card">
+            <h3>Synthetic Data / Data Augmentation</h3>
+            <p>When you need to generate thousands of text samples and inference intelligence doesn't need to be SOTA — just speed and hardware efficiency. Block-level parallel generation makes it ideal for batch synthetic data where volume matters more than per-sample reasoning depth.</p>
+          </div>
+          <div class="usecase-card">
+            <h3>Real-Time Interactive Applications</h3>
+            <p>Chat interfaces, live transcription summarization, code autocomplete, content moderation — any scenario where sub-100ms latency changes the user experience. Even a 50 tokens/s autoregressive model has noticeable lag. DiffusionGemma at 700+ tokens/s makes iteration feel instantaneous.</p>
+          </div>
+          <div class="usecase-card">
+            <h3>Local-First / Privacy-Sensitive Deployment</h3>
+            <p>Building a product that must run fully offline (legal, healthcare, defense)? Apache 2.0 means no license negotiation. 4-bit fits on a single consumer GPU. You don't need top-tier reasoning — you need fast, private, on-device text processing.</p>
+          </div>
+        </div>
+
+        <h3 class="anti-title">When NOT to Use DiffusionGemma</h3>
+        <div class="anti-grid">
+          <div class="anti-item">
+            <strong>Apple Silicon (M1/M2/M3/M4)</strong>
+            <p>You won't see the speed advantage. Use Llama 4 or Qwen 3.6 instead.</p>
+          </div>
+          <div class="anti-item">
+            <strong>Complex reasoning or code gen</strong>
+            <p>The quality gap vs. autoregressive models of similar size is significant.</p>
+          </div>
+          <div class="anti-item">
+            <strong>Cloud API serving many concurrent users</strong>
+            <p>Traditional batched autoregressive inference may be more cost-effective.</p>
+          </div>
+          <div class="anti-item">
+            <strong>Need fine-tuning now</strong>
+            <p>The ecosystem isn't ready. Wait 2–3 months.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 6: FAQ -->
+    <section id="faq" class="section">
+      <div class="container">
+        <h2>FAQ</h2>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>What exactly is a "diffusion language model"? How is it different from GPT/Llama?</summary>
+            <div class="faq-answer">
+              <p>Autoregressive models generate one token at a time, left-to-right, each token depending on all previous ones. A diffusion model works on 256-token blocks simultaneously — it starts with random noise, then iteratively "denoises" toward coherent text, letting every token in the block attend to every other token bidirectionally.</p>
+              <p>Think of it as the difference between typing a sentence word by word (autoregressive) vs. giving a blurry photo of a sentence and letting it sharpen into focus over multiple passes (diffusion). The key consequence: autoregressive models can't go back and fix tokens they already generated. Diffusion models can.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Can I run this on my Apple Silicon Mac (M3/M4 Max/Ultra)?</summary>
+            <div class="faq-answer">
+              <p>You can run it, but you probably won't get the 4x speedup. Google's blog explicitly warns that unified-memory architectures may not see the same acceleration. On Apple Silicon, expect performance similar to autoregressive models of comparable size. If you're on Mac, stick with Llama or Qwen.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>How does the quality compare to Llama 4 or Qwen 3.6?</summary>
+            <div class="faq-answer">
+              <p>Google is transparent: "DiffusionGemma's overall output quality is lower than standard Gemma 4." For short-form generation and summarization, quality is competitive. For complex reasoning, long-form writing, and code, autoregressive models win by a meaningful margin. Exact benchmark comparisons vs. Llama 4 and Qwen 3.6 will emerge as the community runs them.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Is there Ollama support?</summary>
+            <div class="faq-answer">
+              <p>No. llama.cpp support exists as PR #24427 (unmerged as of June 11, 2026). Ollama typically integrates llama.cpp — once PR #24427 merges, Ollama support will follow. Timeline: weeks to months, not days.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Can I fine-tune DiffusionGemma?</summary>
+            <div class="faq-answer">
+              <p>Theoretically yes, practically not yet. The architecture is based on Gemma 4, so the backbone weights can be adapted. But diffusion fine-tuning (tuning denoising behavior vs. next-token prediction) requires different loss functions and training recipes. No established LoRA/QLoRA pipelines exist. If fine-tuning is in your plan, wait 2–3 months.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>What GPU do I actually need to see the speedup?</summary>
+            <div class="faq-answer">
+              <p>RTX 3090 or better, or the Blackwell generation (RTX 5090, RTX PRO 6000) for NVFP4 native 4-bit. RTX 3060, 4060, and laptop GPUs have insufficient compute to saturate tensor cores for block denoising. Rule of thumb: if your GPU can't do BF16 at >100 TFLOPS, the speed advantage diminishes significantly.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Are the 1,000+ tokens/s H100 and 700+ tokens/s RTX 5090 numbers real?</summary>
+            <div class="faq-answer">
+              <p>The only independently verified number is vLLM's 1,288 tokens/s on H200. The 1,000+ H100 and 700+ RTX 5090 figures are Google's self-reported benchmarks — conditions not publicly documented. Community benchmarks will emerge within 1–2 weeks. Treat Google's numbers as "best-case under optimized conditions" until independent testing confirms.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Can I use this commercially?</summary>
+            <div class="faq-answer">
+              <p>Yes. Apache 2.0 is one of the most permissive open-source licenses. You can use it in commercial products, modify it, distribute it, and you don't need to open-source your modifications. Unlike Llama's restrictive terms (>700M monthly active users = need Meta's permission) or Gemma's source-available terms, there are no usage-based restrictions.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>When should I use DiffusionGemma vs. sticking with Qwen/Llama/Gemma?</summary>
+            <div class="faq-answer">
+              <p>Use DiffusionGemma if: (1) you're on a high-compute GPU (4090+), (2) throughput matters more than top-tier quality, (3) you're doing synthetic data, real-time chat, or draft generation. Stick with autoregressive if: (1) you're on Apple Silicon or a lower-end GPU, (2) you need complex reasoning, code, or long-form writing, (3) you need stable, production-tested tooling with Ollama/llama.cpp support.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Built by the community. Not affiliated with Google. DiffusionGemma is a trademark of Google DeepMind.</p>
+      <p>Content based on Google's official blog, technical report, and community testing. Speed claims from Google and vLLM — see benchmark notes for verification status.</p>
+    </div>
+  </footer>
+
+  <!-- FAQ Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What exactly is a \"diffusion language model\"? How is it different from GPT/Llama?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Autoregressive models generate one token at a time, left-to-right. A diffusion model works on 256-token blocks simultaneously — starting with random noise, then iteratively denoising toward coherent text with bidirectional attention. The key difference: diffusion models can go back and fix tokens they already generated. Autoregressive models cannot."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I run DiffusionGemma on my Apple Silicon Mac?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can run it, but you probably won't get the 4x speedup. Google's blog explicitly warns that unified-memory architectures may not see the same acceleration. On Apple Silicon, expect performance similar to autoregressive models of comparable size."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the quality compare to Llama 4 or Qwen 3.6?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Google is transparent: DiffusionGemma's overall output quality is lower than standard Gemma 4. For short-form generation and summarization, quality is competitive. For complex reasoning, long-form writing, and code, autoregressive models win."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is there Ollama support for DiffusionGemma?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. llama.cpp support exists as PR #24427 (unmerged as of June 2026). Ollama typically integrates llama.cpp — once PR #24427 merges, Ollama support will follow. Timeline: weeks to months."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I fine-tune DiffusionGemma?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Theoretically yes, practically not yet. Diffusion fine-tuning requires different loss functions and training recipes. No established LoRA/QLoRA pipelines exist yet. If fine-tuning is essential, wait 2-3 months for the ecosystem to mature."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What GPU do I need to see the speedup?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "RTX 3090 or better, or Blackwell generation (RTX 5090, RTX PRO 6000) for NVFP4 native 4-bit. RTX 3060, 4060, and laptop GPUs have insufficient compute. Rule of thumb: if your GPU can't do BF16 at >100 TFLOPS, the speed advantage diminishes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are the 1,000+ tokens/s on H100 and 700+ tokens/s on RTX 5090 numbers real?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Only vLLM's 1,288 tokens/s on H200 has independent verification. The 1,000+ H100 and 700+ RTX 5090 figures are Google's self-reported benchmarks. Community benchmarks will emerge within 1-2 weeks. Treat Google's numbers as best-case until independently confirmed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use DiffusionGemma commercially?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Apache 2.0 is one of the most permissive open-source licenses. You can use it in commercial products, modify it, distribute it, and don't need to open-source your modifications. Unlike Llama's restrictive terms, there are no usage-based restrictions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When should I use DiffusionGemma vs. sticking with Qwen/Llama/Gemma?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use DiffusionGemma if you are on a high-compute GPU (4090+), throughput matters more than top-tier quality, or you are doing synthetic data, real-time chat, or draft generation. Stick with autoregressive if you are on Apple Silicon or a lower-end GPU, need complex reasoning or code, or need stable production-tested tooling."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Article Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "DiffusionGemma: How to Run Google's Diffusion LLM Locally",
+    "description": "Complete guide to running DiffusionGemma locally — Google DeepMind's 26B MoE diffusion language model. Covers vLLM, llama.cpp, Unsloth, and HuggingFace Transformers deployment.",
+    "author": { "@type": "Organization", "name": "DiffusionGemma Guide" },
+    "datePublished": "2026-06-11",
+    "dateModified": "2026-06-11"
+  }
+  </script>
+
+  <!-- Breadcrumb Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "DiffusionGemma Guide",
+        "item": "https://diffusiongemma.dev"
+      }
+    ]
+  }
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
