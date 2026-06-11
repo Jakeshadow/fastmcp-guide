@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://diffusiongemma.dev/sitemap.xml
