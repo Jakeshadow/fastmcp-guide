@@ -21,17 +21,24 @@
   // === Active nav link on scroll ===
   var sections = document.querySelectorAll('section[id]');
   var navAnchors = document.querySelectorAll('.nav-links a');
+  var sectionTops = [];
+
+  function cacheOffsets() {
+    sectionTops = [];
+    sections.forEach(function (s) {
+      sectionTops.push({ id: s.getAttribute('id'), top: s.offsetTop });
+    });
+  }
 
   function updateActiveLink() {
     var scrollPos = window.scrollY + 80;
     var current = '';
 
-    sections.forEach(function (section) {
-      var top = section.offsetTop;
-      if (scrollPos >= top) {
-        current = section.getAttribute('id');
+    for (var i = 0; i < sectionTops.length; i++) {
+      if (scrollPos >= sectionTops[i].top) {
+        current = sectionTops[i].id;
       }
-    });
+    }
 
     navAnchors.forEach(function (a) {
       a.classList.remove('active');
@@ -41,6 +48,12 @@
     });
   }
 
+  cacheOffsets();
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(cacheOffsets, 100);
+  }, { passive: true });
   window.addEventListener('scroll', updateActiveLink, { passive: true });
   updateActiveLink();
 })();
