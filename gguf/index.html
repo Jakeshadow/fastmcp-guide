@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DiffusionGemma GGUF — Download, Convert &amp; Quantization Guide</title>
+  <meta name="description" content="Download DiffusionGemma GGUF files, convert from PyTorch, and choose the right quantization (Q4_0, Q4_K_M, Q5_K_M). Compatible with llama.cpp and Ollama.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="/css/style.css">
+  <meta property="og:title" content="DiffusionGemma GGUF — Download, Convert &amp; Quantization Guide">
+  <meta property="og:description" content="Download DiffusionGemma GGUF files, convert from PyTorch, choose quantization. llama.cpp and Ollama compatible.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://diffusiongemma.dev/gguf/">
+  <meta property="og:site_name" content="DiffusionGemma Guide">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://diffusiongemma.dev/assets/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://diffusiongemma.dev/assets/og-image.svg">
+  <meta name="twitter:title" content="DiffusionGemma GGUF — Download, Convert &amp; Quantization Guide">
+  <meta name="twitter:description" content="GGUF downloads, PyTorch conversion, quantization options.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://diffusiongemma.dev/gguf/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234285F4' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='sans-serif' font-weight='bold'%3EDG%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <nav id="nav" class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">DiffusionGemma Guide</a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/ollama/">Ollama</a></li>
+        <li><a href="/llama-cpp/">llama.cpp</a></li>
+        <li><a href="/gguf/">GGUF</a></li>
+        <li><a href="/#faq">FAQ</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">GGUF Format · Quantization</div>
+        <h1>DiffusionGemma GGUF Guide</h1>
+        <p class="hero-subtitle">GGUF is the standard format for running LLMs locally with llama.cpp and Ollama. Download pre-converted files or convert from PyTorch yourself.</p>
+        <div class="hero-actions">
+          <a href="#download" class="btn btn-primary">Download GGUF</a>
+          <a href="#convert" class="btn btn-outline">Convert Yourself</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="download" class="section">
+      <div class="container">
+        <h2>Pre-Converted GGUF Downloads</h2>
+        <p>Community-converted GGUF files are available on HuggingFace. These are the most common quantization levels:</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Quant</th><th>Size</th><th>VRAM Needed</th><th>Quality</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Q4_0</strong></td><td>~14GB</td><td>16GB</td><td>Good — small quality loss</td></tr>
+              <tr><td><strong>Q4_K_M</strong></td><td>~15GB</td><td>16–18GB</td><td>Best balance — recommended</td></tr>
+              <tr><td><strong>Q5_K_M</strong></td><td>~17GB</td><td>20GB</td><td>Better quality, needs more VRAM</td></tr>
+              <tr><td><strong>Q8_0</strong></td><td>~26GB</td><td>28GB+</td><td>Near-perfect, for 3090/4090</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="note"><strong>Recommended:</strong> Start with Q4_K_M. It fits on most 24GB GPUs and offers the best quality-to-size ratio. If you have a 16GB GPU, use Q4_0.</p>
+      </div>
+    </section>
+
+    <section id="convert" class="section section-alt">
+      <div class="container">
+        <h2>Convert from PyTorch to GGUF</h2>
+
+        <h3>Step 1: Download the Original Model</h3>
+        <pre><code class="language-bash"># From HuggingFace
+huggingface-cli download google/diffusiongemma-26b-A4B-it \
+  --local-dir ./diffusiongemma-26b
+
+# Or use git-lfs
+git lfs install
+git clone https://huggingface.co/google/diffusiongemma-26b-A4B-it</code></pre>
+
+        <h3>Step 2: Convert to FP16 GGUF</h3>
+        <pre><code class="language-bash">cd llama.cpp
+python convert_hf_to_gguf.py \
+  ../diffusiongemma-26b \
+  --outtype f16 \
+  --outfile diffusiongemma-26b-f16.gguf</code></pre>
+
+        <h3>Step 3: Quantize to 4-bit</h3>
+        <pre><code class="language-bash">./build/bin/llama-quantize \
+  diffusiongemma-26b-f16.gguf \
+  diffusiongemma-26b-q4_k_m.gguf \
+  Q4_K_M</code></pre>
+
+        <h3>Step 4: Verify the GGUF</h3>
+        <pre><code class="language-bash">./build/bin/llama-cli \
+  -m diffusiongemma-26b-q4_k_m.gguf \
+  -p "Hello world" \
+  -n 32</code></pre>
+      </div>
+    </section>
+
+    <section id="engines" class="section">
+      <div class="container">
+        <h2>Compatible Engines</h2>
+        <p>GGUF files work with these inference engines:</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Engine</th><th>Status</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>llama.cpp</strong></td><td>Works (PR branch)</td><td>PR #24427, diffusion-support branch</td></tr>
+              <tr><td><strong>Ollama</strong></td><td>Coming soon</td><td>Depends on llama.cpp PR merge</td></tr>
+              <tr><td><strong>LM Studio</strong></td><td>Coming soon</td><td>Depends on llama.cpp upstream</td></tr>
+              <tr><td><strong>GPT4All</strong></td><td>Not yet</td><td>No timeline</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="related" class="section section-alt">
+      <div class="container">
+        <h2>Related Guides</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:24px;">
+          <a href="/ollama/" class="btn btn-outline">Ollama Setup Guide</a>
+          <a href="/llama-cpp/" class="btn btn-outline">llama.cpp Setup Guide</a>
+          <a href="/" class="btn btn-outline">Home — All Methods</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Built by the community. Not affiliated with Google or HuggingFace.</p>
+      <p>GGUF files are community contributions. Verify checksums before use.</p>
+    </div>
+  </footer>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "DiffusionGemma GGUF — Download, Convert & Quantization Guide",
+    "description": "Download DiffusionGemma GGUF files, convert from PyTorch to GGUF, and choose the right quantization level for llama.cpp and Ollama.",
+    "image": "https://diffusiongemma.dev/assets/og-image.svg",
+    "url": "https://diffusiongemma.dev/gguf/",
+    "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffusiongemma.dev"},
+    "datePublished": "2026-06-12T00:00:00+00:00",
+    "dateModified": "2026-06-12T00:00:00+00:00"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "DiffusionGemma Guide", "item": "https://diffusiongemma.dev"},
+      {"@type": "ListItem", "position": 2, "name": "GGUF Guide", "item": "https://diffusiongemma.dev/gguf/"}
+    ]
+  }
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

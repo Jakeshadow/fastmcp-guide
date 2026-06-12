@@ -30,13 +30,12 @@
 <body>
   <nav id="nav" class="nav">
     <div class="nav-inner">
-      <a href="#hero" class="nav-logo">DiffusionGemma Guide</a>
+      <a href="/" class="nav-logo">DiffusionGemma Guide</a>
       <ul class="nav-links">
-        <li><a href="#what">What</a></li>
-        <li><a href="#why">Why</a></li>
         <li><a href="#run">Run</a></li>
-        <li><a href="#benchmark">Benchmark</a></li>
-        <li><a href="#use-cases">Use Cases</a></li>
+        <li><a href="/ollama/">Ollama</a></li>
+        <li><a href="/llama-cpp/">llama.cpp</a></li>
+        <li><a href="/gguf/">GGUF</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
       <button class="nav-toggle" aria-label="Toggle menu">
@@ -198,6 +197,16 @@ inputs = tokenizer("Explain diffusion language models in one paragraph.", return
 outputs = model.generate(**inputs, max_new_tokens=512)
 print(tokenizer.decode(outputs[0], skip_special_tokens=True))</code></pre>
 
+        <!-- Method 5: Ollama -->
+        <h3>Method 5: Ollama <span class="badge badge-yellow">Community Workaround</span></h3>
+        <p>Ollama support is coming via llama.cpp PR #24427. Until the PR merges, you can use the bridge workaround:</p>
+        <ol>
+          <li>Build llama.cpp with diffusion support (PR #24427 branch)</li>
+          <li>Download or convert a GGUF model</li>
+          <li>Create a Modelfile and run with <code>ollama create</code></li>
+        </ol>
+        <p style="margin-top:12px;"><a href="/ollama/" class="btn btn-outline">Full Ollama Setup Guide &rarr;</a></p>
+
         <!-- Quantization -->
         <h3>Quantization for Consumer GPUs</h3>
 
@@ -310,6 +319,18 @@ model = AutoModelForCausalLM.from_pretrained(
             <h4>Fine-tuning is uncharted territory</h4>
             <p>No established LoRA/QLoRA recipes, no community adapter ecosystem. Tuning a diffusion model is conceptually different from autoregressive — you're tuning denoising behavior, not next-token prediction.</p>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cross-Links -->
+    <section id="related-guides" class="section section-alt">
+      <div class="container">
+        <h2>Detailed Setup Guides</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:24px;">
+          <a href="/ollama/" class="btn btn-outline" style="font-size:15px;padding:12px 24px;">Ollama Setup — Modelfile &amp; Workaround</a>
+          <a href="/llama-cpp/" class="btn btn-outline" style="font-size:15px;padding:12px 24px;">llama.cpp — Build &amp; Inference</a>
+          <a href="/gguf/" class="btn btn-outline" style="font-size:15px;padding:12px 24px;">GGUF — Download &amp; Convert</a>
         </div>
       </div>
     </section>
@@ -524,7 +545,7 @@ model = AutoModelForCausalLM.from_pretrained(
     "url": "https://diffusiongemma.dev",
     "author": { "@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffusiongemma.dev" },
     "datePublished": "2026-06-11T00:00:00+00:00",
-    "dateModified": "2026-06-11T00:00:00+00:00"
+    "dateModified": "2026-06-12T00:00:00+00:00"
   }
   </script>
 

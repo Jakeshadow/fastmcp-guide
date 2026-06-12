@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Run DiffusionGemma with llama.cpp — Build, GGUF &amp; Inference</title>
+  <meta name="description" content="Run DiffusionGemma with llama.cpp — build from source with PR #24427, download GGUF models, run inference. Complete guide with troubleshooting.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="/css/style.css">
+  <meta property="og:title" content="Run DiffusionGemma with llama.cpp — Build, GGUF &amp; Inference">
+  <meta property="og:description" content="Run DiffusionGemma with llama.cpp — build from source, GGUF download, inference examples.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://diffusiongemma.dev/llama-cpp/">
+  <meta property="og:site_name" content="DiffusionGemma Guide">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://diffusiongemma.dev/assets/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://diffusiongemma.dev/assets/og-image.svg">
+  <meta name="twitter:title" content="Run DiffusionGemma with llama.cpp — Build, GGUF &amp; Inference">
+  <meta name="twitter:description" content="Build from source, download GGUF, run inference.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://diffusiongemma.dev/llama-cpp/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234285F4' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='sans-serif' font-weight='bold'%3EDG%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <nav id="nav" class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">DiffusionGemma Guide</a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/ollama/">Ollama</a></li>
+        <li><a href="/llama-cpp/">llama.cpp</a></li>
+        <li><a href="/gguf/">GGUF</a></li>
+        <li><a href="/#faq">FAQ</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">llama.cpp · PR #24427</div>
+        <h1>Run DiffusionGemma with llama.cpp</h1>
+        <p class="hero-subtitle">llama.cpp is the most popular local LLM runtime. DiffusionGemma support is in progress — here's how to build it from the PR branch and run inference today.</p>
+        <div class="hero-actions">
+          <a href="#build" class="btn btn-primary">Build Guide</a>
+          <a href="#inference" class="btn btn-outline">Run Inference</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="build" class="section">
+      <div class="container">
+        <h2>Build llama.cpp with Diffusion Support</h2>
+
+        <h3>Prerequisites</h3>
+        <pre><code class="language-bash"># Ubuntu / Debian
+sudo apt install build-essential cmake git
+
+# macOS
+xcode-select --install
+brew install cmake
+
+# Verify cmake
+cmake --version  # needs 3.18+</code></pre>
+
+        <h3>Clone &amp; Checkout PR Branch</h3>
+        <pre><code class="language-bash">git clone https://github.com/ggerganov/llama.cpp.git
+cd llama.cpp
+git fetch origin pull/24427/head:diffusion-support
+git checkout diffusion-support</code></pre>
+
+        <h3>Build with CUDA (NVIDIA GPU)</h3>
+        <pre><code class="language-bash">mkdir build && cd build
+cmake .. -DGGML_CUDA=ON -DCMAKE_BUILD_TYPE=Release
+make -j$(nproc)
+
+# Verify
+./bin/llama-cli --version</code></pre>
+
+        <h3>Build with Metal (Apple Silicon)</h3>
+        <pre><code class="language-bash">mkdir build && cd build
+cmake .. -DGGML_METAL=ON -DCMAKE_BUILD_TYPE=Release
+make -j$(sysctl -n hw.logicalcpu)</code></pre>
+
+        <h3>Build CPU-only (fallback)</h3>
+        <pre><code class="language-bash">mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j$(nproc)</code></pre>
+      </div>
+    </section>
+
+    <section id="inference" class="section section-alt">
+      <div class="container">
+        <h2>Run Inference</h2>
+
+        <h3>Basic text generation</h3>
+        <pre><code class="language-bash">./build/bin/llama-cli \
+  -m diffusiongemma-26b-q4_k_m.gguf \
+  -p "Explain how diffusion models work for text generation:" \
+  -n 256 \
+  --diffusion-steps 8 \
+  --temperature 0.7</code></pre>
+
+        <h3>Interactive chat mode</h3>
+        <pre><code class="language-bash">./build/bin/llama-cli \
+  -m diffusiongemma-26b-q4_k_m.gguf \
+  --interactive \
+  --diffusion-steps 8 \
+  --temp 0.7</code></pre>
+
+        <h3>Performance Expectations</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>GPU</th><th>Quantization</th><th>Tokens/s (est.)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>RTX 4090</td><td>Q4_K_M</td><td>500–700</td></tr>
+              <tr><td>RTX 3090</td><td>Q4_K_M</td><td>300–500</td></tr>
+              <tr><td>M3 Max (Metal)</td><td>Q4_0</td><td>100–200</td></tr>
+              <tr><td>CPU (8+ cores)</td><td>Q4_0</td><td>5–15</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note"><strong>Note:</strong> These are rough estimates from community testing. The diffusion speed advantage is most visible on high-end GPUs. CPU-only loses the 4x benefit.</p>
+      </div>
+    </section>
+
+    <section id="troubleshoot" class="section">
+      <div class="container">
+        <h2>Troubleshooting</h2>
+
+        <h3>"Unsupported model architecture" error</h3>
+        <p>You're on llama.cpp main branch. You must checkout the <code>diffusion-support</code> branch from PR #24427.</p>
+
+        <h3>Build fails with "cublas not found"</h3>
+        <pre><code class="language-bash"># Verify CUDA toolkit is installed
+nvcc --version
+# Set CUDA path if needed
+export CUDA_PATH=/usr/local/cuda
+cmake .. -DGGML_CUDA=ON -DCUDAToolkit_ROOT=$CUDA_PATH</code></pre>
+
+        <h3>Segfault on first token</h3>
+        <p>The GGUF file might be corrupted or from an incompatible converter version. Re-download from the official source or re-convert with the latest <code>convert.py</code>.</p>
+      </div>
+    </section>
+
+    <section id="related" class="section section-alt">
+      <div class="container">
+        <h2>Related Guides</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:24px;">
+          <a href="/ollama/" class="btn btn-outline">Ollama Setup Guide</a>
+          <a href="/gguf/" class="btn btn-outline">GGUF Download &amp; Conversion</a>
+          <a href="/" class="btn btn-outline">Home — All Methods</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Built by the community. Not affiliated with llama.cpp or Google.</p>
+      <p>llama.cpp PR #24427 is under active development. Status may change.</p>
+    </div>
+  </footer>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Run DiffusionGemma with llama.cpp — Build, GGUF & Inference",
+    "description": "Complete guide to running DiffusionGemma with llama.cpp. Build from source with PR #24427, download GGUF models, and run inference.",
+    "image": "https://diffusiongemma.dev/assets/og-image.svg",
+    "url": "https://diffusiongemma.dev/llama-cpp/",
+    "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffusiongemma.dev"},
+    "datePublished": "2026-06-12T00:00:00+00:00",
+    "dateModified": "2026-06-12T00:00:00+00:00"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "DiffusionGemma Guide", "item": "https://diffusiongemma.dev"},
+      {"@type": "ListItem", "position": 2, "name": "llama.cpp Setup Guide", "item": "https://diffusiongemma.dev/llama-cpp/"}
+    ]
+  }
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

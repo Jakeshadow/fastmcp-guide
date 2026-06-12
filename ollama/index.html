@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Run DiffusionGemma with Ollama — Setup Guide &amp; Modelfile</title>
+  <meta name="description" content="Run DiffusionGemma locally with Ollama. Complete setup with Modelfile, llama.cpp bridge workaround, and troubleshooting for macOS, Linux, Windows.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="/css/style.css">
+  <meta property="og:title" content="Run DiffusionGemma with Ollama — Setup Guide &amp; Modelfile">
+  <meta property="og:description" content="Complete guide to running DiffusionGemma locally with Ollama. Modelfile setup, llama.cpp bridge, troubleshooting.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://diffusiongemma.dev/ollama/">
+  <meta property="og:site_name" content="DiffusionGemma Guide">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://diffusiongemma.dev/assets/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://diffusiongemma.dev/assets/og-image.svg">
+  <meta name="twitter:title" content="Run DiffusionGemma with Ollama — Setup Guide &amp; Modelfile">
+  <meta name="twitter:description" content="Complete guide — Modelfile, llama.cpp bridge, troubleshooting.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://diffusiongemma.dev/ollama/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234285F4' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='sans-serif' font-weight='bold'%3EDG%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <nav id="nav" class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">DiffusionGemma Guide</a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/ollama/">Ollama</a></li>
+        <li><a href="/llama-cpp/">llama.cpp</a></li>
+        <li><a href="/gguf/">GGUF</a></li>
+        <li><a href="/#faq">FAQ</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">Ollama Integration · Work in Progress</div>
+        <h1>Run DiffusionGemma with Ollama</h1>
+        <p class="hero-subtitle">Ollama support is coming via llama.cpp PR #24427. Until then, here's the bridge workaround to run DiffusionGemma through Ollama today.</p>
+        <div class="hero-actions">
+          <a href="#setup" class="btn btn-primary">Get Started</a>
+          <a href="#status" class="btn btn-outline">Current Status</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="status" class="section">
+      <div class="container">
+        <h2>Current Ollama Support Status</h2>
+        <p><strong>Direct Ollama support is not available yet.</strong> DiffusionGemma requires a custom diffusion decoding pipeline that isn't merged into llama.cpp mainline. The key blocker: <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener">PR #24427</a> adds diffusion model support to llama.cpp. Once merged, Ollama (which builds on llama.cpp) can integrate it.</p>
+        <p class="note">Timeline: weeks to months. The PR is under active review as of June 2026. Follow the PR for updates.</p>
+      </div>
+    </section>
+
+    <section id="setup" class="section section-alt">
+      <div class="container">
+        <h2>Workaround: Run DiffusionGemma Through Ollama Today</h2>
+        <p>While waiting for official support, you can bridge DiffusionGemma into Ollama using a custom Modelfile that wraps the llama.cpp diffusion branch.</p>
+
+        <h3>Step 1: Install Ollama</h3>
+        <pre><code class="language-bash"># macOS / Linux
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Windows — download from https://ollama.com/download
+# Or use WSL2 + Linux install above</code></pre>
+
+        <h3>Step 2: Build llama.cpp with Diffusion Support</h3>
+        <pre><code class="language-bash">git clone https://github.com/ggerganov/llama.cpp.git
+cd llama.cpp
+# Checkout the diffusion PR branch
+git fetch origin pull/24427/head:diffusion-support
+git checkout diffusion-support
+
+mkdir build && cd build
+cmake .. -DGGML_CUDA=ON  # if you have NVIDIA GPU
+make -j$(nproc)</code></pre>
+
+        <h3>Step 3: Download a GGUF Model</h3>
+        <pre><code class="language-bash"># Check /gguf/ for available GGUF downloads
+# Place the model in Ollama's model directory
+mkdir -p ~/.ollama/models/
+# See our GGUF guide for download links</code></pre>
+
+        <h3>Step 4: Create a Modelfile</h3>
+        <pre><code class="language-dockerfile"># Modelfile for DiffusionGemma
+FROM ./diffusiongemma-26b-q4_k_m.gguf
+
+PARAMETER temperature 0.7
+PARAMETER top_p 0.9
+PARAMETER num_predict 256
+
+# Diffusion-specific parameters
+PARAMETER diffusion_steps 8
+PARAMETER block_size 256
+
+TEMPLATE """{{ .Prompt }}"""</code></pre>
+
+        <h3>Step 5: Create and Run the Model</h3>
+        <pre><code class="language-bash">ollama create diffusiongemma -f Modelfile
+ollama run diffusiongemma</code></pre>
+      </div>
+    </section>
+
+    <section id="troubleshoot" class="section">
+      <div class="container">
+        <h2>Troubleshooting</h2>
+
+        <h3>"model format not supported" error</h3>
+        <p>This means your GGUF file doesn't include the diffusion architecture flag. Make sure you're using a GGUF converted from the diffusion branch of llama.cpp, not the mainline release.</p>
+
+        <h3>OOM (Out of Memory) on 16GB GPU</h3>
+        <p>Use Q4_0 or Q4_K_M quantization. The 26B model at Q4 needs ~16GB VRAM. Close other GPU processes first.</p>
+
+        <h3>Slow generation on CPU-only</h3>
+        <p>DiffusionGemma's 4x speed advantage only applies with GPU acceleration. On CPU-only, performance will be comparable to or slower than autoregressive models of similar size.</p>
+
+        <h3>Ollama says "model not found" after create</h3>
+        <pre><code class="language-bash"># Verify the model was created
+ollama list
+
+# If missing, check Modelfile path is correct
+ollama create diffusiongemma -f ./Modelfile</code></pre>
+      </div>
+    </section>
+
+    <section id="related" class="section section-alt">
+      <div class="container">
+        <h2>Related Guides</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:24px;">
+          <a href="/llama-cpp/" class="btn btn-outline">llama.cpp Setup Guide</a>
+          <a href="/gguf/" class="btn btn-outline">GGUF Download &amp; Conversion</a>
+          <a href="/" class="btn btn-outline">Home — All Methods</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Built by the community. Not affiliated with Google, Ollama, or llama.cpp.</p>
+      <p>Ollama support depends on llama.cpp PR #24427 — timeline subject to change.</p>
+    </div>
+  </footer>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Run DiffusionGemma with Ollama — Setup Guide & Modelfile",
+    "description": "Complete guide to running DiffusionGemma locally with Ollama. Covers Modelfile setup, llama.cpp bridge workaround, and troubleshooting.",
+    "image": "https://diffusiongemma.dev/assets/og-image.svg",
+    "url": "https://diffusiongemma.dev/ollama/",
+    "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffusiongemma.dev"},
+    "datePublished": "2026-06-12T00:00:00+00:00",
+    "dateModified": "2026-06-12T00:00:00+00:00"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "DiffusionGemma Guide", "item": "https://diffusiongemma.dev"},
+      {"@type": "ListItem", "position": 2, "name": "Ollama Setup Guide", "item": "https://diffusiongemma.dev/ollama/"}
+    ]
+  }
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
