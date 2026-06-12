@@ -545,7 +545,17 @@ model = AutoModelForCausalLM.from_pretrained(
     "url": "https://diffusiongemma.dev",
     "author": { "@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffusiongemma.dev" },
     "datePublished": "2026-06-11T00:00:00+00:00",
-    "dateModified": "2026-06-12T00:00:00+00:00"
+    "dateModified": "2026-06-12T00:00:00+00:00",
+    "sameAs": [
+      "https://blog.google/technology/ai/apache-2-diffusion-language-model/",
+      "https://huggingface.co/google/diffusiongemma-26B-A4B-it",
+      "https://github.com/ggerganov/llama.cpp/pull/24427"
+    ],
+    "hasPart": [
+      { "@type": "Article", "headline": "Run DiffusionGemma with Ollama", "url": "https://diffusiongemma.dev/ollama/" },
+      { "@type": "Article", "headline": "Run DiffusionGemma with llama.cpp", "url": "https://diffusiongemma.dev/llama-cpp/" },
+      { "@type": "Article", "headline": "DiffusionGemma GGUF Guide", "url": "https://diffusiongemma.dev/gguf/" }
+    ]
   }
   </script>
 
@@ -562,6 +572,33 @@ model = AutoModelForCausalLM.from_pretrained(
         "item": "https://diffusiongemma.dev"
       }
     ]
+  }
+  </script>
+
+  <!-- Organization Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "DiffusionGemma Guide",
+    "url": "https://diffusiongemma.dev",
+    "description": "Independent community guide to Google's DiffusionGemma — setup, benchmarks, and integration guides",
+    "sameAs": [
+      "https://huggingface.co/google/diffusiongemma-26B-A4B-it",
+      "https://github.com/ggerganov/llama.cpp/pull/24427"
+    ]
+  }
+  </script>
+
+  <!-- WebSite Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "DiffusionGemma Guide",
+    "url": "https://diffusiongemma.dev",
+    "description": "Complete guide to running Google's DiffusionGemma locally — vLLM, llama.cpp, Ollama, Unsloth setup",
+    "inLanguage": "en"
   }
   </script>
 
