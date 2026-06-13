@@ -302,7 +302,7 @@ services:
   </script>
 
   <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
-  <script>Paddle.Initialize({token:'live_290cee1a87c9f8199d453c665f4'});</script>
+  <script>Paddle.Initialize({token:'live_290cee1a87c9f8199d453c665f4',eventCallback:function(data){if(data.name==='checkout.completed'){window.location.href='https://diffusiongemma.dev/thanks/';}}});</script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
