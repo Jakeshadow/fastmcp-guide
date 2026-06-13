@@ -55,6 +55,7 @@
         <div class="hero-actions">
           <a href="#run" class="btn btn-primary">Get Started</a>
           <a href="#what" class="btn btn-outline">How It Works</a>
+          <a href="/production-guide/" class="btn btn-outline" style="border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Pro Guide</a>
         </div>
         <div class="hero-stats">
           <div class="hero-stat"><strong>1,000+</strong> tokens/s on H100</div>
@@ -253,15 +254,6 @@ model = AutoModelForCausalLM.from_pretrained(
               <tr><td>Apple Silicon: no speedup</td><td>Unified memory shifts bottleneck back to bandwidth</td><td>Google explicitly warns about this. Expect autoregressive-comparable performance.</td></tr>
             </tbody>
           </table>
-        </div>
-
-        <!-- Production Guide CTA -->
-        <div style="margin-top:40px;padding:24px;background:var(--bg2,#1e1e2e);border-radius:12px;border:1px solid var(--border,#313148);text-align:center;">
-          <p style="margin-bottom:12px;color:var(--text,#e8eaed);"><strong>Setting this up for production?</strong> The free guide gets it running. The <strong style="color:var(--accent,#10b981);">Production Guide</strong> adds Docker Compose, GPU tuning, 20+ error fixes, and multi-user serving — tested, documented, ready.</p>
-          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-            <a href="/production-guide/" class="btn btn-primary" style="background:var(--accent,#10b981);">See the Production Guide</a>
-            <a href="/pricing/" class="btn btn-outline">Pricing</a>
-          </div>
         </div>
       </div>
     </section>
