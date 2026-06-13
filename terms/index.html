@@ -14,12 +14,18 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234285F4' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='sans-serif' font-weight='bold'%3EDG%3C/text%3E%3C/svg%3E">
   <style>
-    .legal { max-width: 780px; margin: 0 auto; padding: 48px 24px 64px; }
-    .legal h1 { font-size: 2rem; margin-bottom: 8px; }
-    .legal .updated { color: var(--text2, #9898b0); font-size: 0.9rem; margin-bottom: 32px; }
-    .legal h2 { font-size: 1.3rem; margin: 32px 0 12px; }
-    .legal p, .legal li { color: var(--text2, #9898b0); line-height: 1.7; margin-bottom: 12px; }
-    .legal ul { padding-left: 20px; margin-bottom: 16px; }
+    .terms-page { max-width: 680px; margin: 0 auto; padding: 56px 24px 64px; }
+    .terms-page h1 { font-size: 2rem; margin-bottom: 6px; }
+    .terms-page .subtitle { color: var(--text2, #9898b0); font-size: 1rem; margin-bottom: 40px; line-height: 1.5; }
+    .terms-page h2 { font-size: 1.2rem; margin: 36px 0 12px; }
+    .terms-page p, .terms-page li { color: var(--gray-700, #5f6368); line-height: 1.7; margin-bottom: 12px; }
+    .terms-page ul { padding-left: 20px; margin-bottom: 16px; }
+    .terms-page .highlight { background: #fff; border: 1px solid var(--gray-200, #e8eaed); border-radius: 10px; padding: 20px 22px; margin: 28px 0; }
+    .terms-page .highlight h3 { font-size: 1rem; margin-bottom: 8px; }
+    .terms-page .highlight p { margin-bottom: 0; }
+    @media (max-width: 600px) {
+      .terms-page h1 { font-size: 1.5rem; }
+    }
   </style>
 </head>
 <body>
@@ -36,40 +42,46 @@
     </div>
   </nav>
 
-  <main class="legal">
+  <main class="terms-page">
     <h1>Terms of Service</h1>
-    <p class="updated">Last updated: June 13, 2026</p>
+    <p class="subtitle">Plain English. No surprises. Last updated June 13, 2026.</p>
 
-    <h2>1. Acceptance of Terms</h2>
-    <p>By using DiffusionGemma Guide ("the Site"), you agree to these terms. If you don't agree, don't use the Site.</p>
+    <div class="highlight">
+      <h3>TL;DR</h3>
+      <p>We publish tutorials about DiffusionGemma. We sell a production guide. If something breaks in your setup, that's on you — test before production. Code samples are free to use. Purchases come with a 30-day no-questions-asked refund. We're not affiliated with Google. That's most of what you need to know.</p>
+    </div>
 
-    <h2>2. Content Disclaimer</h2>
-    <p>The Site provides tutorials, guides, and educational content about Google's DiffusionGemma model. All content is for informational purposes only.</p>
+    <h2>1. Using the Site</h2>
+    <p>By browsing DiffusionGemma Guide, you agree to these terms. They're here to keep things clear and fair for everyone.</p>
+
+    <h2>2. Our Content</h2>
+    <p>Everything on this site — tutorials, guides, benchmarks, code snippets — is for educational purposes. We test everything we publish, but technology moves fast and every setup is different.</p>
     <ul>
-      <li>We are <strong>not affiliated with Google</strong> or Google DeepMind. DiffusionGemma is a trademark of Google DeepMind.</li>
-      <li>Code samples and commands are provided as-is. Test them in your environment before production use.</li>
-      <li>Benchmark numbers cited are from Google and community sources. Your results will vary with hardware and setup.</li>
+      <li><strong>We're not affiliated with Google or Google DeepMind.</strong> DiffusionGemma is their trademark, not ours.</li>
+      <li>Code samples and commands are provided as-is. <strong>Test in your own environment</strong> before using them in production.</li>
+      <li>Benchmark numbers come from Google's published data, community reports, and our own testing. Your hardware, your results.</li>
     </ul>
 
     <h2>3. Purchases &amp; Refunds</h2>
-    <p>Digital products sold through this Site are delivered immediately upon purchase. Due to the nature of digital goods:</p>
+    <p>When you buy our Production Guide, you get instant access to the PDF and Markdown files. Here's how it works:</p>
     <ul>
-      <li>Refund requests must be submitted within 7 days of purchase.</li>
-      <li>Refunds are granted if the product is materially different from its description, or if you cannot access the purchased content due to a technical issue on our end.</li>
-      <li>To request a refund, email <strong>support@diffusiongemma.dev</strong> with your transaction ID.</li>
+      <li><strong>30-day money-back guarantee</strong> — if you're not satisfied for any reason, email us and get a full refund. <a href="/refunds/">Full details here</a>.</li>
+      <li>One-time purchase includes lifetime access to future updates of the guide.</li>
+      <li>You may download and keep the files for personal use. Redistribution or resale is not allowed.</li>
     </ul>
 
-    <h2>4. Intellectual Property</h2>
-    <p>All original content on this Site (guides, tutorials, code samples) is our intellectual property. You may use code samples in your own projects. You may not republish entire articles or guides without permission.</p>
+    <h2>4. What You Can and Can't Do</h2>
+    <p>Code samples from our free tutorials — use them however you want. That's what they're for.</p>
+    <p>Our guides, articles, and paid content — these are our work. Please don't republish them elsewhere, share purchased files publicly, or resell them. If you're not sure about a use case, <strong>ask us</strong>.</p>
 
-    <h2>5. Limitation of Liability</h2>
-    <p>The Site and its content are provided "as is" without warranties of any kind. We are not liable for any damages arising from your use of the Site, its content, or any purchased products.</p>
+    <h2>5. The "It's Not Our Fault" Section</h2>
+    <p>We work hard to make everything accurate and useful, but we can't guarantee it'll work perfectly in every environment. We're not liable for any issues that arise from using our content or products — including production downtime, data loss, or hardware damage. Use good judgment.</p>
 
-    <h2>6. Changes to Terms</h2>
-    <p>We may update these terms. Continued use of the Site after changes means you accept the new terms.</p>
+    <h2>6. Updates to These Terms</h2>
+    <p>If we change these terms, we'll update the date at the top. Major changes that affect your purchases will be communicated by email.</p>
 
     <h2>7. Contact</h2>
-    <p>For questions about these terms, email <strong>support@diffusiongemma.dev</strong>.</p>
+    <p>Questions about any of this? <strong>support@diffusiongemma.dev</strong>. We read every email.</p>
   </main>
 
   <footer class="footer">
