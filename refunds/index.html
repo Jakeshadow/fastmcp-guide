@@ -14,12 +14,35 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234285F4' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='sans-serif' font-weight='bold'%3EDG%3C/text%3E%3C/svg%3E">
   <style>
-    .legal { max-width: 780px; margin: 0 auto; padding: 48px 24px 64px; }
-    .legal h1 { font-size: 2rem; margin-bottom: 8px; }
-    .legal .updated { color: var(--text2, #9898b0); font-size: 0.9rem; margin-bottom: 32px; }
-    .legal h2 { font-size: 1.3rem; margin: 32px 0 12px; }
-    .legal p, .legal li { color: var(--text2, #9898b0); line-height: 1.7; margin-bottom: 12px; }
-    .legal ul { padding-left: 20px; margin-bottom: 16px; }
+    .refund-page { max-width: 680px; margin: 0 auto; padding: 56px 24px 64px; }
+    .refund-page h1 { font-size: 2rem; margin-bottom: 6px; }
+    .refund-page .subtitle { color: var(--text2, #9898b0); font-size: 1rem; margin-bottom: 40px; line-height: 1.5; }
+
+    .guarantee-card { background: linear-gradient(135deg, rgba(16,185,129,.06), rgba(16,185,129,.02)); border: 1px solid rgba(16,185,129,.15); border-radius: 14px; padding: 32px 28px; margin-bottom: 36px; text-align: center; }
+    .guarantee-card .icon { font-size: 2.6rem; margin-bottom: 12px; }
+    .guarantee-card h2 { font-size: 1.3rem; margin-bottom: 10px; color: var(--accent, #10b981); }
+    .guarantee-card p { color: var(--text2, #9898b0); font-size: .95rem; line-height: 1.6; max-width: 500px; margin: 0 auto; }
+
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+    .step { text-align: center; padding: 20px 14px; background: #fff; border: 1px solid var(--gray-200, #e8eaed); border-radius: 10px; }
+    .step .num { display: inline-block; width: 32px; height: 32px; line-height: 32px; border-radius: 50%; background: var(--accent, #10b981); color: #000; font-weight: 700; font-size: .9rem; margin-bottom: 10px; }
+    .step h3 { font-size: .95rem; margin-bottom: 6px; }
+    .step p { color: var(--gray-700, #5f6368); font-size: .85rem; line-height: 1.5; }
+
+    .refund-faq { border-top: 1px solid var(--gray-200, #e8eaed); padding-top: 32px; }
+    .refund-faq h2 { font-size: 1.25rem; margin-bottom: 20px; }
+    .refund-faq details { background: #fff; border: 1px solid var(--gray-200, #e8eaed); border-radius: 8px; margin-bottom: 8px; box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,.08)); }
+    .refund-faq details summary { padding: 18px 22px; font-size: 15px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+    .refund-faq details summary::after { content: '+'; font-size: 20px; color: var(--gray-500, #9aa0a6); }
+    .refund-faq details[open] summary::after { content: '−'; color: var(--google-blue, #4285F4); }
+    .refund-faq details[open] { border-color: var(--google-blue, #4285F4); }
+    .refund-faq details .faq-answer { padding: 0 22px 18px; font-size: .93rem; color: var(--gray-700, #5f6368); line-height: 1.6; }
+    .refund-faq details:hover { box-shadow: var(--shadow, 0 2px 8px rgba(0,0,0,.12)); }
+
+    @media (max-width: 600px) {
+      .steps { grid-template-columns: 1fr; }
+      .refund-page h1 { font-size: 1.5rem; }
+    }
   </style>
 </head>
 <body>
@@ -36,22 +59,53 @@
     </div>
   </nav>
 
-  <main class="legal">
+  <main class="refund-page">
     <h1>30-Day Money-Back Guarantee</h1>
-    <p class="updated">Last updated: June 13, 2026</p>
+    <p class="subtitle">If you're not happy, we're not happy. Every purchase comes with a full month to decide — risk free.</p>
 
-    <h2>Our Promise</h2>
-    <p>Every purchase on DiffusionGemma Guide is backed by a <strong>30-day, no-questions-asked money-back guarantee</strong>. If you're not satisfied with your purchase for any reason — or for no reason at all — you get a full refund.</p>
+    <div class="guarantee-card">
+      <div class="icon">100%</div>
+      <h2>Full refund. No questions. No hassle.</h2>
+      <p>Take 30 days to go through the guide. If it doesn't save you time, solve your problems, or meet your expectations — email us and we'll refund every cent. You don't need a reason.</p>
+    </div>
 
-    <h2>How It Works</h2>
-    <ol>
-      <li>Email <strong>support@diffusiongemma.dev</strong> with your transaction ID.</li>
-      <li>We process your refund within 2 business days.</li>
-      <li>That's it. No forms, no explanations required.</li>
-    </ol>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h3>Email us</h3>
+        <p>Send your transaction ID to support@diffusiongemma.dev</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h3>We process it</h3>
+        <p>Refund initiated within 2 business days</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h3>That's it</h3>
+        <p>No forms. No explanations. No fine print.</p>
+      </div>
+    </div>
 
-    <h2>Why We Do This</h2>
-    <p>We build guides that solve real problems. If our content didn't help you, we don't want your money. Simple as that.</p>
+    <div class="refund-faq">
+      <h2>Common questions</h2>
+      <details>
+        <summary>Is there really no catch?</summary>
+        <div class="faq-answer">Really. We trust that if the guide wasn't worth your money, you wouldn't ask for a refund unless you meant it. Over 30 days, that trust has never been abused.</div>
+      </details>
+      <details>
+        <summary>How long does the refund take to reach me?</summary>
+        <div class="faq-answer">We process it within 2 business days. After that, it depends on your payment method — credit cards usually see it in 3-5 days, PayPal within 1-2 days, WeChat/Alipay may take 5-10 business days.</div>
+      </details>
+      <details>
+        <summary>What about updates — do I lose access?</summary>
+        <div class="faq-answer">A refund removes access to future guide updates. But you're welcome to keep anything you've already downloaded — we're not going to chase you down.</div>
+      </details>
+      <details>
+        <summary>Why offer this? Aren't you worried about abuse?</summary>
+        <div class="faq-answer">We build guides that solve real problems for real developers. If our content didn't help you, keeping your money doesn't feel right. Most people are honest — we'd rather earn trust than guard against the 1%.</div>
+      </details>
+    </div>
   </main>
 
   <footer class="footer">
