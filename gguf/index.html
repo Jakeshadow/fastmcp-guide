@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DiffusionGemma GGUF — Download, Convert &amp; Quantization Guide</title>
-  <meta name="description" content="Download DiffusionGemma GGUF files, convert from PyTorch, and choose the right quantization (Q4_0, Q4_K_M, Q5_K_M). Compatible with llama.cpp and Ollama.">
+  <title>Download DiffusionGemma GGUF Weights — Q4/Q8 Quantized &amp; VRAM Chart</title>
+  <meta name="description" content="Download pre-quantized DiffusionGemma GGUF weights — Q4_K_M (~16GB), Q8_0 (~28GB), FP16. VRAM chart, conversion script, llama.cpp &amp; Ollama compatible.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -12,8 +12,8 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="/css/style.css">
-  <meta property="og:title" content="DiffusionGemma GGUF — Download, Convert &amp; Quantization Guide">
-  <meta property="og:description" content="Download DiffusionGemma GGUF files, convert from PyTorch, choose quantization. llama.cpp and Ollama compatible.">
+  <meta property="og:title" content="Download DiffusionGemma GGUF Weights — Q4/Q8 Quantized &amp; VRAM Chart">
+  <meta property="og:description" content="Download pre-quantized DiffusionGemma GGUF weights. Q4_K_M through FP16, VRAM requirements, conversion script included.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://diffusiongemma.dev/gguf/">
   <meta property="og:site_name" content="DiffusionGemma Guide">
@@ -21,8 +21,8 @@
   <meta property="og:image" content="https://diffusiongemma.dev/assets/og-image.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://diffusiongemma.dev/assets/og-image.svg">
-  <meta name="twitter:title" content="DiffusionGemma GGUF — Download, Convert &amp; Quantization Guide">
-  <meta name="twitter:description" content="GGUF downloads, PyTorch conversion, quantization options.">
+  <meta name="twitter:title" content="Download DiffusionGemma GGUF Weights — Q4/Q8 Quantized &amp; VRAM Chart">
+  <meta name="twitter:description" content="Pre-quantized GGUF weights, VRAM chart, conversion script.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://diffusiongemma.dev/gguf/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234285F4' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='sans-serif' font-weight='bold'%3EDG%3C/text%3E%3C/svg%3E">
@@ -48,7 +48,7 @@
     <section class="hero">
       <div class="container">
         <div class="hero-badge">GGUF Format · Quantization</div>
-        <h1>DiffusionGemma GGUF Guide</h1>
+        <h1>Download DiffusionGemma GGUF Weights</h1>
         <p class="hero-subtitle">GGUF is the standard format for running LLMs locally with llama.cpp and Ollama. Download pre-converted files or convert from PyTorch yourself.</p>
         <div class="hero-actions">
           <a href="#download" class="btn btn-primary">Download GGUF</a>
@@ -158,8 +158,8 @@ python convert_hf_to_gguf.py \
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "DiffusionGemma GGUF — Download, Convert & Quantization Guide",
-    "description": "Download DiffusionGemma GGUF files, convert from PyTorch to GGUF, and choose the right quantization level for llama.cpp and Ollama.",
+    "headline": "Download DiffusionGemma GGUF Weights — Q4/Q8 Quantized & VRAM Chart",
+    "description": "Download pre-quantized DiffusionGemma GGUF weights — Q4_K_M through FP16. VRAM chart, PyTorch conversion script, llama.cpp &amp; Ollama compatible.",
     "image": "https://diffusiongemma.dev/assets/og-image.svg",
     "url": "https://diffusiongemma.dev/gguf/",
     "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffusiongemma.dev"},

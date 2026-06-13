@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Run DiffusionGemma with llama.cpp — Build, GGUF &amp; Inference</title>
-  <meta name="description" content="Run DiffusionGemma with llama.cpp — build from source with PR #24427, download GGUF models, run inference. Complete guide with troubleshooting.">
+  <title>Build DiffusionGemma for llama.cpp — Step-by-Step (PR #24427)</title>
+  <meta name="description" content="Build DiffusionGemma from source for llama.cpp — clone PR #24427, compile with CUDA/Metal/CPU, run inference. Working commands, not guesses.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -12,8 +12,8 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="/css/style.css">
-  <meta property="og:title" content="Run DiffusionGemma with llama.cpp — Build, GGUF &amp; Inference">
-  <meta property="og:description" content="Run DiffusionGemma with llama.cpp — build from source, GGUF download, inference examples.">
+  <meta property="og:title" content="Build DiffusionGemma for llama.cpp — Step-by-Step (PR #24427)">
+  <meta property="og:description" content="Build DiffusionGemma from source for llama.cpp. Clone PR #24427 branch, compile, run inference — complete commands.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://diffusiongemma.dev/llama-cpp/">
   <meta property="og:site_name" content="DiffusionGemma Guide">
@@ -21,8 +21,8 @@
   <meta property="og:image" content="https://diffusiongemma.dev/assets/og-image.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://diffusiongemma.dev/assets/og-image.svg">
-  <meta name="twitter:title" content="Run DiffusionGemma with llama.cpp — Build, GGUF &amp; Inference">
-  <meta name="twitter:description" content="Build from source, download GGUF, run inference.">
+  <meta name="twitter:title" content="Build DiffusionGemma for llama.cpp — Step-by-Step (PR #24427)">
+  <meta name="twitter:description" content="Build from PR #24427, compile, run inference.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://diffusiongemma.dev/llama-cpp/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234285F4' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='sans-serif' font-weight='bold'%3EDG%3C/text%3E%3C/svg%3E">
@@ -48,7 +48,7 @@
     <section class="hero">
       <div class="container">
         <div class="hero-badge">llama.cpp · PR #24427</div>
-        <h1>Run DiffusionGemma with llama.cpp</h1>
+        <h1>Build DiffusionGemma for llama.cpp</h1>
         <p class="hero-subtitle">llama.cpp is the most popular local LLM runtime. DiffusionGemma support is in progress — here's how to build it from the PR branch and run inference today.</p>
         <div class="hero-actions">
           <a href="#build" class="btn btn-primary">Build Guide</a>
@@ -178,8 +178,8 @@ cmake .. -DGGML_CUDA=ON -DCUDAToolkit_ROOT=$CUDA_PATH</code></pre>
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Run DiffusionGemma with llama.cpp — Build, GGUF & Inference",
-    "description": "Complete guide to running DiffusionGemma with llama.cpp. Build from source with PR #24427, download GGUF models, and run inference.",
+    "headline": "Build DiffusionGemma for llama.cpp — Step-by-Step (PR #24427)",
+    "description": "Build DiffusionGemma from source for llama.cpp. Clone PR #24427, compile with CUDA/Metal/CPU, run inference with working commands.",
     "image": "https://diffusiongemma.dev/assets/og-image.svg",
     "url": "https://diffusiongemma.dev/llama-cpp/",
     "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffusiongemma.dev"},
