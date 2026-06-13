@@ -32,7 +32,7 @@
     .guide-hero .price-block { margin-bottom: 28px; }
     .guide-hero .price { font-size: 2.4rem; font-weight: 700; color: var(--accent, #10b981); }
     .guide-hero .price-note { color: var(--text2, #9898b0); font-size: .85rem; margin-top: 4px; }
-    .btn-buy { display: inline-block; padding: 14px 40px; font-size: 1.05rem; font-weight: 600; background: var(--accent, #10b981); color: #000; border-radius: 28px; text-decoration: none; transition: all .15s; box-shadow: 0 2px 12px rgba(16,185,129,.35); }
+    .btn-buy { display: inline-block; padding: 14px 40px; font-size: 1.05rem; font-weight: 600; background: var(--accent, #10b981); color: #000; border-radius: 28px; text-decoration: none; border: none; cursor: pointer; font-family: inherit; transition: all .15s; box-shadow: 0 2px 12px rgba(16,185,129,.35); }
     .btn-buy:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(16,185,129,.45); }
 
     .guide-content { max-width: 780px; margin: 0 auto; padding: 0 24px 48px; }
@@ -103,7 +103,7 @@
         <div class="price-note">One-time purchase. Lifetime updates. 30-day money-back guarantee.</div>
         <div class="price-note" style="margin-top:4px;">Founding price — regular $19 after first 100 copies</div>
       </div>
-      <a href="/pricing/" class="btn-buy">Get the Guide</a>
+      <button class="btn-buy" onclick="Paddle.Checkout.open({items:[{priceId:'pri_01ktztp1vv0w0b1h7e560eght0',quantity:1}]})">Get the Guide</button>
     </section>
 
     <div class="guide-content">
@@ -243,7 +243,7 @@ services:
 
       <!-- Final CTA -->
       <section class="final-cta">
-        <a href="/pricing/" class="btn-buy">Get the Production Guide — $14</a>
+        <button class="btn-buy" onclick="Paddle.Checkout.open({items:[{priceId:'pri_01ktztp1vv0w0b1h7e560eght0',quantity:1}]})">Get the Production Guide — $14</button>
         <p style="color:var(--text2,#9898b0);margin-top:12px;font-size:.9rem;">Instant download. 30-day refund. Lifetime updates.</p>
       </section>
 
@@ -301,6 +301,8 @@ services:
   }
   </script>
 
+  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+  <script>Paddle.Initialize({token:'live_290cee1a87c9f8199d453c665f4'});</script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
