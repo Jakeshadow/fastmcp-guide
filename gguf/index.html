@@ -11,7 +11,7 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css?v=2">
   <meta property="og:title" content="Download DiffusionGemma GGUF Weights — Q4/Q8 Quantized &amp; VRAM Chart">
   <meta property="og:description" content="Download pre-quantized DiffusionGemma GGUF weights. Q4_K_M through FP16, VRAM requirements, conversion script included.">
   <meta property="og:type" content="article">
@@ -28,14 +28,22 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234285F4' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='sans-serif' font-weight='bold'%3EDG%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-  <nav id="nav" class="nav">
+    <nav id="nav" class="nav">
     <div class="nav-inner">
-      <a href="/" class="nav-logo">DiffusionGemma Guide</a>
+      <a href="/" class="nav-logo"><svg width="26" height="26" viewBox="0 0 100 100" style="vertical-align:middle;margin-right:6px;"><rect fill="#4285F4" width="100" height="100" rx="20"/><text x="50" y="68" text-anchor="middle" fill="white" font-size="52" font-family="sans-serif" font-weight="bold">DG</text></svg>DG Guide</a>
       <ul class="nav-links">
         <li><a href="/">Home</a></li>
-        <li><a href="/ollama/">Ollama</a></li>
-        <li><a href="/llama-cpp/">llama.cpp</a></li>
-        <li><a href="/gguf/">GGUF</a></li>
+        <li><a href="/benchmarks/">Benchmarks</a></li>
+        <li class="nav-dropdown">
+          <a href="#">Setup ▾</a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="/ollama/">Ollama</a></li>
+            <li><a href="/llama-cpp/">llama.cpp</a></li>
+            <li><a href="/gguf/">GGUF</a></li>
+            <li><a href="/vllm/">vLLM</a></li>
+            <li><a href="/lm-studio/">LM Studio</a></li>
+          </ul>
+        </li>
         <li><a href="/production-guide/">Pro Guide</a></li>
         <li><a href="/#faq">FAQ</a></li>
       </ul>
@@ -45,7 +53,7 @@
     </div>
   </nav>
 
-  <main>
+<main>
     <section class="hero">
       <div class="container">
         <div class="hero-badge">GGUF Format · Quantization</div>

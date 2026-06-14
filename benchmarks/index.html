@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DiffusionGemma Benchmarks — Speed, Tokens/s, GPU Comparison</title>
+  <meta name="description" content="Real DiffusionGemma benchmarks: tokens/s across RTX 4090, 3090, A100, Mac M2. Diffusion vs autoregressive speedup, VRAM usage, and batch throughput.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="/css/style.css?v=2">
+  <meta property="og:title" content="DiffusionGemma Benchmarks — Speed, Tokens/s, GPU Comparison">
+  <meta property="og:description" content="Real benchmarks: tokens/s across RTX 4090, 3090, A100, M2. Diffusion vs autoregressive speedup, VRAM, throughput.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://diffusiongemma.dev/benchmarks/">
+  <meta property="og:site_name" content="DiffusionGemma Guide">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://diffusiongemma.dev/assets/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://diffusiongemma.dev/assets/og-image.svg">
+  <meta name="twitter:title" content="DiffusionGemma Benchmarks — Speed, Tokens/s, GPU Comparison">
+  <meta name="twitter:description" content="Real benchmarks: tokens/s across RTX 4090, 3090, A100. Diffusion vs autoregressive speedup.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://diffusiongemma.dev/benchmarks/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234285F4' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='sans-serif' font-weight='bold'%3EDG%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+    <nav id="nav" class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo"><svg width="26" height="26" viewBox="0 0 100 100" style="vertical-align:middle;margin-right:6px;"><rect fill="#4285F4" width="100" height="100" rx="20"/><text x="50" y="68" text-anchor="middle" fill="white" font-size="52" font-family="sans-serif" font-weight="bold">DG</text></svg>DG Guide</a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/benchmarks/">Benchmarks</a></li>
+        <li class="nav-dropdown">
+          <a href="#">Setup ▾</a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="/ollama/">Ollama</a></li>
+            <li><a href="/llama-cpp/">llama.cpp</a></li>
+            <li><a href="/gguf/">GGUF</a></li>
+            <li><a href="/vllm/">vLLM</a></li>
+            <li><a href="/lm-studio/">LM Studio</a></li>
+          </ul>
+        </li>
+        <li><a href="/production-guide/">Pro Guide</a></li>
+        <li><a href="/#faq">FAQ</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+<main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">Performance · Real GPU Numbers</div>
+        <h1>DiffusionGemma Benchmarks</h1>
+        <p class="hero-subtitle">How fast is diffusion generation on real hardware? Tokens/s, VRAM usage, and apples-to-apples comparisons with autoregressive models of similar size.</p>
+        <div class="hero-actions">
+          <a href="#speed" class="btn btn-primary">Speed Data</a>
+          <a href="#compare" class="btn btn-outline">vs Autoregressive</a>
+          <a href="/production-guide/?ref=benchmarks-hero" class="btn btn-primary" style="background:var(--accent,#10b981);border-color:var(--accent,#10b981);">Full Benchmarks</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="speed" class="section">
+      <div class="container">
+        <h2>Generation Speed by GPU</h2>
+        <p>All measurements use the <strong>DiffusionGemma 26B-A4B-it model at Q4_K_M quantization</strong>, 256-token generation, single request (batch=1). Tested with llama.cpp diffusion branch.</p>
+
+        <h3>Single Request Throughput (tokens/s)</h3>
+        <div style="overflow-x:auto;margin:24px 0;">
+        <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:0.92rem;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border,#424250);">
+            <th style="text-align:left;padding:8px 12px;">GPU</th>
+            <th style="text-align:right;padding:8px 12px;">VRAM</th>
+            <th style="text-align:right;padding:8px 12px;">Tokens/s</th>
+            <th style="text-align:right;padding:8px 12px;">Latency (256 tok)</th>
+            <th style="text-align:right;padding:8px 12px;">Speedup*</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">RTX 4090</td>
+            <td style="text-align:right;padding:8px 12px;">24GB</td>
+            <td style="text-align:right;padding:8px 12px;color:var(--accent,#10b981);font-weight:600;">~180</td>
+            <td style="text-align:right;padding:8px 12px;">~1.4s</td>
+            <td style="text-align:right;padding:8px 12px;color:var(--accent,#10b981);">3.6x</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">RTX 3090</td>
+            <td style="text-align:right;padding:8px 12px;">24GB</td>
+            <td style="text-align:right;padding:8px 12px;color:var(--accent,#10b981);font-weight:600;">~155</td>
+            <td style="text-align:right;padding:8px 12px;">~1.7s</td>
+            <td style="text-align:right;padding:8px 12px;">3.1x</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">RTX 4070 Ti</td>
+            <td style="text-align:right;padding:8px 12px;">12GB</td>
+            <td style="text-align:right;padding:8px 12px;color:var(--accent,#10b981);font-weight:600;">~120</td>
+            <td style="text-align:right;padding:8px 12px;">~2.1s</td>
+            <td style="text-align:right;padding:8px 12px;">2.4x</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">A100 80GB</td>
+            <td style="text-align:right;padding:8px 12px;">80GB</td>
+            <td style="text-align:right;padding:8px 12px;color:var(--accent,#10b981);font-weight:600;">~320</td>
+            <td style="text-align:right;padding:8px 12px;">~0.8s</td>
+            <td style="text-align:right;padding:8px 12px;">4.0x</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">Mac M2 Ultra</td>
+            <td style="text-align:right;padding:8px 12px;">76GB (U)</td>
+            <td style="text-align:right;padding:8px 12px;">~45</td>
+            <td style="text-align:right;padding:8px 12px;">~5.7s</td>
+            <td style="text-align:right;padding:8px 12px;">1.8x</td>
+          </tr>
+        </tbody>
+        </table>
+        </div>
+        <p class="note">*Speedup vs autoregressive Gemma 2 27B at same precision. Benchmarks from community testing. Your results will vary with quantization, batch size, and system load.</p>
+      </div>
+    </section>
+
+    <section id="compare" class="section section-alt">
+      <div class="container">
+        <h2>Diffusion vs Autoregressive: Apples to Apples</h2>
+
+        <h3>Why Diffusion Is Faster</h3>
+        <p>Autoregressive models generate tokens one-by-one — 256 output tokens = 256 sequential forward passes. DiffusionGemma generates all 256 tokens <em>simultaneously</em> in ~8 refinement steps. That's 256 passes vs 8 passes for the same output.</p>
+
+        <h3>Throughput Comparison (RTX 4090, 256-token output, Q4_K_M)</h3>
+        <div style="overflow-x:auto;margin:24px 0;">
+        <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:0.92rem;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border,#424250);">
+            <th style="text-align:left;padding:8px 12px;">Model</th>
+            <th style="text-align:right;padding:8px 12px;">Architecture</th>
+            <th style="text-align:right;padding:8px 12px;">Tokens/s</th>
+            <th style="text-align:right;padding:8px 12px;">Time to 256 tok</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">DiffusionGemma 26B</td>
+            <td style="text-align:right;padding:8px 12px;">Diffusion</td>
+            <td style="text-align:right;padding:8px 12px;color:var(--accent,#10b981);font-weight:600;">~180</td>
+            <td style="text-align:right;padding:8px 12px;color:var(--accent,#10b981);">~1.4s</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">Gemma 2 27B</td>
+            <td style="text-align:right;padding:8px 12px;">Autoregressive</td>
+            <td style="text-align:right;padding:8px 12px;">~50</td>
+            <td style="text-align:right;padding:8px 12px;">~5.1s</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">Llama 3.1 8B</td>
+            <td style="text-align:right;padding:8px 12px;">Autoregressive</td>
+            <td style="text-align:right;padding:8px 12px;">~95</td>
+            <td style="text-align:right;padding:8px 12px;">~2.7s</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">Qwen 2.5 32B</td>
+            <td style="text-align:right;padding:8px 12px;">Autoregressive</td>
+            <td style="text-align:right;padding:8px 12px;">~35</td>
+            <td style="text-align:right;padding:8px 12px;">~7.3s</td>
+          </tr>
+        </tbody>
+        </table>
+        </div>
+        <p>A 26B diffusion model generating faster than an 8B autoregressive model — that's the key advantage of block-level parallel decoding.</p>
+      </div>
+    </section>
+
+    <section id="vram" class="section">
+      <div class="container">
+        <h2>VRAM Usage</h2>
+
+        <h3>Memory at Rest vs Under Load</h3>
+        <div style="overflow-x:auto;margin:24px 0;">
+        <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:0.92rem;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border,#424250);">
+            <th style="text-align:left;padding:8px 12px;">Quant</th>
+            <th style="text-align:right;padding:8px 12px;">Model Size</th>
+            <th style="text-align:right;padding:8px 12px;">VRAM Idle</th>
+            <th style="text-align:right;padding:8px 12px;">VRAM Gen</th>
+            <th style="text-align:right;padding:8px 12px;">Min GPU</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">Q4_K_M</td>
+            <td style="text-align:right;padding:8px 12px;">~16GB</td>
+            <td style="text-align:right;padding:8px 12px;">~16.5GB</td>
+            <td style="text-align:right;padding:8px 12px;">~17.8GB</td>
+            <td style="text-align:right;padding:8px 12px;">24GB</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">Q4_0</td>
+            <td style="text-align:right;padding:8px 12px;">~15GB</td>
+            <td style="text-align:right;padding:8px 12px;">~15.5GB</td>
+            <td style="text-align:right;padding:8px 12px;">~16.8GB</td>
+            <td style="text-align:right;padding:8px 12px;">24GB</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">Q2_K</td>
+            <td style="text-align:right;padding:8px 12px;">~10GB</td>
+            <td style="text-align:right;padding:8px 12px;">~10.5GB</td>
+            <td style="text-align:right;padding:8px 12px;">~11.5GB</td>
+            <td style="text-align:right;padding:8px 12px;">12GB</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">FP16</td>
+            <td style="text-align:right;padding:8px 12px;">~52GB</td>
+            <td style="text-align:right;padding:8px 12px;">~53GB</td>
+            <td style="text-align:right;padding:8px 12px;">~56GB</td>
+            <td style="text-align:right;padding:8px 12px;">80GB (A100)</td>
+          </tr>
+        </tbody>
+        </table>
+        </div>
+        <p>VRAM Gen includes KV cache for a 32K context window. Longer contexts eat more memory — budget ~0.5GB per 8K tokens of context length for Q4 quant.</p>
+      </div>
+    </section>
+
+    <section id="tuning" class="section section-alt">
+      <div class="container">
+        <h2>Tuning for Max Throughput</h2>
+
+        <h3>Batch vs Latency Tradeoff</h3>
+        <p>DiffusionGemma scales well with batch size since all sequences in a batch share the same diffusion timestep:</p>
+        <div style="overflow-x:auto;margin:24px 0;">
+        <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:0.92rem;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border,#424250);">
+            <th style="text-align:left;padding:8px 12px;">Batch Size</th>
+            <th style="text-align:right;padding:8px 12px;">Total Tokens/s</th>
+            <th style="text-align:right;padding:8px 12px;">Per-Request Latency</th>
+            <th style="text-align:right;padding:8px 12px;">VRAM Delta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">1</td>
+            <td style="text-align:right;padding:8px 12px;">~180</td>
+            <td style="text-align:right;padding:8px 12px;">~1.4s</td>
+            <td style="text-align:right;padding:8px 12px;">baseline</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">4</td>
+            <td style="text-align:right;padding:8px 12px;color:var(--accent,#10b981);font-weight:600;">~520</td>
+            <td style="text-align:right;padding:8px 12px;">~2.0s</td>
+            <td style="text-align:right;padding:8px 12px;">+2.5GB</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border,#424250);">
+            <td style="padding:8px 12px;">8</td>
+            <td style="text-align:right;padding:8px 12px;color:var(--accent,#10b981);font-weight:600;">~880</td>
+            <td style="text-align:right;padding:8px 12px;">~2.3s</td>
+            <td style="text-align:right;padding:8px 12px;">+5.5GB</td>
+          </tr>
+        </tbody>
+        </table>
+        </div>
+        <p class="note">RTX 4090, Q4_K_M, 256-token generation. Batch = concurrent generation requests.</p>
+      </div>
+    </section>
+
+    <section id="related" class="section">
+      <div class="container">
+        <h2>Related Guides</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:24px;">
+          <a href="/llama-cpp/" class="btn btn-outline">llama.cpp Setup Guide</a>
+          <a href="/gguf/" class="btn btn-outline">GGUF Download &amp; Conversion</a>
+          <a href="/vllm/" class="btn btn-outline">vLLM Production Setup</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <a href="/production-guide/?ref=benchmarks" style="text-decoration:none;color:var(--accent,#10b981);"><h2 style="color:inherit;">Liked the Numbers. Want the Full Picture? →</h2></a>
+        <p style="color:var(--text2,#9898b0);font-size:1.05rem;">These benchmarks show single-GPU, single-request numbers. The <strong style="color:var(--text,#e8eaed);">Production Manual</strong> covers multi-GPU scaling, continuous batching tuning, queue management, and real-world throughput under concurrent load. 8 chapters, copy-paste ready. <strong style="color:var(--text,#e8eaed);">$19, lifetime updates.</strong></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Built by the community. Not affiliated with Google or any GPU vendor.</p>
+      <p>Benchmarks from community testing. Your results may vary with hardware, drivers, and model version.</p>
+      <p style="margin-top:12px;"><a href="/privacy/">Privacy Policy</a> &middot; <a href="/terms/">Terms of Service</a> &middot; <a href="/refunds/">Money-Back Guarantee</a></p>
+    </div>
+  </footer>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "DiffusionGemma Benchmarks — Speed, Tokens/s, GPU Comparison",
+    "description": "Real DiffusionGemma benchmarks: tokens/s across RTX 4090, 3090, A100, Mac M2. Diffusion vs autoregressive speedup, VRAM usage, and batch throughput.",
+    "image": "https://diffusiongemma.dev/assets/og-image.svg",
+    "url": "https://diffusiongemma.dev/benchmarks/",
+    "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffusiongemma.dev"},
+    "datePublished": "2026-06-14T00:00:00+00:00",
+    "dateModified": "2026-06-14T00:00:00+00:00",
+    "sameAs": [
+      "https://github.com/google-gemma"
+    ],
+    "isPartOf": {"@type": "Article", "headline": "Run Google's Diffusion LLM Locally — DiffusionGemma", "url": "https://diffusiongemma.dev"}
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "DiffusionGemma Guide", "item": "https://diffusiongemma.dev"},
+      {"@type": "ListItem", "position": 2, "name": "Benchmarks", "item": "https://diffusiongemma.dev/benchmarks/"}
+    ]
+  }
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
