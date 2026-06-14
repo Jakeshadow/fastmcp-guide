@@ -253,13 +253,23 @@ services:
     "@type": "Product",
     "name": "DiffusionGemma Production Guide",
     "description": "The missing production manual for DiffusionGemma — Docker Compose, GPU tuning, 20+ error fixes, real benchmarks. 8 chapters, free sample included.",
+    "image": "https://diffusiongemma.dev/assets/og-image.svg",
     "url": "https://diffusiongemma.dev/production-guide/",
+    "brand": {"@type": "Organization", "name": "DiffusionGemma Guide"},
     "offers": {
       "@type": "Offer",
       "price": "14.00",
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock",
-      "priceValidUntil": "2026-08-13"
+      "priceValidUntil": "2026-08-13",
+      "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "returnMethod": "https://schema.org/ReturnByMail",
+        "merchantReturnDays": 30,
+        "refundType": "https://schema.org/FullRefund",
+        "url": "https://diffusiongemma.dev/refunds/"
+      }
     }
   }
   </script>
