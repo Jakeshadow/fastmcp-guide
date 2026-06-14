@@ -112,23 +112,8 @@
 
       <!-- Pain statement -->
       <div class="pain-box">
-        <p><strong>You followed the free tutorials. The model runs. Now what?</strong> You need it to survive reboots, serve multiple users, monitor GPU memory, handle OOMs gracefully, and not fail silently at 3am. The official docs don't cover this. GitHub issues are scattered. This guide fills the gap.</p>
+        <p><strong>You followed the free tutorials. The model runs. Now what?</strong> You need it to survive reboots, serve multiple users, monitor GPU memory, handle OOMs gracefully, and not fail silently at 3am. The official docs don't cover this. GitHub issues are scattered. See for yourself — here's Chapter 1 in full.</p>
       </div>
-
-      <!-- TOC -->
-      <section class="toc">
-        <h2>What's Inside</h2>
-        <ol>
-          <li><strong>Production Deployment Architecture</strong> — Docker Compose, systemd, Nginx reverse proxy, healthchecks</li>
-          <li><strong>GPU Optimization Deep Dive</strong> — Memory tuning, batch sizing, NVFP4 vs GGUF trade-offs</li>
-          <li><strong>Quantization Strategy & Comparison</strong> — Q4_0 through FP16 benchmarks, which quant for which workload</li>
-          <li><strong>Troubleshooting: 20+ Common Errors</strong> — From "trust_remote_code" to segfaults, each with root cause + verified fix</li>
-          <li><strong>Performance Benchmarks on Real Hardware</strong> — RTX 3090, 4090, 5090, A6000, H100 — not Google's self-reported numbers</li>
-          <li><strong>Multi-User & API Serving</strong> — Concurrent requests, queue management, rate limiting</li>
-          <li><strong>Security & Authentication</strong> — API key setup, TLS termination, safe exposure patterns</li>
-          <li><strong>Monitoring, Logging & Maintenance</strong> — Prometheus metrics, log aggregation, model update workflows</li>
-        </ol>
-      </section>
 
       <!-- Free Sample Chapter -->
       <section class="sample-chapter">
@@ -201,6 +186,20 @@ services:
 }</code></pre>
 
         <p style="margin-top:16px;"><strong>The full chapter covers:</strong> systemd service files, log rotation, GPU driver update safety, multi-GPU setup, and a deployment checklist that catches the 5 most common production gotchas before they bite.</p>
+      </section>
+
+      <!-- TOC -->
+      <section class="toc">
+        <h2>This Is Chapter 1. The Other 7 Go Just as Deep.</h2>
+        <ol>
+          <li><strong>GPU Optimization Deep Dive</strong> — Memory tuning, batch sizing, NVFP4 vs GGUF trade-offs</li>
+          <li><strong>Quantization Strategy & Comparison</strong> — Q4_0 through FP16 benchmarks, which quant for which workload</li>
+          <li><strong>Troubleshooting: 20+ Common Errors</strong> — From "trust_remote_code" to segfaults, each with root cause + verified fix</li>
+          <li><strong>Performance Benchmarks on Real Hardware</strong> — RTX 3090, 4090, 5090, A6000, H100 — not Google's self-reported numbers</li>
+          <li><strong>Multi-User & API Serving</strong> — Concurrent requests, queue management, rate limiting</li>
+          <li><strong>Security & Authentication</strong> — API key setup, TLS termination, safe exposure patterns</li>
+          <li><strong>Monitoring, Logging & Maintenance</strong> — Prometheus metrics, log aggregation, model update workflows</li>
+        </ol>
       </section>
 
       <!-- Guarantee -->
