@@ -82,6 +82,7 @@
       .guide-hero { padding: 40px 20px 32px; }
       .guide-hero h1 { font-size: 1.5rem; }
       .btn-buy { padding: 12px 32px; font-size: 1rem; }
+      .who-for-grid { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>
@@ -124,6 +125,32 @@
     </section>
 
     <div class="guide-content">
+
+      <!-- Who This Is For (And Not For) -->
+      <section class="who-for" style="margin-bottom:32px;">
+        <h2 style="font-size:1.2rem;margin-bottom:10px;">Who This Guide Is For (And Who It's Not)</h2>
+        <p style="color:var(--text2,#9898b0);margin-bottom:18px;line-height:1.6;font-size:.95rem;">DiffusionGemma is <strong style="color:var(--accent,#10b981);">4x faster</strong> than standard Gemma 4 — but the community has confirmed it makes <strong style="color:var(--google-red,#EA4335);">6x more factual errors</strong> on fact-checking benchmarks (Reddit comparison: standard Gemma 45/50 correct, DiffusionGemma 33/50). This guide assumes you understand the tradeoff and want to deploy it for the right use cases — not to replace your factuality-critical stack.</p>
+        <div class="who-for-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);border-radius:10px;padding:20px 22px;">
+            <h3 style="font-size:.95rem;color:var(--accent,#10b981);margin-bottom:10px;">Good For</h3>
+            <ul style="padding-left:18px;color:var(--gray-700,#5f6368);line-height:1.8;font-size:.9rem;margin:0;">
+              <li>Data augmentation & synthetic generation</li>
+              <li>Draft writing & code scaffolding</li>
+              <li>Speed-critical pipelines where you verify output</li>
+              <li>Creative / brainstorming tasks</li>
+            </ul>
+          </div>
+          <div style="background:rgba(234,67,53,.06);border:1px solid rgba(234,67,53,.18);border-radius:10px;padding:20px 22px;">
+            <h3 style="font-size:.95rem;color:var(--google-red,#EA4335);margin-bottom:10px;">Not For</h3>
+            <ul style="padding-left:18px;color:var(--gray-700,#5f6368);line-height:1.8;font-size:.9rem;margin:0;">
+              <li>Factual QA / knowledge-base answers</li>
+              <li>Replacing standard Gemma 4 for accuracy</li>
+              <li>Tasks where hallucinations are unacceptable</li>
+              <li>Low-compute environments (it's compute-bound, CUDA-favored)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
       <!-- Pain statement -->
       <div class="pain-box">
