@@ -70,6 +70,14 @@
       </div>
     </section>
 
+    <section id="status" class="section">
+      <div class="container">
+        <h2>Current vLLM Support Status</h2>
+        <p><strong>vLLM has supported DiffusionGemma since day 0.</strong> Google collaborated with the vLLM team before launch, making vLLM the <strong>only production-ready serving path</strong> for DiffusionGemma today. No custom forks, no PR branches, no workarounds — just <code>pip install vllm</code> and <code>--trust-remote-code</code>.</p>
+        <p class="note">vLLM loads models directly from HuggingFace format (safetensors), bypassing GGUF entirely. This is the recommended path for production deployments — multi-GPU, continuous batching, and OpenAI-compatible API out of the box.</p>
+      </div>
+    </section>
+
     <section id="setup" class="section">
       <div class="container">
         <h2>Install vLLM with DiffusionGemma Support</h2>
@@ -202,7 +210,7 @@ print(response.choices[0].message.content)</code></pre>
     "url": "https://diffusiongemma.dev/vllm/",
     "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffusiongemma.dev"},
     "datePublished": "2026-06-14T00:00:00+00:00",
-    "dateModified": "2026-06-14T00:00:00+00:00",
+    "dateModified": "2026-06-16T00:00:00+00:00",
     "sameAs": [
       "https://github.com/vllm-project/vllm",
       "https://docs.vllm.ai/"

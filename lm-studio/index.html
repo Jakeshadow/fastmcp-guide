@@ -70,6 +70,14 @@
       </div>
     </section>
 
+    <section id="status" class="section">
+      <div class="container">
+        <h2>Current LM Studio Support Status</h2>
+        <p><strong>LM Studio cannot load DiffusionGemma yet.</strong> LM Studio bundles mainline llama.cpp, which doesn't include the <code>diffusion-gemma</code> architecture. The blocker is <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener">llama.cpp PR #24427</a> (draft, ~3-5 weeks estimated). Once merged into mainline, LM Studio will update their bundled llama.cpp — typically within 1-2 releases.</p>
+        <p class="note">Until then: use <a href="/ollama/">Ollama with custom Modelfile</a> or <a href="/llama-cpp/">standalone llama.cpp</a> from the PR branch. No workaround exists for LM Studio specifically.</p>
+      </div>
+    </section>
+
     <section id="setup" class="section">
       <div class="container">
         <h2>Install &amp; Set Up LM Studio</h2>
@@ -184,7 +192,7 @@ curl http://localhost:1234/v1/models
     "url": "https://diffusiongemma.dev/lm-studio/",
     "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffusiongemma.dev"},
     "datePublished": "2026-06-14T00:00:00+00:00",
-    "dateModified": "2026-06-14T00:00:00+00:00",
+    "dateModified": "2026-06-16T00:00:00+00:00",
     "sameAs": [
       "https://lmstudio.ai",
       "https://github.com/ggerganov/llama.cpp"
