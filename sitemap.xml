@@ -1,73 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://diffusiongemma.dev/</loc>
+    <loc>https://diffrun.dev/</loc>
     <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://diffusiongemma.dev/ollama/</loc>
+    <loc>https://diffrun.dev/ollama/</loc>
     <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://diffusiongemma.dev/llama-cpp/</loc>
+    <loc>https://diffrun.dev/llama-cpp/</loc>
     <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://diffusiongemma.dev/gguf/</loc>
+    <loc>https://diffrun.dev/gguf/</loc>
     <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://diffusiongemma.dev/production-guide/</loc>
+    <loc>https://diffrun.dev/production-guide/</loc>
     <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://diffusiongemma.dev/vllm/</loc>
+    <loc>https://diffrun.dev/vllm/</loc>
     <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://diffusiongemma.dev/lm-studio/</loc>
+    <loc>https://diffrun.dev/lm-studio/</loc>
     <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://diffusiongemma.dev/benchmarks/</loc>
+    <loc>https://diffrun.dev/benchmarks/</loc>
     <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://diffusiongemma.dev/privacy/</loc>
+    <loc>https://diffrun.dev/privacy/</loc>
     <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://diffusiongemma.dev/terms/</loc>
+    <loc>https://diffrun.dev/terms/</loc>
     <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://diffusiongemma.dev/refunds/</loc>
+    <loc>https://diffrun.dev/refunds/</loc>
     <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://diffusiongemma.dev/pricing/</loc>
+    <loc>https://diffrun.dev/pricing/</loc>
     <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>

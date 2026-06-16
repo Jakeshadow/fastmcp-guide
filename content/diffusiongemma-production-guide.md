@@ -12,7 +12,7 @@
 
 You've followed the free tutorials. You've run `docker run` or `python inference.py` and seen DiffusionGemma generate text. **Now you need it to work reliably, for real users, 24/7.** That's the gap this guide fills.
 
-If you haven't run the model yet, start with the free tutorials at [diffusiongemma.dev](https://diffusiongemma.dev). Get it working first. Come back when "it works on my machine" isn't enough.
+If you haven't run the model yet, start with the free tutorials at [diffrun.dev](https://diffrun.dev). Get it working first. Come back when "it works on my machine" isn't enough.
 
 ### What You Need
 
@@ -25,7 +25,7 @@ If you haven't run the model yet, start with the free tutorials at [diffusiongem
 
 **These are intentional gaps — not oversights.** Know them before you buy.
 
-**Ollama deployment.** As of June 2026, Ollama does not support DiffusionGemma. The llama.cpp diffusion decoder (PR #24427) has not been merged into mainline llama.cpp, and Ollama builds on mainline. The free tutorial at `/ollama/` on diffusiongemma.dev covers the current workaround and tracks the latest status. When Ollama support lands, this guide gets updated. Until then, this guide focuses on vLLM (GPU) and llama.cpp diffusion branch (GPU/CPU hybrid).
+**Ollama deployment.** As of June 2026, Ollama does not support DiffusionGemma. The llama.cpp diffusion decoder (PR #24427) has not been merged into mainline llama.cpp, and Ollama builds on mainline. The free tutorial at `/ollama/` on diffrun.dev covers the current workaround and tracks the latest status. When Ollama support lands, this guide gets updated. Until then, this guide focuses on vLLM (GPU) and llama.cpp diffusion branch (GPU/CPU hybrid).
 
 **Training, fine-tuning, or LoRA.** This guide covers inference only — deploying and serving a pre-trained model. If you want to fine-tune DiffusionGemma, the Google Research repo has training scripts. That's a different book.
 
@@ -46,7 +46,7 @@ If your tooling requires GGUF or widespread ecosystem support, stick with Q4_K_M
 
 ### Free vs Paid: The Boundary
 
-| Free tutorials at diffusiongemma.dev | This guide |
+| Free tutorials at diffrun.dev | This guide |
 |---|---|
 | How to run the model | How to keep it running |
 | One command to get started | The 15 things that go wrong and how to fix them |
@@ -183,7 +183,7 @@ limit_conn_zone $binary_remote_addr zone=conn:10m;
 
 server {
     listen 443 ssl http2;
-    server_name api.diffusiongemma.dev;
+    server_name api.diffrun.dev;
 
     ssl_certificate     /etc/nginx/ssl/fullchain.pem;
     ssl_certificate_key /etc/nginx/ssl/privkey.pem;
@@ -234,7 +234,7 @@ server {
 # HTTP → HTTPS redirect
 server {
     listen 80;
-    server_name api.diffusiongemma.dev;
+    server_name api.diffrun.dev;
     return 301 https://$host$request_uri;
 }
 ```
@@ -335,7 +335,7 @@ Before you go live, verify every item:
 - [ ] Single inference works: `curl http://localhost:8000/v1/completions -H "Content-Type: application/json" -d '{"model":"google/diffusiongemma-26B-A4B-it","prompt":"Hello","max_tokens":10}'`
 - [ ] Log rotation configured and tested: `docker compose logs --tail 10` works and disk usage is under limits
 - [ ] SSL certificate valid for at least 30 days: `openssl x509 -in ./ssl/fullchain.pem -noout -enddate`
-- [ ] DNS resolves `api.diffusiongemma.dev` to your server IP
+- [ ] DNS resolves `api.diffrun.dev` to your server IP
 - [ ] Firewall allows 80/443 from public, blocks 8000 from public
 - [ ] systemd service enabled: `systemctl is-enabled diffusiongemma.service`
 - [ ] Reboot test: `sudo reboot`, wait 3 minutes, verify `/health` returns 200
@@ -1040,7 +1040,7 @@ vLLM exposes an OpenAI-compatible API at `/v1`. Any client that works with OpenA
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://api.diffusiongemma.dev/v1",
+    base_url="https://api.diffrun.dev/v1",
     api_key="your-api-key-here"
 )
 
@@ -1055,7 +1055,7 @@ response = client.completions.create(
 
 ```bash
 # curl equivalent
-curl https://api.diffusiongemma.dev/v1/completions \
+curl https://api.diffrun.dev/v1/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer your-api-key-here" \
   -d '{
@@ -1317,7 +1317,7 @@ Use Let's Encrypt for certificates:
 sudo apt install certbot python3-certbot-dns-cloudflare
 sudo certbot certonly --dns-cloudflare \
     --dns-cloudflare-credentials /etc/cloudflare/credentials.ini \
-    -d api.diffusiongemma.dev
+    -d api.diffrun.dev
 ```
 
 Auto-renewal:
