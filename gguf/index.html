@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Download DiffusionGemma GGUF Weights — Q4/Q8 Quantized &amp; VRAM Chart</title>
-  <meta name="description" content="Download pre-quantized DiffusionGemma GGUF weights — Q4_K_M (~16GB), Q8_0 (~28GB), FP16. VRAM chart, conversion script, llama.cpp &amp; Ollama compatible.">
+  <title>DiffusionGemma GGUF: Load in Ollama &amp; llama.cpp — Fix Compatibility</title>
+  <meta name="description" content="DiffusionGemma GGUF guide: why Ollama and LM Studio can't load GGUF yet, how to fix it, download pre-quantized weights, and convert from PyTorch yourself.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -12,8 +12,8 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=2">
-  <meta property="og:title" content="Download DiffusionGemma GGUF Weights — Q4/Q8 Quantized &amp; VRAM Chart">
-  <meta property="og:description" content="Download pre-quantized DiffusionGemma GGUF weights. Q4_K_M through FP16, VRAM requirements, conversion script included.">
+  <meta property="og:title" content="DiffusionGemma GGUF: Load in Ollama &amp; llama.cpp — Fix Compatibility">
+  <meta property="og:description" content="Why Ollama and LM Studio can't load DiffusionGemma GGUF yet, how to fix it, download pre-quantized weights, and convert from PyTorch.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://diffusiongemma.dev/gguf/">
   <meta property="og:site_name" content="DiffusionGemma Guide">
@@ -21,8 +21,8 @@
   <meta property="og:image" content="https://diffusiongemma.dev/assets/og-image.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://diffusiongemma.dev/assets/og-image.svg">
-  <meta name="twitter:title" content="Download DiffusionGemma GGUF Weights — Q4/Q8 Quantized &amp; VRAM Chart">
-  <meta name="twitter:description" content="Pre-quantized GGUF weights, VRAM chart, conversion script.">
+  <meta name="twitter:title" content="DiffusionGemma GGUF: Load in Ollama &amp; llama.cpp — Fix Compatibility">
+  <meta name="twitter:description" content="Why Ollama and LM Studio can't load GGUF yet, how to fix it, download pre-quantized weights, and convert from PyTorch.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://diffusiongemma.dev/gguf/">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
@@ -60,20 +60,44 @@
 <main>
     <section class="hero">
       <div class="container">
-        <div class="hero-badge">GGUF Format · Quantization</div>
-        <h1>Download DiffusionGemma GGUF Weights</h1>
-        <p class="hero-subtitle">GGUF is the standard format for running LLMs locally with llama.cpp and Ollama. Download pre-converted files or convert from PyTorch yourself.</p>
+        <div class="hero-badge">GGUF Format · Quantization · Compatibility Fix</div>
+        <h1>DiffusionGemma GGUF: Load in Ollama &amp; llama.cpp</h1>
+        <p class="hero-subtitle">GGUF is the standard format for local LLMs — but Ollama and LM Studio <strong>can't load DiffusionGemma GGUF yet</strong> (blocked on llama.cpp PR #24427). Here's what works, what doesn't, and how to get it running today.</p>
         <div class="hero-actions">
+          <a href="#status" class="btn btn-outline">Compatibility Status</a>
           <a href="#download" class="btn btn-primary">Download GGUF</a>
           <a href="#convert" class="btn btn-outline">Convert Yourself</a>
         </div>
       </div>
     </section>
 
-    <section id="download" class="section">
+    <section id="status" class="section">
+      <div class="container">
+        <h2>Why Ollama &amp; LM Studio Can't Load GGUF Yet</h2>
+        <p>The <code>diffusion-gemma</code> architecture is brand new (released June 10, 2026). llama.cpp support lives in <strong>PR #24427</strong>, which hasn't been merged into mainline yet. Ollama and LM Studio both build on mainline llama.cpp — so neither can load DiffusionGemma GGUF until the PR lands.</p>
+
+        <div class="table-wrap" style="margin-top:20px;">
+          <table>
+            <thead>
+              <tr><th>Engine</th><th>GGUF Support</th><th>Workaround</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>llama.cpp</strong></td><td><span style="color:#10b981;">Works</span> (PR branch)</td><td>Build from <code>diffusion-support</code> branch</td></tr>
+              <tr><td><strong>Ollama</strong></td><td><span style="color:#d2991d;">Blocked</span></td><td>Custom Modelfile + PR branch llama.cpp. <a href="/ollama/">See step-by-step</a></td></tr>
+              <tr><td><strong>LM Studio</strong></td><td><span style="color:#d2991d;">Blocked</span></td><td>Not possible yet — wait for PR merge</td></tr>
+              <tr><td><strong>vLLM</strong></td><td><span style="color:#10b981;">Works</span> (native)</td><td>Doesn't use GGUF — uses HF format directly</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p style="margin-top:16px;"><strong>If you see "model type diffusion_gemma not supported" or "failed to load gguf model"</strong> — you're using mainline llama.cpp, not the PR branch. The error is telling you the architecture isn't recognized. Until PR #24427 merges, the only path is building from the <code>diffusion-support</code> branch. The <a href="/ollama/">Ollama setup guide</a> has the exact commands.</p>
+      </div>
+    </section>
+
+    <section id="download" class="section section-alt">
       <div class="container">
         <h2>Pre-Converted GGUF Downloads</h2>
-        <p>Community-converted GGUF files are available on HuggingFace. These are the most common quantization levels:</p>
+        <p>Community-converted GGUF files are available on HuggingFace. <strong>Note:</strong> These require llama.cpp from the PR branch, not mainline. These are the most common quantization levels:</p>
 
         <div class="table-wrap">
           <table>
@@ -127,22 +151,30 @@ python convert_hf_to_gguf.py \
       </div>
     </section>
 
-    <section id="engines" class="section">
+    <section id="faq" class="section">
       <div class="container">
-        <h2>Compatible Engines</h2>
-        <p>GGUF files work with these inference engines:</p>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Engine</th><th>Status</th><th>Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>llama.cpp</strong></td><td>Works (PR branch)</td><td>PR #24427, diffusion-support branch</td></tr>
-              <tr><td><strong>Ollama</strong></td><td>Coming soon</td><td>Depends on llama.cpp PR merge</td></tr>
-              <tr><td><strong>LM Studio</strong></td><td>Coming soon</td><td>Depends on llama.cpp upstream</td></tr>
-              <tr><td><strong>GPT4All</strong></td><td>Not yet</td><td>No timeline</td></tr>
-            </tbody>
-          </table>
+        <h2>GGUF FAQ</h2>
+        <div class="faq-list">
+        <details class="faq-item">
+          <summary>Why does Ollama say "model type diffusion_gemma not supported"?</summary>
+          <div class="faq-answer">Ollama builds on mainline llama.cpp, which doesn't have DiffusionGemma support yet. The <code>diffusion-gemma</code> architecture is only in PR #24427. Until it's merged into mainline, Ollama can't recognize DiffusionGemma GGUF files. <a href="/ollama/">Our Ollama guide</a> has a workaround using a custom Modelfile.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Why does LM Studio fail with "model type not supported"?</summary>
+          <div class="faq-answer">Same issue as Ollama — LM Studio uses mainline llama.cpp for both MLX and Metal backends. The <code>diffusion-gemma</code> architecture isn't in mainline. There's no workaround for LM Studio yet; you'll need to wait for PR #24427 to merge, then LM Studio to update their llama.cpp dependency.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Can I use the pre-converted GGUF files today?</summary>
+          <div class="faq-answer">Yes, but only with llama.cpp built from the <code>diffusion-support</code> branch (PR #24427). The unsloth GGUF on HuggingFace has 107k+ downloads — all using this branch. Once the PR merges, these GGUF files will work with mainline llama.cpp, Ollama, and LM Studio.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Which GGUF quantization should I choose?</summary>
+          <div class="faq-answer"><strong>Q4_K_M</strong> is the recommended starting point — it fits on most 24 GB GPUs with the best quality-to-size ratio. Q4_0 for 16 GB cards. Q5_K_M for better quality if you have 20+ GB VRAM. Q8_0 if VRAM isn't a constraint (28+ GB).</div>
+        </details>
+        <details class="faq-item">
+          <summary>Does vLLM use GGUF format?</summary>
+          <div class="faq-answer">No. vLLM loads models directly from HuggingFace format (PyTorch/safetensors), not GGUF. If you're using vLLM, you don't need GGUF at all. vLLM has supported DiffusionGemma since day 0 with Google's collaboration.</div>
+        </details>
         </div>
       </div>
     </section>
@@ -181,18 +213,32 @@ python convert_hf_to_gguf.py \
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Download DiffusionGemma GGUF Weights — Q4/Q8 Quantized & VRAM Chart",
-    "description": "Download pre-quantized DiffusionGemma GGUF weights — Q4_K_M through FP16. VRAM chart, PyTorch conversion script, llama.cpp &amp; Ollama compatible.",
+    "headline": "DiffusionGemma GGUF: Load in Ollama & llama.cpp — Fix Compatibility",
+    "description": "Why Ollama and LM Studio can't load DiffusionGemma GGUF yet, how to fix it, download pre-quantized weights, and convert from PyTorch.",
     "image": "https://diffusiongemma.dev/assets/og-image.svg",
     "url": "https://diffusiongemma.dev/gguf/",
     "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffusiongemma.dev"},
     "datePublished": "2026-06-12T00:00:00+00:00",
-    "dateModified": "2026-06-12T00:00:00+00:00",
+    "dateModified": "2026-06-16T00:00:00+00:00",
     "sameAs": [
       "https://huggingface.co/google/diffusiongemma-26B-A4B-it",
       "https://github.com/ggerganov/llama.cpp"
     ],
     "isPartOf": {"@type": "Article", "headline": "Run Google's Diffusion LLM Locally — DiffusionGemma", "url": "https://diffusiongemma.dev"}
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "Why does Ollama say 'model type diffusion_gemma not supported'?", "acceptedAnswer": {"@type": "Answer", "text": "Ollama builds on mainline llama.cpp, which doesn't have DiffusionGemma support yet. The diffusion-gemma architecture is only in PR #24427. Until it's merged into mainline, Ollama can't recognize DiffusionGemma GGUF files."}},
+      {"@type": "Question", "name": "Why does LM Studio fail with 'model type not supported'?", "acceptedAnswer": {"@type": "Answer", "text": "LM Studio uses mainline llama.cpp for both MLX and Metal backends. The diffusion-gemma architecture isn't in mainline. There's no workaround for LM Studio yet; wait for PR #24427 to merge, then LM Studio to update their llama.cpp dependency."}},
+      {"@type": "Question", "name": "Can I use the pre-converted GGUF files today?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, but only with llama.cpp built from the diffusion-support branch (PR #24427). The unsloth GGUF on HuggingFace has 107k+ downloads — all using this branch. Once the PR merges, these GGUF files will work with mainline llama.cpp, Ollama, and LM Studio."}},
+      {"@type": "Question", "name": "Which GGUF quantization should I choose?", "acceptedAnswer": {"@type": "Answer", "text": "Q4_K_M is the recommended starting point — it fits on most 24 GB GPUs with the best quality-to-size ratio. Q4_0 for 16 GB cards. Q5_K_M for better quality if you have 20+ GB VRAM. Q8_0 if VRAM isn't a constraint (28+ GB)."}},
+      {"@type": "Question", "name": "Does vLLM use GGUF format?", "acceptedAnswer": {"@type": "Answer", "text": "No. vLLM loads models directly from HuggingFace format (PyTorch/safetensors), not GGUF. If you're using vLLM, you don't need GGUF at all. vLLM has supported DiffusionGemma since day 0 with Google's collaboration."}}
+    ]
   }
   </script>
 
