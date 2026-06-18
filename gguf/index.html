@@ -74,7 +74,7 @@
     <section id="status" class="section">
       <div class="container">
         <h2>Why Ollama &amp; LM Studio Can't Load GGUF Yet</h2>
-        <p>The <code>diffusion-gemma</code> architecture is brand new (released June 10, 2026). llama.cpp support lives in <strong>PR #24427</strong>, which hasn't been merged into mainline yet. Ollama and LM Studio both build on mainline llama.cpp — so neither can load DiffusionGemma GGUF until the PR lands.</p>
+        <p>The <code>diffusion-gemma</code> architecture is brand new (released June 10, 2026). llama.cpp support lives in <strong>PR #24427</strong>, which hasn't been merged into mainline yet (now has merge conflicts as of June 18 — needs rebase). Ollama and LM Studio both build on mainline llama.cpp — so neither can load DiffusionGemma GGUF until the PR lands.</p>
 
         <div class="table-wrap" style="margin-top:20px;">
           <table>
@@ -90,7 +90,7 @@
           </table>
         </div>
 
-        <p style="margin-top:16px;"><strong>If you see "model type diffusion_gemma not supported" or "failed to load gguf model"</strong> — you're using mainline llama.cpp, not the PR branch. The error is telling you the architecture isn't recognized. Until PR #24427 merges, the only path is building from the <code>diffusion-support</code> branch. The <a href="/ollama/">Ollama setup guide</a> has the exact commands.</p>
+        <p style="margin-top:16px;"><strong>If you see "model type diffusion_gemma not supported" or "failed to load gguf model"</strong> — you're using mainline llama.cpp, not the PR branch. The error is telling you the architecture isn't recognized. Until PR #24427 merges (note: now has merge conflicts, needs rebase), the only path is building from the <code>diffusion-support</code> branch. The <a href="/ollama/">Ollama setup guide</a> has the exact commands.</p>
       </div>
     </section>
 

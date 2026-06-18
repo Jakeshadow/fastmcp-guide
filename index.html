@@ -159,7 +159,7 @@ for output in outputs:
 
         <!-- Method 2: llama.cpp -->
         <h3>Method 2: llama.cpp <span class="badge badge-yellow">Bleeding Edge</span></h3>
-        <p>llama.cpp support is via <strong>unmerged PR #24427</strong>. Clone and checkout the PR branch:</p>
+        <p>llama.cpp support is via <strong>PR #24427</strong> (open, now has merge conflicts — needs rebase). Clone and checkout the PR branch:</p>
         <pre><code class="language-bash">git clone https://github.com/ggml-ai/llama.cpp
 cd llama.cpp
 git fetch origin pull/24427/head:diffusiongemma
@@ -175,7 +175,7 @@ cmake --build build --config Release
   -p "Explain how diffusion language models work." \
   -n 512 \
   -ngl 99</code></pre>
-        <p class="note">This is bleeding edge — expect bugs. Check PR #24427 for latest status before using in production.</p>
+        <p class="note">This is bleeding edge — expect bugs. PR #24427 now has merge conflicts (as of June 18) and needs a rebase. Check the PR for latest status before using in production.</p>
 
         <!-- Method 3: Unsloth -->
         <h3>Method 3: Unsloth</h3>
@@ -213,7 +213,7 @@ print(tokenizer.decode(outputs[0], skip_special_tokens=True))</code></pre>
 
         <!-- Method 5: Ollama -->
         <h3>Method 5: Ollama <span class="badge badge-yellow">Community Workaround</span></h3>
-        <p>Ollama support is coming via llama.cpp PR #24427. Until the PR merges, you can use the bridge workaround:</p>
+        <p>Ollama support is coming via llama.cpp PR #24427 (open, now has merge conflicts). Until the PR merges, you can use the bridge workaround:</p>
         <ol>
           <li>Build llama.cpp with diffusion support (PR #24427 branch)</li>
           <li>Download or convert a GGUF model</li>
@@ -422,7 +422,7 @@ model = AutoModelForCausalLM.from_pretrained(
           <details class="faq-item">
             <summary>Is there Ollama support?</summary>
             <div class="faq-answer">
-              <p>No. llama.cpp support exists as PR #24427 (unmerged as of June 11, 2026). Ollama typically integrates llama.cpp — once PR #24427 merges, Ollama support will follow. Timeline: weeks to months, not days.</p>
+              <p>No. llama.cpp support exists as PR #24427 (open, now has merge conflicts as of June 18, 2026). Ollama typically integrates llama.cpp — once PR #24427 merges, Ollama support will follow. Timeline: weeks to months, may extend due to conflicts.</p>
             </div>
           </details>
           <details class="faq-item">
@@ -510,7 +510,7 @@ model = AutoModelForCausalLM.from_pretrained(
         "name": "Is there Ollama support for DiffusionGemma?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. llama.cpp support exists as PR #24427 (unmerged as of June 2026). Ollama typically integrates llama.cpp — once PR #24427 merges, Ollama support will follow. Timeline: weeks to months."
+          "text": "No. llama.cpp support exists as PR #24427 (open, now has merge conflicts as of June 2026). Ollama typically integrates llama.cpp — once PR #24427 merges, Ollama support will follow. Timeline: weeks to months."
         }
       },
       {
