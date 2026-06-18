@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Run DiffusionGemma on LM Studio — Local Desktop GUI Setup</title>
-  <meta name="description" content="Run DiffusionGemma in LM Studio — no CLI, no Docker. Desktop GUI setup, model download, diffusion config, and API server. Step-by-step.">
+  <title>LM Studio Can't Run DiffusionGemma Yet — 3 Alternatives That Work Today</title>
+  <meta name="description" content="LM Studio doesn't support diffusion models yet (blocked on llama.cpp PR #24427). 3 working alternatives to run DiffusionGemma locally today.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -12,8 +12,8 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=2">
-  <meta property="og:title" content="Run DiffusionGemma on LM Studio — Local Desktop GUI Setup">
-  <meta property="og:description" content="Run DiffusionGemma in LM Studio — no CLI, no Docker. Desktop GUI setup with model download and config.">
+  <meta property="og:title" content="LM Studio Can't Run DiffusionGemma Yet — 3 Alternatives That Work Today">
+  <meta property="og:description" content="LM Studio doesn't support diffusion models yet. 3 working alternatives to run DiffusionGemma locally today.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://diffrun.dev/lm-studio/">
   <meta property="og:site_name" content="DiffusionGemma Guide">
@@ -21,8 +21,8 @@
   <meta property="og:image" content="https://diffrun.dev/assets/og-image.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://diffrun.dev/assets/og-image.svg">
-  <meta name="twitter:title" content="Run DiffusionGemma on LM Studio — Local Desktop GUI Setup">
-  <meta name="twitter:description" content="Desktop GUI setup for DiffusionGemma — no CLI needed. Model download, config, API server.">
+  <meta name="twitter:title" content="LM Studio Can't Run DiffusionGemma Yet — 3 Alternatives That Work Today">
+  <meta name="twitter:description" content="3 working alternatives to run DiffusionGemma locally. We track PR #24427 daily.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://diffrun.dev/lm-studio/">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
@@ -60,98 +60,82 @@
 <main>
     <section class="hero">
       <div class="container">
-        <div class="hero-badge">LM Studio · Desktop GUI, No CLI</div>
-        <h1>Run DiffusionGemma on LM Studio</h1>
-        <p class="hero-subtitle">LM Studio is the easiest way to run local LLMs — download, click, chat. Here's how to get DiffusionGemma working with full diffusion speed.</p>
+        <div class="hero-badge">LM Studio · Status &amp; Alternatives</div>
+        <h1>3 Ways to Run It Today</h1>
+        <p class="hero-subtitle">LM Studio bundles mainline llama.cpp, which hasn't merged diffusion model support yet. <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener">PR #24427</a> is the blocker.</p>
         <div class="hero-actions">
-          <a href="#setup" class="btn btn-primary">Setup Guide</a>
-          <a href="#config" class="btn btn-outline">Diffusion Config</a>
+          <a href="#ollama-alt" class="btn btn-outline">Ollama Bridge (~30min)</a>
+          <a href="#llamacpp-alt" class="btn btn-outline">llama.cpp Build (~20min)</a>
+          <a href="#vllm-alt" class="btn btn-outline">vLLM (~10min)</a>
+        </div>
+        <p style="margin-top:16px;font-size:0.95rem;color:var(--text2,#9898b0);">We track <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener" style="color:var(--accent,#10b981);">PR #24427</a> daily. This page updates the moment anything changes. <a href="#tracking" style="color:var(--accent,#10b981);">See live status →</a></p>
+      </div>
+    </section>
+
+    <section id="ollama-alt" class="section">
+      <div class="container">
+        <h2>Option 1: Ollama Bridge Workaround (Works Today)</h2>
+        <p>Use a custom Modelfile that wraps the llama.cpp diffusion branch. You get the full DiffusionGemma experience inside Ollama — <code>ollama run diffusiongemma</code> — while waiting for native support.</p>
+        <p style="margin-top:12px;"><strong>Best for:</strong> developers who want Ollama's familiar CLI and don't mind a one-time bridge setup. <strong>~30 min</strong> (mostly downloading + building).</p>
+        <div style="margin-top:16px;">
+          <a href="/ollama/" class="btn btn-outline">Full Ollama Setup Guide →</a>
         </div>
       </div>
     </section>
 
-    <section id="status" class="section">
+    <section id="llamacpp-alt" class="section">
       <div class="container">
-        <h2>Current LM Studio Support Status</h2>
-        <p><strong>LM Studio cannot load DiffusionGemma yet.</strong> LM Studio bundles mainline llama.cpp, which doesn't include the <code>diffusion-gemma</code> architecture. The blocker is <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener">llama.cpp PR #24427</a> (open, now has merge conflicts — timeline uncertain). Once merged into mainline, LM Studio will update their bundled llama.cpp — typically within 1-2 releases.</p>
-        <p class="note">Until then: use <a href="/ollama/">Ollama with custom Modelfile</a> or <a href="/llama-cpp/">standalone llama.cpp</a> from the PR branch. No workaround exists for LM Studio specifically.</p>
+        <h2>Option 2: llama.cpp Direct Build</h2>
+        <p>Build llama.cpp from the PR #24427 branch. This is the most direct path — the diffusion architecture lives here, and you get full control over build flags (CUDA, Metal, CPU).</p>
+        <p style="margin-top:12px;"><strong>Best for:</strong> developers comfortable with cmake/make who want maximum performance and don't need a GUI. <strong>~20 min</strong> (clone + build + download GGUF).</p>
+        <div style="margin-top:16px;">
+          <a href="/llama-cpp/" class="btn btn-outline">llama.cpp Build Guide →</a>
+        </div>
       </div>
     </section>
 
-    <section id="setup" class="section">
+    <section id="vllm-alt" class="section">
       <div class="container">
-        <h2>Install &amp; Set Up LM Studio</h2>
-
-        <h3>Step 1: Download LM Studio</h3>
-        <pre><code class="language-bash"># Download from https://lmstudio.ai
-# Available for macOS, Windows, Linux (AppImage)
-# Requires GPU with 16GB+ VRAM for DiffusionGemma 26B Q4</code></pre>
-
-        <h3>Step 2: Load DiffusionGemma</h3>
-        <p>LM Studio 0.3.x supports GGUF models. After downloading a DiffusionGemma GGUF from our <a href="/gguf/">GGUF guide</a>, drag the <code>.gguf</code> file into LM Studio's model folder:</p>
-        <pre><code class="language-bash"># Default model paths:
-# Windows: %USERPROFILE%\.cache\lm-studio\models\
-# macOS:   ~/.cache/lm-studio/models/
-# Linux:   ~/.cache/lm-studio/models/
-
-# Copy your GGUF file there
-cp diffusiongemma-26b-q4_k_m.gguf ~/.cache/lm-studio/models/</code></pre>
-
-        <h3>Step 3: Select Model &amp; Load</h3>
-        <p>Open LM Studio, click the <strong>Model Browser</strong> (top-left folder icon), find "diffusiongemma" in your local models, and click <strong>Load Model</strong>. LM Studio auto-detects GPU and loads with llama.cpp backend.</p>
+        <h2>Option 3: vLLM (Production-Grade, Day-0 Support)</h2>
+        <p>vLLM has supported DiffusionGemma since launch — Google collaborated directly on the integration. If you're serving to users or need an OpenAI-compatible API, this is the production path.</p>
+        <p style="margin-top:12px;"><strong>Best for:</strong> production deployments, API serving, multi-user setups. <strong>~10 min</strong> (pip install + download model, no build needed).</p>
+        <div style="margin-top:16px;">
+          <a href="/vllm/" class="btn btn-outline">vLLM Setup Guide →</a>
+        </div>
       </div>
     </section>
 
-    <section id="config" class="section section-alt">
+    <section id="why-not" class="section section-alt">
       <div class="container">
-        <h2>Diffusion-Specific Configuration</h2>
-
-        <h3>GPU Offload</h3>
-        <p>In the right sidebar, under <strong>GPU Offload</strong>, set layers to max (drag slider all the way right). For a 26B Q4 model, this loads the full model into GPU memory — ~16GB VRAM.</p>
-
-        <h3>Context Length</h3>
-        <p>Set <strong>Context Length</strong> to 65536 (DiffusionGemma's native window). Lower to 32768 if you're tight on VRAM.</p>
-
-        <h3>Diffusion Parameters</h3>
-        <p>In <strong>Advanced Settings</strong>, add these overrides for diffusion generation:</p>
-        <pre><code class="language-json">{
-  "diffusion_steps": 8,
-  "block_size": 256,
-  "temperature": 0.7,
-  "top_p": 0.9
-}</code></pre>
-        <p class="note">These parameters control DiffusionGemma's block-level parallel generation. 8 steps is the default; lower is faster but lower quality.</p>
-
-        <h3>Start the Server</h3>
-        <p>Toggle <strong>Local Server</strong> in the top bar. LM Studio exposes an OpenAI-compatible endpoint at <code>http://localhost:1234/v1</code>.</p>
-        <pre><code class="language-bash">curl http://localhost:1234/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "diffusiongemma-26b",
-    "messages": [{"role": "user", "content": "Hello!"}],
-    "max_tokens": 256
-  }'</code></pre>
+        <h2>Why Can't LM Studio Load DiffusionGemma?</h2>
+        <p>LM Studio bundles its own build of llama.cpp — the engine that powers model loading and inference. The <code>diffusion-gemma</code> architecture is brand new (released June 10, 2026) and only exists in <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener">PR #24427</a>, which hasn't been merged into mainline llama.cpp yet (now has merge conflicts — needs a rebase).</p>
+        <p style="margin-top:12px;">LM Studio updates their bundled llama.cpp from mainline releases. Until the PR merges and LM Studio ships an update, DiffusionGemma GGUF files will show "unsupported model architecture" in LM Studio — no workaround exists specifically for LM Studio because you can't swap its internal engine.</p>
+        <p style="margin-top:12px;">The three alternatives above all route around this by using the PR branch directly (llama.cpp, Ollama bridge) or by using a completely different engine (vLLM).</p>
       </div>
     </section>
 
-    <section id="troubleshoot" class="section">
+    <section id="tracking" class="section">
       <div class="container">
-        <h2>Troubleshooting</h2>
-
-        <h3>Model doesn't appear in LM Studio browser</h3>
-        <p>LM Studio only detects <code>.gguf</code> files. If your file has a different extension, rename it. Also verify the path — LM Studio scans its model folder on startup.</p>
-
-        <h3>"Unsupported model architecture" on load</h3>
-        <p>LM Studio bundles its own llama.cpp build. DiffusionGemma support requires llama.cpp with diffusion patches (PR #24427). As of June 2026, not all LM Studio builds include this. You may need to use the <a href="/llama-cpp/">standalone llama.cpp setup</a> instead.</p>
-
-        <h3>OOM (Out of Memory)</h3>
-        <p>LM Studio shows VRAM usage in the bottom bar. If it hits 100%, lower GPU Offload layers or switch to a smaller quant (Q4_0 instead of Q4_K_M). Close other GPU apps (browser, video player) before loading.</p>
-
-        <h3>Server starts but returns errors</h3>
-        <pre><code class="language-bash"># Test basic connectivity
-curl http://localhost:1234/v1/models
-
-# Check LM Studio logs: View → Developer Tools → Console</code></pre>
+        <h2>Tracking PR #24427 — Live Status</h2>
+        <p>We check this PR daily. Here's the current state:</p>
+        <div class="table-wrap" style="margin-top:16px;">
+          <table>
+            <thead>
+              <tr><th>What</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>PR #24427</strong></td><td><span style="color:#d2991d;">Open — merge conflicts (needs rebase)</span></td></tr>
+              <tr><td><strong>Author</strong></td><td>NVIDIA engineer (lnigam@nvidia.com)</td></tr>
+              <tr><td><strong>Reviews</strong></td><td>0 reviews after 35+ commits</td></tr>
+              <tr><td><strong>Last checked</strong></td><td>June 18, 2026</td></tr>
+              <tr><td><strong>Merge ETA</strong></td><td>4–8 weeks (rough estimate — not guaranteed)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:16px;"><strong>We're tracking this PR daily. This page will be updated the moment anything changes — bookmark it or check back.</strong> When native support lands, LM Studio typically adopts new llama.cpp releases within 1–2 versions.</p>
+        <div style="margin-top:20px;">
+          <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener" class="btn btn-outline">View PR #24427 on GitHub →</a>
+        </div>
       </div>
     </section>
 
@@ -159,17 +143,17 @@ curl http://localhost:1234/v1/models
       <div class="container">
         <h2>Related Guides</h2>
         <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:24px;">
-          <a href="/llama-cpp/" class="btn btn-outline">llama.cpp Setup Guide</a>
-          <a href="/gguf/" class="btn btn-outline">GGUF Download &amp; Conversion</a>
-          <a href="/ollama/" class="btn btn-outline">Ollama Workaround</a>
+          <a href="/ollama/" class="btn btn-outline">Ollama Bridge Workaround</a>
+          <a href="/llama-cpp/" class="btn btn-outline">llama.cpp Direct Build</a>
+          <a href="/vllm/" class="btn btn-outline">vLLM Setup Guide</a>
         </div>
       </div>
     </section>
 
     <section class="section">
       <div class="container">
-        <a href="/production-guide/?ref=lm-studio" style="text-decoration:none;color:var(--accent,#10b981);"><h2 style="color:inherit;">Running on Your Desktop. Now Run in Production. →</h2></a>
-        <p style="color:var(--text2,#9898b0);font-size:1.05rem;">LM Studio is great for local dev. The <strong style="color:var(--text,#e8eaed);">Production Manual</strong> covers Docker Compose, GPU tuning, multi-user queue management, auto-restart policies, and 20+ error fixes. 8 chapters, each saves you 5+ hours. <strong style="color:var(--text,#e8eaed);">$39, lifetime updates.</strong></p>
+        <a href="/production-guide/?ref=lm-studio" style="text-decoration:none;color:var(--accent,#10b981);"><h2 style="color:inherit;">Save 40+ Hours of Debugging →</h2></a>
+        <p style="color:var(--text2,#9898b0);font-size:1.05rem;">Got one of the alternatives running? The <strong style="color:var(--text,#e8eaed);">Production Manual</strong> covers Docker Compose, GPU tuning, 20+ error fixes, multi-user serving — 8 chapters that each save you 5+ hours. Copy-paste ready, not theory.</p>
       </div>
     </section>
   </main>
@@ -177,7 +161,7 @@ curl http://localhost:1234/v1/models
   <footer class="footer">
     <div class="container">
       <p>This is an unofficial community resource. Not affiliated with, endorsed by, or sponsored by LM Studio or Google.</p>
-      <p>LM Studio setup tested with LM Studio 0.3.x. DiffusionGemma support depends on bundled llama.cpp build.</p>
+      <p>LM Studio support depends on llama.cpp PR #24427 — timeline subject to change. We check daily.</p>
       <p style="margin-top:12px;"><a href="/privacy/">Privacy Policy</a> &middot; <a href="/terms/">Terms of Service</a> &middot; <a href="/refunds/">Money-Back Guarantee</a></p>
     </div>
   </footer>
@@ -186,16 +170,16 @@ curl http://localhost:1234/v1/models
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Run DiffusionGemma on LM Studio — Local Desktop GUI Setup",
-    "description": "Run DiffusionGemma in LM Studio — no CLI, no Docker. Desktop GUI setup with model download, diffusion config, and API server.",
+    "headline": "LM Studio Can't Run DiffusionGemma Yet — 3 Alternatives That Work Today",
+    "description": "LM Studio doesn't support diffusion models yet (blocked on llama.cpp PR #24427). 3 working alternatives to run DiffusionGemma locally today.",
     "image": "https://diffrun.dev/assets/og-image.svg",
     "url": "https://diffrun.dev/lm-studio/",
     "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffrun.dev"},
     "datePublished": "2026-06-14T00:00:00+00:00",
-    "dateModified": "2026-06-16T00:00:00+00:00",
+    "dateModified": "2026-06-18T00:00:00+00:00",
     "sameAs": [
       "https://lmstudio.ai",
-      "https://github.com/ggerganov/llama.cpp"
+      "https://github.com/ggerganov/llama.cpp/pull/24427"
     ],
     "isPartOf": {"@type": "Article", "headline": "Run Google's Diffusion LLM Locally — DiffusionGemma", "url": "https://diffrun.dev"}
   }
@@ -207,14 +191,14 @@ curl http://localhost:1234/v1/models
     "@type": "BreadcrumbList",
     "itemListElement": [
       {"@type": "ListItem", "position": 1, "name": "DiffusionGemma Guide", "item": "https://diffrun.dev"},
-      {"@type": "ListItem", "position": 2, "name": "LM Studio Setup Guide", "item": "https://diffrun.dev/lm-studio/"}
+      {"@type": "ListItem", "position": 2, "name": "LM Studio Status & Alternatives", "item": "https://diffrun.dev/lm-studio/"}
     ]
   }
   </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+
   <script src="/js/main.js"></script>
 </body>
 </html>

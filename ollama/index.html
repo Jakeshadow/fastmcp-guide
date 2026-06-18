@@ -60,26 +60,18 @@
 <main>
     <section class="hero">
       <div class="container">
-        <div class="hero-badge">Ollama Integration · Work in Progress</div>
+        <div class="hero-badge">Ollama · Works Today via Bridge</div>
         <h1>Run DiffusionGemma with Ollama</h1>
-        <p class="hero-subtitle">Ollama support is coming via llama.cpp PR #24427. Until then, here's the bridge workaround to run DiffusionGemma through Ollama today.</p>
+        <p class="hero-subtitle">Ollama support is coming via llama.cpp PR #24427. Until then, here's the bridge workaround — <strong>works right now</strong>, full DiffusionGemma inside Ollama.</p>
         <div class="hero-actions">
-          <a href="#setup" class="btn btn-primary">Get Started</a>
-          <a href="#status" class="btn btn-outline">Current Status</a>
+          <a href="#setup" class="btn btn-outline">Get Started — 5 Steps (~30min)</a>
           <a href="/production-guide/" class="btn btn-outline" style="border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Save 40+ Hours</a>
         </div>
+        <p style="margin-top:16px;font-size:0.95rem;color:var(--text2,#9898b0);">We track <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener" style="color:var(--accent,#10b981);">PR #24427</a> daily — this page updates when native support lands. <a href="#tracking" style="color:var(--accent,#10b981);">See live status →</a></p>
       </div>
     </section>
 
-    <section id="status" class="section">
-      <div class="container">
-        <h2>Current Ollama Support Status</h2>
-        <p><strong>Direct Ollama support is not available yet.</strong> DiffusionGemma requires a custom diffusion decoding pipeline that isn't merged into llama.cpp mainline. The key blocker: <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener">PR #24427</a> adds diffusion model support to llama.cpp. Once merged, Ollama (which builds on llama.cpp) can integrate it.</p>
-        <p class="note">Timeline: weeks to months. The PR is open but now has merge conflicts (as of June 18, 2026) — the branch needs a rebase before it can be merged. Follow the PR for updates.</p>
-      </div>
-    </section>
-
-    <section id="setup" class="section section-alt">
+    <section id="setup" class="section">
       <div class="container">
         <h2>Workaround: Run DiffusionGemma Through Ollama Today</h2>
         <p>While waiting for official support, you can bridge DiffusionGemma into Ollama using a custom Modelfile that wraps the llama.cpp diffusion branch.</p>
@@ -150,6 +142,31 @@ ollama create diffusiongemma -f ./Modelfile</code></pre>
       </div>
     </section>
 
+    <section id="tracking" class="section section-alt">
+      <div class="container">
+        <h2>Tracking PR #24427 — When Native Support Lands, Skip the Bridge</h2>
+        <p>The bridge workaround above works today. Once PR #24427 merges into mainline llama.cpp, Ollama will bundle it and you'll be able to run a single <code>ollama pull diffusiongemma</code> — no bridge needed.</p>
+        <div class="table-wrap" style="margin-top:16px;">
+          <table>
+            <thead>
+              <tr><th>What</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>PR #24427</strong></td><td><span style="color:#d2991d;">Open — merge conflicts (needs rebase)</span></td></tr>
+              <tr><td><strong>Author</strong></td><td>NVIDIA engineer (lnigam@nvidia.com)</td></tr>
+              <tr><td><strong>Reviews</strong></td><td>0 reviews after 35+ commits</td></tr>
+              <tr><td><strong>Last checked</strong></td><td>June 18, 2026</td></tr>
+              <tr><td><strong>Merge ETA</strong></td><td>4–8 weeks (rough estimate)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:16px;"><strong>We check this PR daily. This page will be updated the moment anything changes.</strong> When native support lands, you'll see updated instructions here — no more bridge needed.</p>
+        <div style="margin-top:20px;">
+          <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener" class="btn btn-outline">View PR #24427 on GitHub →</a>
+        </div>
+      </div>
+    </section>
+
     <section id="related" class="section section-alt">
       <div class="container">
         <h2>Related Guides</h2>
@@ -188,7 +205,7 @@ ollama create diffusiongemma -f ./Modelfile</code></pre>
     "url": "https://diffrun.dev/ollama/",
     "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffrun.dev"},
     "datePublished": "2026-06-12T00:00:00+00:00",
-    "dateModified": "2026-06-12T00:00:00+00:00",
+    "dateModified": "2026-06-18T00:00:00+00:00",
     "sameAs": [
       "https://ollama.com",
       "https://github.com/ggerganov/llama.cpp/pull/24427"

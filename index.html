@@ -135,8 +135,24 @@
         </div>
         <p class="note">Cards with limited compute (RTX 3060, RTX 4060, laptop GPUs) and Apple Silicon Macs will see significantly reduced speedups.</p>
 
+        <h3>Pick Your Path</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>You want…</th><th>Best path</th><th>Time</th><th>PR #24427 needed?</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Fastest, no build</td><td><a href="#method-vllm">vLLM</a> <span class="badge badge-green">Recommended</span></td><td>~10 min</td><td>No</td></tr>
+              <tr><td>Ollama CLI</td><td><a href="/ollama/">Ollama bridge</a> <span class="badge badge-yellow">Workaround</span></td><td>~30 min</td><td>Yes (PR branch)</td></tr>
+              <tr><td>CPU / hybrid CPU+GPU</td><td><a href="/llama-cpp/">llama.cpp PR branch</a> <span class="badge badge-yellow">Bleeding Edge</span></td><td>~20 min</td><td>Yes (PR branch)</td></tr>
+              <tr><td>Desktop GUI</td><td><a href="/lm-studio/">LM Studio</a> — not yet, <a href="/lm-studio/">see alternatives →</a></td><td>—</td><td>Blocked</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">All paths except vLLM depend on <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener">llama.cpp PR #24427</a> (open, merge conflicts — <a href="/llama-cpp/#tracking">tracking daily</a>). Once merged, Ollama and LM Studio gain native support.</p>
+
         <!-- Method 1: vLLM -->
-        <h3>Method 1: vLLM <span class="badge badge-green">Recommended</span></h3>
+        <h3 id="method-vllm">Method 1: vLLM <span class="badge badge-green">Recommended</span></h3>
         <p>vLLM has day-zero support with optimized block denoising kernels. This is the fastest path — and the only one with independently verified speed numbers (1,288 tokens/s on H200).</p>
         <pre><code class="language-bash">pip install vllm>=0.12.0</code></pre>
         <pre><code class="language-python">from vllm import LLM, SamplingParams

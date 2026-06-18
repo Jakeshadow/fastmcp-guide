@@ -60,13 +60,12 @@
 <main>
     <section class="hero">
       <div class="container">
-        <div class="hero-badge">GGUF Format · Quantization · Compatibility Fix</div>
+        <div class="hero-badge">GGUF Format · Works via PR Branch</div>
         <h1>DiffusionGemma GGUF: Load in Ollama &amp; llama.cpp</h1>
         <p class="hero-subtitle">GGUF is the standard format for local LLMs — but Ollama and LM Studio <strong>can't load DiffusionGemma GGUF yet</strong> (blocked on llama.cpp PR #24427). Here's what works, what doesn't, and how to get it running today.</p>
         <div class="hero-actions">
-          <a href="#status" class="btn btn-outline">Compatibility Status</a>
-          <a href="#download" class="btn btn-primary">Download GGUF</a>
-          <a href="#convert" class="btn btn-outline">Convert Yourself</a>
+          <a href="#download" class="btn btn-outline">Download GGUF (~10min)</a>
+          <a href="#convert" class="btn btn-outline">Convert Yourself (~20min)</a>
         </div>
       </div>
     </section>
@@ -90,7 +89,7 @@
           </table>
         </div>
 
-        <p style="margin-top:16px;"><strong>If you see "model type diffusion_gemma not supported" or "failed to load gguf model"</strong> — you're using mainline llama.cpp, not the PR branch. The error is telling you the architecture isn't recognized. Until PR #24427 merges (note: now has merge conflicts, needs rebase), the only path is building from the <code>diffusion-support</code> branch. The <a href="/ollama/">Ollama setup guide</a> has the exact commands.</p>
+        <p style="margin-top:16px;"><strong>"model type diffusion_gemma not supported" means you're on mainline llama.cpp.</strong> Build from the <code>diffusion-support</code> branch instead. <a href="/llama-cpp/">llama.cpp guide has the commands →</a></p>
       </div>
     </section>
 
@@ -179,6 +178,17 @@ python convert_hf_to_gguf.py \
       </div>
     </section>
 
+    <section id="tracking" class="section">
+      <div class="container">
+        <h2>Tracking PR #24427 — Once Merged, GGUF Works Everywhere</h2>
+        <p>When PR #24427 merges into mainline llama.cpp, all engines that bundle it — Ollama, LM Studio, and mainline llama.cpp — will load DiffusionGemma GGUF without the branch workaround. The GGUF files you download today will still work.</p>
+        <p style="margin-top:12px;"><strong>PR status (June 18):</strong> Open, 35+ commits, 0 reviews, merge conflicts (needs rebase). We check daily — this page updates the moment it merges.</p>
+        <div style="margin-top:12px;">
+          <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener" class="btn btn-outline">View PR #24427 →</a>
+        </div>
+      </div>
+    </section>
+
     <section id="related" class="section section-alt">
       <div class="container">
         <h2>Related Guides</h2>
@@ -219,7 +229,7 @@ python convert_hf_to_gguf.py \
     "url": "https://diffrun.dev/gguf/",
     "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffrun.dev"},
     "datePublished": "2026-06-12T00:00:00+00:00",
-    "dateModified": "2026-06-16T00:00:00+00:00",
+    "dateModified": "2026-06-18T00:00:00+00:00",
     "sameAs": [
       "https://huggingface.co/google/diffusiongemma-26B-A4B-it",
       "https://github.com/ggerganov/llama.cpp"

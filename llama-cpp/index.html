@@ -60,11 +60,11 @@
 <main>
     <section class="hero">
       <div class="container">
-        <div class="hero-badge">llama.cpp · PR #24427</div>
+        <div class="hero-badge">llama.cpp · Works via PR Branch</div>
         <h1>Build DiffusionGemma for llama.cpp</h1>
         <p class="hero-subtitle">llama.cpp is the most popular local LLM runtime. DiffusionGemma support is in progress — here's how to build it from the PR branch and run inference today.</p>
         <div class="hero-actions">
-          <a href="#build" class="btn btn-primary">Build Guide</a>
+          <a href="#build" class="btn btn-outline">Build Guide (~20min)</a>
           <a href="#inference" class="btn btn-outline">Run Inference</a>
         </div>
       </div>
@@ -167,6 +167,27 @@ cmake .. -DGGML_CUDA=ON -DCUDAToolkit_ROOT=$CUDA_PATH</code></pre>
       </div>
     </section>
 
+    <section id="tracking" class="section section-alt">
+      <div class="container">
+        <h2>Tracking PR #24427 — What Happens When It Merges</h2>
+        <p>Once this PR merges into mainline llama.cpp, you'll be able to <code>git checkout master && make</code> instead of checking out the PR branch. Ollama and LM Studio will also gain support automatically via their next releases.</p>
+        <div class="table-wrap" style="margin-top:16px;">
+          <table>
+            <thead>
+              <tr><th>What</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>PR #24427</strong></td><td><span style="color:#d2991d;">Open — merge conflicts (needs rebase)</span></td></tr>
+              <tr><td><strong>Author</strong></td><td>NVIDIA engineer (lnigam@nvidia.com)</td></tr>
+              <tr><td><strong>Reviews</strong></td><td>0 reviews after 35+ commits</td></tr>
+              <tr><td><strong>Last checked</strong></td><td>June 18, 2026</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:16px;"><strong>We check this PR daily. This page updates the moment it merges.</strong></p>
+      </div>
+    </section>
+
     <section id="related" class="section section-alt">
       <div class="container">
         <h2>Related Guides</h2>
@@ -207,7 +228,7 @@ cmake .. -DGGML_CUDA=ON -DCUDAToolkit_ROOT=$CUDA_PATH</code></pre>
     "url": "https://diffrun.dev/llama-cpp/",
     "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffrun.dev"},
     "datePublished": "2026-06-12T00:00:00+00:00",
-    "dateModified": "2026-06-12T00:00:00+00:00",
+    "dateModified": "2026-06-18T00:00:00+00:00",
     "sameAs": [
       "https://github.com/ggerganov/llama.cpp",
       "https://github.com/ggerganov/llama.cpp/pull/24427"
