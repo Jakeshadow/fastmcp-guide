@@ -41,8 +41,6 @@
 
     .guide-content { max-width: 780px; margin: 0 auto; padding: 0 24px 48px; }
 
-    .pain-box { background: rgba(234,67,53,.08); border-left: 3px solid var(--google-red, #EA4335); padding: 18px 22px; border-radius: 0 10px 10px 0; margin: 32px 0; }
-    .pain-box p { color: var(--text2, #9898b0); margin: 0; font-size: .95rem; }
 
     .toc { margin: 28px 0; }
     .toc h2 { margin-bottom: 16px; }
@@ -58,9 +56,9 @@
     .sample-chapter code { color: var(--accent, #10b981); }
     .sample-chapter ul { padding-left: 20px; }
 
-    .guarantee { text-align: center; margin: 36px 0; padding: 24px; background: rgba(16,185,129,.06); border-radius: 12px; }
-    .guarantee p { margin: 0; color: var(--text2, #9898b0); }
-    .guarantee strong { color: var(--accent, #10b981); }
+    .guarantee { text-align: center; margin: 36px 0; padding: 28px; background: rgba(16,185,129,.06); border: 1px solid rgba(16,185,129,.25); border-radius: 12px; }
+    .guarantee p { margin: 0; color: var(--accent, #10b981); font-family: 'Google Sans', 'Roboto', sans-serif; font-weight: 500; }
+    .guarantee strong { color: var(--accent, #10b981); font-weight: 700; }
 
     .social-proof { margin: 32px 0; }
     .social-proof h2 { margin-bottom: 16px; }
@@ -114,52 +112,26 @@
 <main>
     <!-- Hero -->
     <section class="guide-hero">
-      <div class="badge">The Key Manual for DiffusionGemma</div>
+      <div class="badge">From Setup to Production · Works Pre-PR</div>
       <h1>8 Chapters. 40+ Hours Saved. Copy-Paste Ready.</h1>
-      <p class="sub">Copy-paste ready guides, not theory. Each chapter saves you at least 5 hours of debugging. Docker Compose, GPU tuning, 20 verified error fixes, real benchmarks on 5 GPUs, multi-user serving, security — all 8 chapters combined save you 40+ hours.</p>
+      <p class="sub">You got DiffusionGemma running — vLLM, Ollama bridge, or llama.cpp. This guide covers what happens next: Docker Compose, GPU tuning, 20 verified error fixes, real benchmarks on 5 GPUs, multi-user serving, security. Everything the free tutorials don't cover.</p>
       <div class="price-block">
         <div class="price">$39</div>
         <div class="price-note">One-time purchase. Lifetime updates. 30-day money-back guarantee.</div>
       </div>
-      <button class="btn-buy" onclick="Paddle.Checkout.open({settings:{successUrl:'https://diffrun.dev/thanks/'},items:[{priceId:'pri_01ktztp1vv0w0b1h7e560eght0',quantity:1}]})">Get the Guide — $39</button>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:8px;">
+        <a href="#sample" class="btn btn-outline" style="border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Preview Chapter 1 (Free)</a>
+        <button class="btn-buy" onclick="Paddle.Checkout.open({settings:{successUrl:'https://diffrun.dev/thanks/'},items:[{priceId:'pri_01ktztp1vv0w0b1h7e560eght0',quantity:1}]})">Get the Guide — $39</button>
+      </div>
+      <p style="font-size:.85rem;color:var(--text2,#9898b0);margin-top:14px;line-height:1.5;">This guide works today — pre-PR #24427. When the PR merges (Ollama/LM Studio native support), <strong style="color:var(--text,#e8eaed);">you get the updated version free</strong>. We track the PR daily. Questions or issues? <a href="mailto:support@diffrun.dev" style="color:var(--accent,#10b981);">support@diffrun.dev</a></p>
     </section>
 
     <div class="guide-content">
 
-      <!-- Who This Is For (And Not For) -->
-      <section class="who-for" style="margin-bottom:32px;">
-        <h2 style="font-size:1.2rem;margin-bottom:10px;">Who This Guide Is For (And Who It's Not)</h2>
-        <p style="color:var(--text2,#9898b0);margin-bottom:18px;line-height:1.6;font-size:.95rem;">DiffusionGemma is <strong style="color:var(--accent,#10b981);">4x faster</strong> than standard Gemma 4 — but the community has confirmed it makes <strong style="color:var(--google-red,#EA4335);">6x more factual errors</strong> on fact-checking benchmarks (Reddit comparison: standard Gemma 45/50 correct, DiffusionGemma 33/50). This guide assumes you understand the tradeoff and want to deploy it for the right use cases — not to replace your factuality-critical stack.</p>
-        <div class="who-for-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);border-radius:10px;padding:20px 22px;">
-            <h3 style="font-size:.95rem;color:var(--accent,#10b981);margin-bottom:10px;">Good For</h3>
-            <ul style="padding-left:18px;color:var(--gray-700,#5f6368);line-height:1.8;font-size:.9rem;margin:0;">
-              <li>Data augmentation & synthetic generation</li>
-              <li>Draft writing & code scaffolding</li>
-              <li>Speed-critical pipelines where you verify output</li>
-              <li>Creative / brainstorming tasks</li>
-            </ul>
-          </div>
-          <div style="background:rgba(234,67,53,.06);border:1px solid rgba(234,67,53,.18);border-radius:10px;padding:20px 22px;">
-            <h3 style="font-size:.95rem;color:var(--google-red,#EA4335);margin-bottom:10px;">Not For</h3>
-            <ul style="padding-left:18px;color:var(--gray-700,#5f6368);line-height:1.8;font-size:.9rem;margin:0;">
-              <li>Factual QA / knowledge-base answers</li>
-              <li>Replacing standard Gemma 4 for accuracy</li>
-              <li>Tasks where hallucinations are unacceptable</li>
-              <li>Low-compute environments (it's compute-bound, CUDA-favored)</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- Pain statement -->
-      <div class="pain-box">
-        <p><strong>You followed the free tutorials. The model runs. Now what?</strong> You need it to survive reboots, serve multiple users, monitor GPU memory, handle OOMs gracefully, and not fail silently at 3am. The official docs don't cover this. GitHub issues are scattered. See for yourself — here's Chapter 1 in full.</p>
-      </div>
 
       <!-- Free Sample Chapter -->
-      <section class="sample-chapter">
-        <div class="sample-badge">FREE PREVIEW — Chapter 1</div>
+      <section id="sample" class="sample-chapter">
+        <div class="sample-badge">FREE PREVIEW — Chapter 1 (Saves ~5h)</div>
         <h2>Production Deployment Architecture</h2>
         <p>Here's the production-grade Docker Compose setup — the single most requested pattern from the free tutorials. This is what Chapter 1 goes deep on.</p>
 
@@ -232,16 +204,42 @@ services:
 
       <!-- TOC -->
       <section class="toc">
-        <h2>This Is Chapter 1. The Other 7 Go Just as Deep.</h2>
-        <ol>
-          <li><strong>GPU Optimization Deep Dive</strong> — Memory tuning, batch sizing, NVFP4 vs GGUF trade-offs</li>
-          <li><strong>Quantization Strategy & Comparison</strong> — Q4_0 through FP16 benchmarks, which quant for which workload</li>
-          <li><strong>Troubleshooting: 20+ Common Errors</strong> — From "trust_remote_code" to segfaults, each with root cause + verified fix</li>
-          <li><strong>Performance Benchmarks on Real Hardware</strong> — RTX 3090, 4090, 5090, A6000, H100 — not Google's self-reported numbers</li>
-          <li><strong>Multi-User & API Serving</strong> — Concurrent requests, queue management, rate limiting</li>
-          <li><strong>Security & Authentication</strong> — API key setup, TLS termination, safe exposure patterns</li>
-          <li><strong>Monitoring, Logging & Maintenance</strong> — Prometheus metrics, log aggregation, model update workflows</li>
+        <h2>Chapter 1 Got You Started. The Other 7 Cover…</h2>
+        <ol style="font-size:1.05rem;line-height:2.2;">
+          <li><strong>GPU Optimization Deep Dive</strong> — Memory tuning, batch sizing, NVFP4 vs GGUF trade-offs <span style="color:var(--accent,#10b981);font-weight:700;">~8h saved</span></li>
+          <li><strong>Quantization Strategy & Comparison</strong> — Q4_0 through FP16 benchmarks, which quant for which workload <span style="color:var(--accent,#10b981);font-weight:700;">~4h saved</span></li>
+          <li><strong>Troubleshooting: 20+ Common Errors</strong> — From "trust_remote_code" to segfaults, each with root cause + verified fix <span style="color:var(--accent,#10b981);font-weight:700;">~10h saved</span></li>
+          <li><strong>Performance Benchmarks on Real Hardware</strong> — RTX 3090, 4090, 5090, A6000, H100 — not Google's self-reported numbers <span style="color:var(--accent,#10b981);font-weight:700;">~5h saved</span></li>
+          <li><strong>Multi-User & API Serving</strong> — Concurrent requests, queue management, rate limiting <span style="color:var(--accent,#10b981);font-weight:700;">~6h saved</span></li>
+          <li><strong>Security & Authentication</strong> — API key setup, TLS termination, safe exposure patterns <span style="color:var(--accent,#10b981);font-weight:700;">~3h saved</span></li>
+          <li><strong>Monitoring, Logging & Maintenance</strong> — Prometheus metrics, log aggregation, model update workflows <span style="color:var(--accent,#10b981);font-weight:700;">~5h saved</span></li>
         </ol>
+      </section>
+
+      <!-- Who This Is For (And Not For) -->
+      <section class="who-for" style="margin-bottom:32px;">
+        <h2 style="font-size:1.2rem;margin-bottom:10px;">Who This Guide Is For (And Who It's Not)</h2>
+        <p style="color:var(--text2,#9898b0);margin-bottom:18px;line-height:1.6;font-size:.95rem;">DiffusionGemma is <strong style="color:var(--accent,#10b981);">4x faster</strong> than standard Gemma 4. Google is explicit: <em>"DiffusionGemma's overall output quality is lower than standard Gemma 4."</em> The speed-for-quality tradeoff is by design — this isn't a replacement for accuracy-critical workflows. This guide assumes you understand the tradeoff and want to deploy it for the right use cases.</p>
+        <div class="who-for-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);border-radius:10px;padding:20px 22px;">
+            <h3 style="font-size:.95rem;color:var(--accent,#10b981);margin-bottom:10px;">Good For</h3>
+            <ul style="padding-left:18px;color:var(--gray-700,#5f6368);line-height:1.8;font-size:.9rem;margin:0;">
+              <li>Data augmentation & synthetic generation</li>
+              <li>Draft writing & code scaffolding</li>
+              <li>Speed-critical pipelines where you verify output</li>
+              <li>Creative / brainstorming tasks</li>
+            </ul>
+          </div>
+          <div style="background:rgba(234,67,53,.06);border:1px solid rgba(234,67,53,.18);border-radius:10px;padding:20px 22px;">
+            <h3 style="font-size:.95rem;color:var(--google-red,#EA4335);margin-bottom:10px;">Not For</h3>
+            <ul style="padding-left:18px;color:var(--gray-700,#5f6368);line-height:1.8;font-size:.9rem;margin:0;">
+              <li>Factual QA / knowledge-base answers</li>
+              <li>Replacing standard Gemma 4 for accuracy</li>
+              <li>Tasks where hallucinations are unacceptable</li>
+              <li>Low-compute environments (it's compute-bound, CUDA-favored)</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
       <!-- Guarantee -->
@@ -327,7 +325,7 @@ services:
     "url": "https://diffrun.dev/production-guide/",
     "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffrun.dev"},
     "datePublished": "2026-06-14T00:00:00+00:00",
-    "dateModified": "2026-06-17T00:00:00+00:00",
+    "dateModified": "2026-06-18T00:00:00+00:00",
     "isPartOf": {"@type": "Article", "headline": "Run Google's Diffusion LLM Locally — DiffusionGemma", "url": "https://diffrun.dev"}
   }
   </script>
