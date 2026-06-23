@@ -37,7 +37,7 @@
         <li><a href="/deployment/">Deployment</a></li>
         <li><a href="/security/">Security</a></li>
         <li><a href="/testing/">Testing</a></li>
-        <li><a href="/production-guide/">Pro Guide</a></li>
+        <li><a href="/production-guide/">Manual</a></li>
       </ul>
       <button class="nav-toggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -54,7 +54,7 @@
         <div class="hero-actions">
           <a href="#inspector" class="btn btn-outline">Inspector (~5 min)</a>
           <a href="#pytest" class="btn btn-outline">pytest (~10 min)</a>
-          <a href="/production-guide/" class="btn btn-outline" style="border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Pro Guide</a>
+          <a href="/production-guide/" class="btn btn-outline" style="border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Manual</a>
         </div>
       </div>
     </section>
@@ -169,7 +169,7 @@ OTEL_SERVICE_NAME=fastmcp-server</code></pre>
         <div class="faq-list">
           <details class="faq-item">
             <summary>Does this CI/CD pipeline work with GitLab CI or Bitbucket Pipelines?</summary>
-            <div class="faq-answer"><p>The YAML syntax differs but the structure is portable: test job → build Docker → push → deploy. The pytest commands, Dockerfile, and coverage thresholds are identical. The Pro Guide includes ready-to-use GitLab CI (<code>.gitlab-ci.yml</code>) and Bitbucket (<code>bitbucket-pipelines.yml</code>) templates with the same gates.</p></div>
+            <div class="faq-answer"><p>The YAML syntax differs but the structure is portable: test job → build Docker → push → deploy. The pytest commands, Dockerfile, and coverage thresholds are identical. The Manual includes ready-to-use GitLab CI (<code>.gitlab-ci.yml</code>) and Bitbucket (<code>bitbucket-pipelines.yml</code>) templates with the same gates.</p></div>
           </details>
           <details class="faq-item">
             <summary>How do I test before deploying — can I run this locally?</summary>
@@ -177,11 +177,11 @@ OTEL_SERVICE_NAME=fastmcp-server</code></pre>
           </details>
           <details class="faq-item">
             <summary>Can I skip MCP Inspector and just use curl or a REST client?</summary>
-            <div class="faq-answer"><p>Not directly — MCP uses JSON-RPC over SSE or Streamable HTTP, not REST. Inspector is purpose-built for this protocol and shows tool schemas, errors, and responses in MCP format. The Pro Guide includes a pytest helper that wraps the MCP client for headless API-level testing if you prefer that to the GUI.</p></div>
+            <div class="faq-answer"><p>Not directly — MCP uses JSON-RPC over SSE or Streamable HTTP, not REST. Inspector is purpose-built for this protocol and shows tool schemas, errors, and responses in MCP format. The Manual includes a pytest helper that wraps the MCP client for headless API-level testing if you prefer that to the GUI.</p></div>
           </details>
           <details class="faq-item">
             <summary>How do I set up OpenTelemetry if I already use Datadog/Prometheus?</summary>
-            <div class="faq-answer"><p>Set <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> to your collector's ingest URL. For Datadog, add the Datadog Exporter to your OTEL Collector config. For Prometheus, use the OTLP-to-Prometheus bridge in the OTEL Collector. The Pro Guide includes collector configs for Datadog, Grafana Cloud, and self-hosted Prometheus.</p></div>
+            <div class="faq-answer"><p>Set <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> to your collector's ingest URL. For Datadog, add the Datadog Exporter to your OTEL Collector config. For Prometheus, use the OTLP-to-Prometheus bridge in the OTEL Collector. The Manual includes collector configs for Datadog, Grafana Cloud, and self-hosted Prometheus.</p></div>
           </details>
         </div>
       </div>

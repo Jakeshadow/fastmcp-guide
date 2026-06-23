@@ -37,7 +37,7 @@
         <li><a href="/deployment/">Deployment</a></li>
         <li><a href="/security/">Security</a></li>
         <li><a href="/testing/">Testing</a></li>
-        <li><a href="/production-guide/">Pro Guide</a></li>
+        <li><a href="/production-guide/">Manual</a></li>
       </ul>
       <button class="nav-toggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -53,7 +53,7 @@
         <p class="hero-subtitle">From <code>uvicorn app:app</code> to a hardened MCP server behind nginx with auth, monitoring, and CI/CD — in one copy-paste ready manual. For developers who wrote their first MCP tool and need it in production.</p>
         <div class="hero-actions">
           <a href="#sample-ch0" class="btn btn-outline">Preview — Free Chapters 0 &amp; 1 (~25 min read)</a>
-          <a href="/pricing/" class="btn btn-primary" style="background:var(--accent,#10b981);border-color:var(--accent,#10b981);">Get the Manual — from $39</a>
+          <button onclick="Paddle.Checkout.open({settings:{successUrl:'https://deploymcp.dev/thanks/essential/'},items:[{priceId:'pri_01kvs7gj3yrsr53f4xbr8150cs',quantity:1}]})" class="btn btn-primary" style="background:var(--accent,#10b981);border-color:var(--accent,#10b981);font-family:inherit;cursor:pointer;">Get the Manual — from $39</button>
         </div>
         <p style="margin-top:12px;font-size:0.95rem;color:var(--gray-700);">The free guides on this site get you running. This manual keeps you running — and covers every edge case those guides can't fit. If FastMCP v4 ships within 6 months, you get the update for free. Questions? <a href="mailto:support@deploymcp.dev">support@deploymcp.dev</a>.</p>
       </div>
@@ -225,7 +225,7 @@
               <li>PDF + Markdown. Instant download.</li>
               <li>Lifetime updates</li>
             </ul>
-            <a href="/pricing/" class="btn btn-primary" style="display:block;text-align:center;background:var(--gray-200);color:var(--text);border-color:var(--gray-200);margin-top:auto;">Buy Essential — $39</a>
+            <button onclick="Paddle.Checkout.open({settings:{successUrl:'https://deploymcp.dev/thanks/essential/'},items:[{priceId:'pri_01kvs7gj3yrsr53f4xbr8150cs',quantity:1}]})" class="btn btn-primary" style="display:block;text-align:center;background:var(--gray-200);color:var(--text);border-color:var(--gray-200);margin-top:auto;width:100%;font-family:inherit;cursor:pointer;border-radius:28px;padding:14px 0;font-size:1.05rem;font-weight:600;">Buy Essential — $39</button>
           </div>
           <div style="background:#fff;border:2px solid var(--accent,#10b981);border-radius:12px;padding:28px;position:relative;box-shadow:0 0 20px rgba(16,185,129,.08);display:flex;flex-direction:column;">
             <div style="display:inline-block;padding:3px 10px;background:var(--accent,#10b981);color:#000;font-size:.75rem;font-weight:600;border-radius:12px;position:absolute;top:-14px;left:24px;">RECOMMENDED</div>
@@ -242,7 +242,7 @@
               <li>Lifetime updates</li>
             </ul>
             <p style="font-size:.76rem;color:var(--gray-700);margin:-8px 0 16px;line-height:1.4;">Honest note: pen-test script uses single JSON-RPC calls — if your server requires initialize-then-call, some checks may return WARN (README covers the fix). Grafana dashboard uses standard metric names — find-replace in JSON if yours differ. Both verify in ~5 min on your live server.</p>
-            <a href="/pricing/" class="btn btn-primary" style="display:block;text-align:center;background:var(--accent,#10b981);border-color:var(--accent,#10b981);color:#000;margin-top:auto;">Buy Pro — $59</a>
+            <button onclick="Paddle.Checkout.open({settings:{successUrl:'https://deploymcp.dev/thanks/pro/'},items:[{priceId:'pri_01kvs7kmwkr5spptjwz7rq2zh2',quantity:1}]})" class="btn btn-primary" style="display:block;text-align:center;background:var(--accent,#10b981);border-color:var(--accent,#10b981);color:#000;margin-top:auto;width:100%;font-family:inherit;cursor:pointer;border-radius:28px;padding:14px 0;font-size:1.05rem;font-weight:600;">Buy Pro — $59</button>
           </div>
         </div>
       </div>
@@ -316,7 +316,7 @@
       <div class="container" style="text-align:center;">
         <h2 style="color:var(--accent,#10b981);">Save ~24 Hours of Trial-and-Error</h2>
         <p style="color:var(--gray-700);font-size:1.1rem;margin-bottom:24px;">100+ pages, 8 chapters. Every config copy-paste ready. 30-day money-back guarantee. Lifetime updates. From $39.</p>
-        <a href="/pricing/" class="btn btn-primary" style="background:var(--accent,#10b981);border-color:var(--accent,#10b981);font-size:1.1rem;padding:14px 36px;color:#000;">View Pricing — from $39</a>
+        <button onclick="Paddle.Checkout.open({settings:{successUrl:'https://deploymcp.dev/thanks/essential/'},items:[{priceId:'pri_01kvs7gj3yrsr53f4xbr8150cs',quantity:1}]})" class="btn btn-primary" style="background:var(--accent,#10b981);border-color:var(--accent,#10b981);font-size:1.1rem;padding:14px 36px;color:#000;font-family:inherit;cursor:pointer;">Get the Manual — from $39</button>
         <p style="margin-top:12px;font-size:0.9rem;color:var(--gray-700);">Secure payment via Paddle. EU VAT may apply.</p>
       </div>
     </section>
@@ -331,5 +331,7 @@
   </footer>
 
   <script src="/js/main.js"></script>
+  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+  <script>Paddle.Initialize({token:'live_290cee1a87c9f8199d453c665f4',eventCallback:function(data){if(data.name==='checkout.completed'){window.location.href='https://deploymcp.dev/thanks/';}}});</script>
 </body>
 </html>
