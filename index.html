@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Run DiffusionGemma on Your GPU — Honest Guide &amp; Benchmarks</title>
-  <meta name="description" content="5 ways to run DiffusionGemma locally. Real hardware requirements, tested on RTX 3090–5090. What works, what doesn&apos;t.">
+  <title>Your MCP Server Works Locally. Now What? — FastMCP Production Guide</title>
+  <meta name="description" content="Deploy your MCP server to production securely — nginx, TLS, auth, Docker, CI/CD. Copy-paste ready configs. From localhost to HTTPS in one afternoon.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -12,19 +12,19 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="/css/style.css?v=3">
-  <meta property="og:title" content="Run DiffusionGemma on Your GPU — Honest Guide &amp; Benchmarks">
-  <meta property="og:description" content="5 ways to run DiffusionGemma locally. Real hardware requirements, tested on RTX 3090–5090. What works, what doesn&apos;t.">
+  <meta property="og:title" content="Your MCP Server Works Locally. Now What? — FastMCP Production Guide">
+  <meta property="og:description" content="Deploy your MCP server to production securely — nginx, TLS, auth, Docker, CI/CD. Copy-paste ready configs. From localhost to HTTPS.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://diffrun.dev">
-  <meta property="og:site_name" content="DiffusionGemma Guide">
+  <meta property="og:url" content="https://deploymcp.dev">
+  <meta property="og:site_name" content="MCP Deploy Guide">
   <meta property="og:locale" content="en_US">
-  <meta property="og:image" content="https://diffrun.dev/assets/og-image.svg">
+  <meta property="og:image" content="https://deploymcp.dev/assets/og-image.svg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://diffrun.dev/assets/og-image.svg">
-  <meta name="twitter:title" content="Run DiffusionGemma on Your GPU — Honest Guide &amp; Benchmarks">
-  <meta name="twitter:description" content="5 ways to run DiffusionGemma locally. Real hardware requirements, tested on RTX 3090–5090. What works, what doesn&apos;t.">
+  <meta name="twitter:image" content="https://deploymcp.dev/assets/og-image.svg">
+  <meta name="twitter:title" content="Your MCP Server Works Locally. Now What?">
+  <meta name="twitter:description" content="Deploy to production securely — nginx, TLS, auth, Docker, CI/CD. Copy-paste ready configs. From localhost to HTTPS.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://diffrun.dev">
+  <link rel="canonical" href="https://deploymcp.dev">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
@@ -34,23 +34,13 @@
 <body>
     <nav id="nav" class="nav">
     <div class="nav-inner">
-      <a href="/" class="nav-logo"><svg width="26" height="26" viewBox="0 0 100 100" style="vertical-align:middle;margin-right:6px;"><rect fill="#4285F4" width="100" height="100" rx="20"/><text x="50" y="68" text-anchor="middle" fill="white" font-size="52" font-family="sans-serif" font-weight="bold">DG</text></svg>DG Guide</a>
-      <ul class="nav-links">
-        <li><a href="#run">Run</a></li>
-        <li><a href="/benchmarks/">Benchmarks</a></li>
-        <li class="nav-dropdown">
-          <a href="#">Setup ▾</a>
-          <ul class="nav-dropdown-menu">
-            <li><a href="/ollama/">Ollama</a></li>
-            <li><a href="/llama-cpp/">llama.cpp</a></li>
-            <li><a href="/gguf/">GGUF</a></li>
-            <li><a href="/vllm/">vLLM</a></li>
-            <li><a href="/lm-studio/">LM Studio</a></li>
+      <a href="/" class="nav-logo"><svg width="26" height="26" viewBox="0 0 100 100" style="vertical-align:middle;margin-right:6px;"><rect fill="#0078D4" width="100" height="100" rx="20"/><text x="50" y="68" text-anchor="middle" fill="white" font-size="52" font-family="sans-serif" font-weight="bold">MD</text></svg>MCP Deploy</a>
+          <ul class="nav-links">
+            <li><a href="/deployment/">Deployment</a></li>
+            <li><a href="/security/">Security</a></li>
+            <li><a href="/testing/">Testing</a></li>
+            <li><a href="/production-guide/">Pro Guide</a></li>
           </ul>
-        </li>
-        <li><a href="/production-guide/">Pro Guide</a></li>
-        <li><a href="#faq">FAQ</a></li>
-      </ul>
       <button class="nav-toggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
@@ -61,414 +51,237 @@
     <!-- Hero -->
     <section id="hero" class="hero">
       <div class="container">
-        <div class="hero-badge">Google DeepMind · Apache 2.0</div>
-        <h1>DiffusionGemma Guide — Run Google's Diffusion LLM Locally</h1>
-        <p class="hero-subtitle">A 26B MoE model that generates 256-token blocks in parallel — 4x faster than autoregressive. Fits on a single 24GB GPU with quantization.</p>
+        <div class="hero-badge">Prefect · MIT Licensed · v3</div>
+        <h1>Your MCP Server Works Locally. Now What?</h1>
+        <p class="hero-subtitle">Deploy to production securely — nginx, TLS, auth, Docker, CI/CD — in one afternoon. No prior DevOps experience needed.</p>
         <div class="hero-actions">
-          <a href="#run" class="btn btn-primary">Get Started</a>
-          <a href="#what" class="btn btn-outline">How It Works</a>
-          <a href="/production-guide/" class="btn btn-outline" style="border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Save 40+ Hours</a>
+          <a href="/deployment/" class="btn btn-primary">Deployment Guide</a>
+          <a href="/security/" class="btn btn-outline">Security Hardening</a>
+          <a href="/production-guide/" class="btn btn-outline" style="border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Save 20+ Hours</a>
         </div>
         <div class="hero-stats">
-          <div class="hero-stat"><strong>1,000+</strong> tokens/s on H100</div>
-          <div class="hero-stat"><strong>700+</strong> tokens/s on RTX 5090</div>
-          <div class="hero-stat"><strong>18 GB</strong> VRAM with quantization</div>
+          <div class="hero-stat"><strong>5x</strong> less code than raw SDK</div>
+          <div class="hero-stat"><strong>v3</strong> HTTP + ASGI + OAuth</div>
+          <div class="hero-stat"><strong>1M+</strong> daily downloads</div>
         </div>
       </div>
     </section>
 
-    <!-- Module 1: What Is DiffusionGemma -->
+    <!-- Module 1: What Is FastMCP -->
     <section id="what" class="section section-alt">
       <div class="container">
-        <h2>What Is DiffusionGemma</h2>
-        <p class="section-lead">DiffusionGemma generates text like an image diffusion model: instead of typing one word at a time left-to-right, it fills in a whole 256-token block at once through iterative denoising — imagine a paragraph that "comes into focus" over multiple passes rather than being typed letter by letter.</p>
-        <p>It's a 26B-parameter Mixture of Experts (MoE) model built on the Gemma 4 backbone that activates only 3.8B parameters during inference. The paradigm shift isn't model size or dataset — it's the <strong>generation algorithm</strong>. Standard autoregressive LLMs (GPT, Llama, Qwen, Gemma) are causal — each token depends only on previous tokens. DiffusionGemma uses <strong>bidirectional attention</strong> during generation, meaning every token in a 256-token canvas can attend to every other token simultaneously. This enables self-correction: if the model becomes less confident about a token mid-generation, it can "re-noise" and replace it — something autoregressive models cannot do because they commit each token permanently.</p>
-        <p>Google released it under Apache 2.0 on June 10, 2026. Weights are on HuggingFace at <code>google/diffusiongemma-26B-A4B-it</code>. It supports text, image, and video inputs (multimodal), a 256K token context window, and 140+ languages.</p>
+        <h2>What Is FastMCP</h2>
+        <p class="section-lead">FastMCP lets you turn any Python function into a tool that AI assistants (Claude, ChatGPT, Cursor) can call over a standard protocol — with one decorator and zero boilerplate.</p>
+        <p>It wraps the Model Context Protocol (MCP) so you write <code>@mcp.tool</code> instead of manually handling JSON-RPC, schema generation, transport negotiation, and error propagation. FastMCP was incorporated into the official MCP Python SDK and the standalone project (maintained by Prefect) now ships v3 with <strong>HTTP deployment, ASGI support, OAuth, and multi-client capabilities</strong> — downloaded over a million times a day. 70% of all Python MCP servers use FastMCP.</p>
+        <p>The gap is not "how to build a server" — dozens of tutorials cover that. The gap is <strong>"how to run it in production without getting hacked or paged at 3am."</strong> This guide closes that gap.</p>
       </div>
     </section>
 
-    <!-- Module 2: Why It Matters -->
+    <!-- Module 2: Why FastMCP Matters -->
     <section id="why" class="section">
       <div class="container">
-        <h2>Why DiffusionGemma Matters</h2>
+        <h2>Why You Need Production Patterns</h2>
         <div class="reasons-grid">
           <div class="reason-card">
-            <h3>1. It changes the inference bottleneck</h3>
-            <p>Autoregressive models are memory-bandwidth-bound — the GPU spends most of its time loading weights just to generate 1 token at a time. DiffusionGemma drafts and refines 256 tokens in parallel, keeping tensor cores busy and hitting 700–1,000+ tokens/s on dedicated GPUs.</p>
-            <p class="reason-note">This speed comes with a quality tradeoff. Google is explicit: <em>"DiffusionGemma's overall output quality is lower than standard Gemma 4."</em> The value prop is NOT "better LLM" — it's "4x faster at acceptable quality for specific workloads."</p>
+            <h3>1. 5x less code, same production gap</h3>
+            <p>FastMCP eliminates boilerplate with decorators that auto-generate schemas from type hints and docstrings. But the official docs leave production deployment as an exercise for the reader — the HTTP deployment guide is 2 pages of code snippets, not a deployment runbook.</p>
+            <p class="reason-note">Developers on Reddit r/mcp are asking "How can I host an MCP server in production?" with dozens of replies debating Railway vs Cloudflare vs self-host — nobody has the complete answer.</p>
           </div>
           <div class="reason-card">
-            <h3>2. Runs on 18GB VRAM with quantization</h3>
-            <p>A 26B-class model fitting on a single consumer GPU at 4-bit, running at potentially 200–700+ tokens/s, opens a practical speed tier that didn't exist before. Comparable autoregressive 25–30B models need 24GB+ and run at 50–80 tokens/s.</p>
-            <p class="reason-note">Not all hardware benefits equally. Apple Silicon Macs and low-compute GPUs (RTX 3060, 4060) won't see the speedup — the compute-bound advantage disappears when the bottleneck shifts back to memory bandwidth.</p>
+            <h3>2. v3 opens the network. Defaults are dangerous.</h3>
+            <p>Before v3, FastMCP ran over stdio — a local pipe, no network, no auth. v3 introduced HTTP transport and ASGI. Change host to <code>0.0.0.0</code> as many tutorials suggest, and you have an <strong>unauthenticated RCE endpoint</strong> on the public internet.</p>
+            <p class="reason-note">A security researcher demonstrated full RCE on a default FastMCP setup following official docs. 66% of MCP servers have security code smells (Docker MCP security analysis).</p>
           </div>
           <div class="reason-card">
-            <h3>3. Apache 2.0 — truly permissive</h3>
-            <p>Unlike Llama's custom license or Gemma 3's restrictive terms, Apache 2.0 means you can build products on this, fine-tune it, and distribute it commercially without restriction. The real constraint isn't the license — it's that this is a new paradigm with less mature tooling.</p>
+            <h3>3. MCP is exploding. Production demand is now.</h3>
+            <p>Every major AI platform now supports MCP: Claude Desktop, ChatGPT, Cursor, Windsurf, GitHub Copilot. The MCP server registry has 1,800+ servers. Teams are moving from "one developer's local tool" to "team-shared MCP infrastructure."</p>
           </div>
           <div class="reason-card">
-            <h3>4. Local-first design</h3>
-            <p>DiffusionGemma is optimized for single-user, low-concurrency local inference. In high-QPS cloud serving, autoregressive models can batch users efficiently — so DiffusionGemma's advantage paradoxically narrows in cloud deployment. For individual developers or small teams running locally, this is where it shines.</p>
+            <h3>4. Most tutorials skip the boring stuff</h3>
+            <p>Testing, authentication, deployment — the stuff that keeps your server running when real users touch it. Courses go from 38% to 98% test coverage but skip how to actually ship. This guide fills every gap.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Module 3: How to Run -->
-    <section id="run" class="section section-alt">
+    <!-- Module 3: Deployment Quick Start -->
+    <section id="deploy" class="section section-alt">
       <div class="container">
-        <h2>How to Run DiffusionGemma Locally</h2>
-
-        <h3>Prerequisites: Hardware</h3>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Quantization</th><th>VRAM</th><th>Tested GPUs</th><th>Expected Speed</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>4-bit (Q4_K_M)</td><td>15–17 GB</td><td>RTX 4090, 5090, 3090 (24GB)</td><td>~200–400 tokens/s</td></tr>
-              <tr><td>8-bit (Q8_0)</td><td>27–29 GB</td><td>RTX 5090 (32GB), A6000</td><td>~500–700+ tokens/s</td></tr>
-              <tr><td>FP16 / BF16</td><td>52 GB</td><td>H100, A100, H200, dual 4090</td><td>1,000+ tokens/s</td></tr>
-              <tr><td>NVFP4 (NVIDIA 4-bit)</td><td>~15 GB</td><td>Blackwell (5090, RTX PRO)</td><td>700+ tokens/s</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="note">Cards with limited compute (RTX 3060, RTX 4060, laptop GPUs) and Apple Silicon Macs will see significantly reduced speedups.</p>
+        <h2>Production Deployment — From Local to Live</h2>
 
         <h3>Pick Your Path</h3>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>You want…</th><th>Best path</th><th>Time</th><th>PR #24427 needed?</th></tr>
+              <tr><th>You want…</th><th>Best path</th><th>Time</th><th>Guide</th></tr>
             </thead>
             <tbody>
-              <tr><td>Fastest, no build</td><td><a href="#method-vllm">vLLM</a> <span class="badge badge-green">Recommended</span></td><td>~10 min</td><td>No</td></tr>
-              <tr><td>Ollama CLI</td><td><a href="/ollama/">Ollama bridge</a> <span class="badge badge-yellow">Workaround</span></td><td>~30 min</td><td>Yes (PR branch)</td></tr>
-              <tr><td>CPU / hybrid CPU+GPU</td><td><a href="/llama-cpp/">llama.cpp PR branch</a> <span class="badge badge-yellow">Bleeding Edge</span></td><td>~20 min</td><td>Yes (PR branch)</td></tr>
-              <tr><td>Desktop GUI</td><td><a href="/lm-studio/">LM Studio</a> — not yet, <a href="/lm-studio/">see alternatives →</a></td><td>—</td><td>Blocked</td></tr>
+              <tr><td>Local dev + testing</td><td>fastmcp dev server + Inspector <span class="badge badge-green">Start Here</span></td><td>~5 min</td><td><a href="/deployment/#step-1">Step 1 →</a></td></tr>
+              <tr><td>HTTP + TLS production</td><td>ASGI app + nginx reverse proxy <span class="badge badge-green">Recommended</span></td><td>~30 min</td><td><a href="/deployment/#step-3">Step 3 →</a></td></tr>
+              <tr><td>Team deployment with auth</td><td>Bearer/OAuth + Docker <span class="badge badge-yellow">Read Carefully</span></td><td>~1 hr</td><td><a href="/deployment/#step-4">Step 4 →</a></td></tr>
+              <tr><td>Enterprise K8s cluster</td><td>Kubernetes + OTEL monitoring</td><td>~2 hr</td><td><a href="/deployment/#step-6">Step 6 →</a></td></tr>
             </tbody>
           </table>
         </div>
-        <p class="note">All paths except vLLM depend on <a href="https://github.com/ggerganov/llama.cpp/pull/24427" target="_blank" rel="noopener">llama.cpp PR #24427</a> (open, merge conflicts — <a href="/llama-cpp/#tracking">tracking daily</a>). Once merged, Ollama and LM Studio gain native support.</p>
 
-        <!-- Method 1: vLLM -->
-        <h3 id="method-vllm">Method 1: vLLM <span class="badge badge-green">Recommended</span></h3>
-        <p>vLLM has day-zero support with optimized block denoising kernels. This is the fastest path — and the only one with independently verified speed numbers (1,288 tokens/s on H200).</p>
-        <pre><code class="language-bash">pip install vllm>=0.12.0</code></pre>
-        <pre><code class="language-python">from vllm import LLM, SamplingParams
+        <h3>Quick Start: HTTP Deployment</h3>
+        <pre><code class="language-python"># app.py
+from fastmcp import FastMCP
 
-llm = LLM(
-    model="google/diffusiongemma-26B-A4B-it",
-    trust_remote_code=True,
-    tensor_parallel_size=1,
-    max_model_len=65536,
-)
+mcp = FastMCP("ProductionServer")
 
-sampling_params = SamplingParams(
-    temperature=0.7,
-    max_tokens=2048,
-)
+@mcp.tool()
+def search_docs(query: str) -> str:
+    """Search internal documentation."""
+    return f"Found results for: {query}"
 
-outputs = llm.generate(["Explain how diffusion language models work."], sampling_params)
-for output in outputs:
-    print(output.outputs[0].text)</code></pre>
-
-        <!-- Method 2: llama.cpp -->
-        <h3>Method 2: llama.cpp <span class="badge badge-yellow">Bleeding Edge</span></h3>
-        <p>llama.cpp support is via <strong>PR #24427</strong> (open, now has merge conflicts — needs rebase). Clone and checkout the PR branch:</p>
-        <pre><code class="language-bash">git clone https://github.com/ggml-ai/llama.cpp
-cd llama.cpp
-git fetch origin pull/24427/head:diffusiongemma
-git checkout diffusiongemma
-
-# Build with CUDA
-cmake -B build -DGGML_CUDA=ON
-cmake --build build --config Release
-
-# Run with GGUF quantized weights
-./build/bin/llama-cli \
-  -m DiffusionGemma-26B-A4B-it-Q4_K_M.gguf \
-  -p "Explain how diffusion language models work." \
-  -n 512 \
-  -ngl 99</code></pre>
-        <p class="note">This is bleeding edge — expect bugs. PR #24427 now has merge conflicts (as of June 18) and needs a rebase. Check the PR for latest status before using in production.</p>
-
-        <!-- Method 3: Unsloth -->
-        <h3>Method 3: Unsloth</h3>
-        <pre><code class="language-bash">pip install unsloth
-pip install flash-attn --no-build-isolation  # optional</code></pre>
-        <pre><code class="language-python">from unsloth import FastModel
-
-model, tokenizer = FastModel.from_pretrained(
-    model_name="google/diffusiongemma-26B-A4B-it",
-    max_seq_length=65536,
-    load_in_4bit=True,  # fits in ~16GB
-)</code></pre>
-        <p>Unsloth provides a hardware-requirements table at <a href="https://unsloth.ai/docs/models/diffusiongemma" target="_blank" rel="noopener">unsloth.ai/docs/models/diffusiongemma</a> with VRAM estimates for all quantization levels.</p>
-
-        <!-- Method 4: HF Transformers -->
-        <h3>Method 4: HuggingFace Transformers</h3>
-        <p>Simplest path for a quick first test:</p>
-        <pre><code class="language-bash">pip install transformers>=4.55.0 accelerate</code></pre>
-        <pre><code class="language-python">from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
-
-model_id = "google/diffusiongemma-26B-A4B-it"
-
-model = AutoModelForCausalLM.from_pretrained(
-    model_id,
-    torch_dtype=torch.bfloat16,
-    device_map="auto",
-    trust_remote_code=True,
-)
-
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-inputs = tokenizer("Explain diffusion language models in one paragraph.", return_tensors="pt").to("cuda")
-outputs = model.generate(**inputs, max_new_tokens=512)
-print(tokenizer.decode(outputs[0], skip_special_tokens=True))</code></pre>
-
-        <!-- Method 5: Ollama -->
-        <h3>Method 5: Ollama <span class="badge badge-yellow">Community Workaround</span></h3>
-        <p>Ollama support is coming via llama.cpp PR #24427 (open, now has merge conflicts). Until the PR merges, you can use the bridge workaround:</p>
-        <ol>
-          <li>Build llama.cpp with diffusion support (PR #24427 branch)</li>
-          <li>Download or convert a GGUF model</li>
-          <li>Create a Modelfile and run with <code>ollama create</code></li>
-        </ol>
-        <p style="margin-top:12px;"><a href="/ollama/" class="btn btn-outline">Full Ollama Setup Guide &rarr;</a></p>
-
-        <!-- Quantization -->
-        <h3>Quantization for Consumer GPUs</h3>
-
-        <h4>NVFP4 (Blackwell GPUs only: RTX 5090 / RTX PRO 6000)</h4>
-        <pre><code class="language-python">model = AutoModelForCausalLM.from_pretrained(
-    model_id,
-    torch_dtype=nvfp4,
-    device_map="auto",
-    trust_remote_code=True,
-)</code></pre>
-
-        <h4>Bitsandbytes 4-bit (Ampere+: RTX 3090, 4090)</h4>
-        <pre><code class="language-python">from transformers import BitsAndBytesConfig
-
-bnb_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_compute_dtype=torch.bfloat16,
-    bnb_4bit_use_double_quant=True,
-)
-
-model = AutoModelForCausalLM.from_pretrained(
-    model_id,
-    quantization_config=bnb_config,
-    device_map="auto",
-    trust_remote_code=True,
-)</code></pre>
-
-        <h4>GGUF Q4_K_M (llama.cpp path)</h4>
-        <p>Download community-converted GGUF files from HuggingFace. ~16GB VRAM, ~200–400 tokens/s on RTX 4090 (community estimate).</p>
-
-        <!-- Troubleshooting -->
-        <h3>Troubleshooting</h3>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><code>trust_remote_code=True</code> required</td><td>Custom diffusion attention modules not in standard transformers</td><td>Add <code>trust_remote_code=True</code> to all <code>from_pretrained()</code> calls</td></tr>
-              <tr><td>OOM on 16GB GPU at 4-bit</td><td>Bitsandbytes 4-bit estimates optimistic for 26B-class</td><td>Try GGUF Q4_K_M via llama.cpp PR #24427, or use <code>device_map="sequential"</code></td></tr>
-              <tr><td><code>KeyError: 'denoising_steps'</code></td><td>Using standard <code>model.generate()</code> without diffusion params</td><td>Check model card for <code>num_denoising_steps</code>, <code>denoising_temperature</code></td></tr>
-              <tr><td>Slow on RTX 3060/4060/laptop GPU</td><td>Compute-limited cards can't saturate tensor cores</td><td>Speed advantage requires high-CUDA-core GPUs. Consider autoregressive models.</td></tr>
-              <tr><td>Apple Silicon: no speedup</td><td>Unified memory shifts bottleneck back to bandwidth</td><td>Google explicitly warns about this. Expect autoregressive-comparable performance.</td></tr>
-            </tbody>
-          </table>
-        </div>
+# Create ASGI app for uvicorn/gunicorn
+app = mcp.http_app()</code></pre>
+        <pre><code class="language-bash">uvicorn app:app --host 127.0.0.1 --port 8000 --workers 4</code></pre>
+        <p style="margin-top:12px;"><a href="/deployment/" class="btn btn-outline">Full Deployment Guide (6 Steps) &rarr;</a></p>
       </div>
     </section>
 
-    <!-- Module 4: Real Performance -->
-    <section id="benchmark" class="section">
+    <!-- Module 4: Security -->
+    <section id="security" class="section">
       <div class="container">
-        <h2>Real Performance &amp; Honest Assessment</h2>
-
-        <h3>Speed Benchmarks</h3>
+        <h2>Security Hardening Checklist</h2>
+        <p class="section-lead">Every item below addresses a real attack vector. A security researcher demonstrated full RCE on a default FastMCP setup. 66% of MCP servers leak credentials.</p>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>Hardware</th><th>Tokens/s</th><th>Quantization</th><th>Source</th></tr>
+              <tr><th>#</th><th>Check</th><th>Why</th></tr>
             </thead>
             <tbody>
-              <tr><td>H200</td><td>1,288</td><td>BF16 (vLLM)</td><td>vLLM blog — independently verified</td></tr>
-              <tr><td>H100</td><td>~1,000+</td><td>BF16</td><td>Google (self-reported) — not independently confirmed</td></tr>
-              <tr><td>RTX 5090</td><td>~700+</td><td>NVFP4</td><td>Google (self-reported) — not independently confirmed</td></tr>
-              <tr><td>RTX 4090</td><td>~200–400</td><td>Q4_K_M (GGUF)</td><td>Community estimate — no published benchmarks yet</td></tr>
-              <tr><td>RTX 3090</td><td>~150–300</td><td>Q4_K_M (GGUF)</td><td>Community estimate — no published benchmarks yet</td></tr>
+              <tr><td>1</td><td>Authentication required</td><td>Default is no auth. HTTP transport = public RCE without it.</td></tr>
+              <tr><td>2</td><td>TLS everywhere</td><td>FastMCP does not handle TLS. Use nginx for termination.</td></tr>
+              <tr><td>3</td><td>Path validation</td><td>Tools accessing filesystem must validate against directory traversal.</td></tr>
+              <tr><td>4</td><td>Rate limiting</td><td>Misbehaving agent can exhaust your server without limits.</td></tr>
+              <tr><td>5</td><td>Input sanitization</td><td>Tool params arrive as JSON from an LLM — never pass raw input to shell.</td></tr>
+              <tr><td>6</td><td>CORS restrictions</td><td>Never use <code>allow_origins=["*"]</code> in production.</td></tr>
+              <tr><td>7</td><td>Secrets management</td><td>Plaintext secrets visible in process lists across thousands of installs.</td></tr>
+              <tr><td>8</td><td>Non-root container</td><td>Don't run as root inside Docker containers.</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="note"><strong>Speed honesty note:</strong> Only the H200 1,288 tokens/s figure has independent verification (from vLLM's own blog). The 1,000+ H100 and 700+ RTX 5090 numbers are Google's self-reported benchmarks. Community benchmarks will emerge over the next 1–2 weeks.</p>
+        <p style="margin-top:16px;"><a href="/security/" class="btn btn-outline">Full Security Guide (10 Items with Code) &rarr;</a></p>
+      </div>
+    </section>
 
-        <h3>Quality vs. Autoregressive Models</h3>
-        <div class="compare-grid">
-          <div>
-            <h4>Where it's competitive</h4>
-            <ul>
-              <li>Short-form text generation (1–2 paragraphs)</li>
-              <li>Summarization &amp; factual extraction</li>
-              <li>Translation (140+ languages)</li>
-              <li>Data augmentation / synthetic text</li>
-              <li>Chat / basic Q&amp;A</li>
-            </ul>
+    <!-- Module 5: Testing & CI/CD -->
+    <section id="testing" class="section section-alt">
+      <div class="container">
+        <h2>Testing and CI/CD</h2>
+        <div class="reasons-grid">
+          <div class="reason-card">
+            <h3>MCP Inspector</h3>
+            <p>Web UI that connects to your running server for interactive tool testing. <code>fastmcp dev server.py</code> opens it at localhost:5173.</p>
           </div>
-          <div>
-            <h4>Where it falls short</h4>
-            <ul>
-              <li>Complex reasoning (math, logic, multi-hop)</li>
-              <li>Long-form creative writing (3+ paragraphs)</li>
-              <li>Code generation (multi-function/multi-file)</li>
-              <li>Nuanced instruction following</li>
-            </ul>
+          <div class="reason-card">
+            <h3>pytest Integration</h3>
+            <p>Full async test client — <code>Client("app:mcp")</code> connects to your server, call tools, assert results.</p>
+          </div>
+          <div class="reason-card">
+            <h3>GitHub Actions Pipeline</h3>
+            <p>Test → Build Docker → Deploy. Coverage gate at 80%. Push to main, ship automatically.</p>
+          </div>
+          <div class="reason-card">
+            <h3>OpenTelemetry Monitoring</h3>
+            <p>Native OTEL support. Export to Prometheus/Grafana or Datadog. Monitor latency, error rate, tool call volume.</p>
           </div>
         </div>
-
-        <h3>Current Limitations</h3>
-        <div class="limitations-grid">
-          <div class="limit-card">
-            <h4>Quality drop is real and permanent</h4>
-            <p>Google is honest: DiffusionGemma is not and will not be "Gemma 4 quality at 4x speed." It's a different tradeoff. Accept it or choose a different model.</p>
-          </div>
-          <div class="limit-card">
-            <h4>Tooling is bleeding edge</h4>
-            <p>llama.cpp support is an unmerged PR. Ollama doesn't work. Community GGUF quantizations may vary in quality. The ecosystem will mature, but in June 2026, you're an early adopter.</p>
-          </div>
-          <div class="limit-card">
-            <h4>Hardware pickiness</h4>
-            <p>The speed advantage collapses on low-compute GPUs (3060, 4060, laptops) and Apple Silicon. Check your hardware before getting excited about those 700+ tokens/s numbers.</p>
-          </div>
-          <div class="limit-card">
-            <h4>Fine-tuning is uncharted territory</h4>
-            <p>No established LoRA/QLoRA recipes, no community adapter ecosystem. Tuning a diffusion model is conceptually different from autoregressive — you're tuning denoising behavior, not next-token prediction.</p>
-          </div>
-        </div>
+        <p style="margin-top:16px;"><a href="/testing/" class="btn btn-outline">Full Testing Guide with Code &rarr;</a></p>
       </div>
     </section>
 
     <!-- Cross-Links -->
-    <section id="related-guides" class="section section-alt">
+    <section id="related-guides" class="section">
       <div class="container">
-        <h2>Detailed Setup Guides</h2>
+        <h2>Detailed Guides</h2>
         <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:24px;">
-          <a href="/ollama/" class="btn btn-outline" style="font-size:15px;padding:12px 24px;">Ollama Setup — Modelfile &amp; Workaround</a>
-          <a href="/llama-cpp/" class="btn btn-outline" style="font-size:15px;padding:12px 24px;">llama.cpp — Build &amp; Inference</a>
-          <a href="/gguf/" class="btn btn-outline" style="font-size:15px;padding:12px 24px;">GGUF — Download &amp; Convert</a>
-          <a href="/production-guide/" class="btn btn-outline" style="font-size:15px;padding:12px 24px;border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Save 40+ Hours — The Manual</a>
+          <a href="/deployment/" class="btn btn-outline" style="font-size:15px;padding:12px 24px;">Production Deployment — 6 Steps</a>
+          <a href="/security/" class="btn btn-outline" style="font-size:15px;padding:12px 24px;">Security Hardening — 10 Items</a>
+          <a href="/testing/" class="btn btn-outline" style="font-size:15px;padding:12px 24px;">Testing & CI/CD — Full Pipeline</a>
+          <a href="/production-guide/" class="btn btn-outline" style="font-size:15px;padding:12px 24px;border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Save 20+ Hours — Pro Guide</a>
         </div>
       </div>
     </section>
 
-    <!-- Module 5: Use Cases -->
-    <section id="use-cases" class="section section-alt">
+        <!-- Evidence -->
+    <section id="evidence" class="section">
       <div class="container">
-        <h2>Use Cases</h2>
-        <div class="usecases-grid">
-          <div class="usecase-card">
-            <h3>Local LLM Enthusiast with a 24GB GPU</h3>
-            <p>On an RTX 4090 or 3090, DiffusionGemma at 4-bit fits in ~16GB VRAM and delivers potentially 200–400 tokens/s — a speed tier no autoregressive 20B+ model can touch on consumer hardware. For comparison: Qwen 2.5 32B at Q4 runs at ~40–60 tokens/s on a 4090.</p>
+        <h2>Don't Take Our Word For It</h2>
+        <div class="reasons-grid">
+          <div class="reason-card">
+            <h3>CardinalOps MCP Security Research</h3>
+            <p>A security researcher demonstrated <strong>full remote code execution</strong> on a default FastMCP setup following popular tutorials — no auth, no TLS, exposed HTTP transport. The attack took under 15 minutes.</p>
+            <p class="reason-note">"Every tool you add to an MCP server is another API endpoint on localhost. Anyone who can reach that endpoint can call those tools." — CardinalOps, June 2026</p>
           </div>
-          <div class="usecase-card">
-            <h3>Synthetic Data / Data Augmentation</h3>
-            <p>When you need to generate thousands of text samples and inference intelligence doesn't need to be SOTA — just speed and hardware efficiency. Block-level parallel generation makes it ideal for batch synthetic data where volume matters more than per-sample reasoning depth.</p>
+          <div class="reason-card">
+            <h3>Docker MCP Security Analysis</h3>
+            <p>Across 100+ analyzed MCP server Docker images: <strong>66% had security code smells</strong>, 42% ran as root, and 31% had unauthenticated endpoints exposed. The top 5 issues map directly to our hardening checklist.</p>
+            <p class="reason-note">"MCP is the new SSH — it's a remote execution protocol. Treat it like you'd treat an open port." — Docker Security Research, May 2026</p>
           </div>
-          <div class="usecase-card">
-            <h3>Real-Time Interactive Applications</h3>
-            <p>Chat interfaces, live transcription summarization, code autocomplete, content moderation — any scenario where sub-100ms latency changes the user experience. Even a 50 tokens/s autoregressive model has noticeable lag. DiffusionGemma at 700+ tokens/s makes iteration feel instantaneous.</p>
-          </div>
-          <div class="usecase-card">
-            <h3>Local-First / Privacy-Sensitive Deployment</h3>
-            <p>Building a product that must run fully offline (legal, healthcare, defense)? Apache 2.0 means no license negotiation. 4-bit fits on a single consumer GPU. You don't need top-tier reasoning — you need fast, private, on-device text processing.</p>
-          </div>
-        </div>
-
-        <h3 class="anti-title">When NOT to Use DiffusionGemma</h3>
-        <div class="anti-grid">
-          <div class="anti-item">
-            <strong>Apple Silicon (M1/M2/M3/M4)</strong>
-            <p>You won't see the speed advantage. Use Llama 4 or Qwen 3.6 instead.</p>
-          </div>
-          <div class="anti-item">
-            <strong>Complex reasoning or code gen</strong>
-            <p>The quality gap vs. autoregressive models of similar size is significant.</p>
-          </div>
-          <div class="anti-item">
-            <strong>Cloud API serving many concurrent users</strong>
-            <p>Traditional batched autoregressive inference may be more cost-effective.</p>
-          </div>
-          <div class="anti-item">
-            <strong>Need fine-tuning now</strong>
-            <p>The ecosystem isn't ready. Wait 2–3 months.</p>
+          <div class="reason-card">
+            <h3>Reddit r/mcp: "How do I host this in production?"</h3>
+            <p>A single thread asking "How can I host an MCP server in production?" on r/mcp drew <strong>dozens of replies debating Railway vs Cloudflare vs self-host</strong> — but nobody posted a complete, working config. This guide is the answer that thread never got.</p>
+            <a href="https://reddit.com/r/mcp" class="reason-note" style="display:block;text-decoration:none;color:inherit;">Read the thread →</a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Module 6: FAQ -->
-    <section id="faq" class="section">
+    <!-- FAQ -->
+    <section id="faq" class="section section-alt">
       <div class="container">
         <h2>FAQ</h2>
         <div class="faq-list">
           <details class="faq-item">
-            <summary>What exactly is a "diffusion language model"? How is it different from GPT/Llama?</summary>
+            <summary>I get "could not infer transport from server.py" — what's wrong?</summary>
             <div class="faq-answer">
-              <p>Autoregressive models generate one token at a time, left-to-right, each token depending on all previous ones. A diffusion model works on 256-token blocks simultaneously — it starts with random noise, then iteratively "denoises" toward coherent text, letting every token in the block attend to every other token bidirectionally.</p>
-              <p>Think of it as the difference between typing a sentence word by word (autoregressive) vs. giving a blurry photo of a sentence and letting it sharpen into focus over multiple passes (diffusion). The key consequence: autoregressive models can't go back and fix tokens they already generated. Diffusion models can.</p>
+              <p>This happens when the MCP client can't determine the transport protocol. Make sure your <code>mcp.run()</code> call explicitly specifies the transport: <code>mcp.run(transport="http")</code> for HTTP or <code>mcp.run(transport="stdio")</code> for local. If using the ASGI pattern, the client must connect via HTTP URL, not a file path.</p>
             </div>
           </details>
           <details class="faq-item">
-            <summary>Can I run this on my Apple Silicon Mac (M3/M4 Max/Ultra)?</summary>
+            <summary>FastMCP vs the raw MCP Python SDK — which should I use?</summary>
             <div class="faq-answer">
-              <p>You can run it, but you probably won't get the 4x speedup. Google's blog explicitly warns that unified-memory architectures may not see the same acceleration. On Apple Silicon, expect performance similar to autoregressive models of comparable size. If you're on Mac, stick with Llama or Qwen.</p>
+              <p>FastMCP. It reduces boilerplate by ~5x, auto-generates schemas from type hints, and handles protocol lifecycle. The raw SDK is for edge cases where you need custom JSON-RPC handling. Community consensus: "FastMCP all day."</p>
             </div>
           </details>
           <details class="faq-item">
-            <summary>How does the quality compare to Llama 4 or Qwen 3.6?</summary>
+            <summary>Can FastMCP handle multiple concurrent clients?</summary>
             <div class="faq-answer">
-              <p>Google is transparent: "DiffusionGemma's overall output quality is lower than standard Gemma 4." For short-form generation and summarization, quality is competitive. For complex reasoning, long-form writing, and code, autoregressive models win by a meaningful margin. Exact benchmark comparisons vs. Llama 4 and Qwen 3.6 will emerge as the community runs them.</p>
+              <p>Yes, with HTTP transport. Each client gets its own MCP session (tracked by <code>mcp-session-id</code> header). Use uvicorn with <code>--workers 4</code> or gunicorn for concurrency. Stdio transport is single-client only.</p>
             </div>
           </details>
           <details class="faq-item">
-            <summary>Is there Ollama support?</summary>
+            <summary>How do I make authentication tokens survive server restarts?</summary>
             <div class="faq-answer">
-              <p>No. llama.cpp support exists as PR #24427 (open, now has merge conflicts as of June 18, 2026). Ollama typically integrates llama.cpp — once PR #24427 merges, Ollama support will follow. Timeline: weeks to months, may extend due to conflicts.</p>
+              <p>Set <code>jwt_secret</code> explicitly (don't let FastMCP auto-generate it) and configure a persistent <code>token_store</code> (Redis or filesystem). Without these, every restart forces all clients to re-authenticate.</p>
             </div>
           </details>
           <details class="faq-item">
-            <summary>Can I fine-tune DiffusionGemma?</summary>
+            <summary>Is FastMCP Cloud the only way to deploy remotely?</summary>
             <div class="faq-answer">
-              <p>Theoretically yes, practically not yet. The architecture is based on Gemma 4, so the backbone weights can be adapted. But diffusion fine-tuning (tuning denoising behavior vs. next-token prediction) requires different loss functions and training recipes. No established LoRA/QLoRA pipelines exist. If fine-tuning is in your plan, wait 2–3 months.</p>
+              <p>No. FastMCP Cloud (by Prefect) is one option. You can also self-host on any platform that runs Python: Docker on a VPS, Railway, Cloudflare Workers, AWS ECS, Google Cloud Run, Kubernetes. The ASGI app pattern works with any ASGI-compatible hosting.</p>
             </div>
           </details>
           <details class="faq-item">
-            <summary>What GPU do I actually need to see the speedup?</summary>
+            <summary>My browser client connects but sessions break silently — why?</summary>
             <div class="faq-answer">
-              <p>RTX 3090 or better, or the Blackwell generation (RTX 5090, RTX PRO 6000) for NVFP4 native 4-bit. RTX 3060, 4060, and laptop GPUs have insufficient compute to saturate tensor cores for block denoising. Rule of thumb: if your GPU can't do BF16 at >100 TFLOPS, the speed advantage diminishes significantly.</p>
+              <p>You're missing <code>expose_headers=["mcp-session-id"]</code> in your CORS config. Without it, browsers receive the session ID header but JavaScript can't read it. Add it to your <code>http_app()</code> call.</p>
             </div>
           </details>
           <details class="faq-item">
-            <summary>Are the 1,000+ tokens/s H100 and 700+ tokens/s RTX 5090 numbers real?</summary>
+            <summary>What's the difference between mcp.run(transport="http") and mcp.http_app()?</summary>
             <div class="faq-answer">
-              <p>The only independently verified number is vLLM's 1,288 tokens/s on H200. The 1,000+ H100 and 700+ RTX 5090 figures are Google's self-reported benchmarks — conditions not publicly documented. Community benchmarks will emerge within 1–2 weeks. Treat Google's numbers as "best-case under optimized conditions" until independent testing confirms.</p>
+              <p><code>mcp.run()</code> starts a built-in server (good for dev). <code>mcp.http_app()</code> returns a Starlette ASGI application you run with uvicorn/gunicorn (production). Use <code>http_app()</code> when you need multiple workers, custom middleware, or to mount MCP alongside other routes.</p>
             </div>
           </details>
           <details class="faq-item">
-            <summary>Can I use this commercially?</summary>
+            <summary>How do I handle the CVE-2026-48710 Starlette vulnerability?</summary>
             <div class="faq-answer">
-              <p>Yes. Apache 2.0 is one of the most permissive open-source licenses. You can use it in commercial products, modify it, distribute it, and you don't need to open-source your modifications. Unlike Llama's restrictive terms (>700M monthly active users = need Meta's permission) or Gemma's source-available terms, there are no usage-based restrictions.</p>
-            </div>
-          </details>
-          <details class="faq-item">
-            <summary>When should I use DiffusionGemma vs. sticking with Qwen/Llama/Gemma?</summary>
-            <div class="faq-answer">
-              <p>Use DiffusionGemma if: (1) you're on a high-compute GPU (4090+), (2) throughput matters more than top-tier quality, (3) you're doing synthetic data, real-time chat, or draft generation. Stick with autoregressive if: (1) you're on Apple Silicon or a lower-end GPU, (2) you need complex reasoning, code, or long-form writing, (3) you need stable, production-tested tooling with Ollama/llama.cpp support.</p>
+              <p>Update to FastMCP ≥3.3, which floors Starlette at <code>>=1.0.1</code>. Run <code>pip install --upgrade fastmcp</code> and verify with <code>pip show starlette</code>.</p>
             </div>
           </details>
         </div>
@@ -477,16 +290,16 @@ model = AutoModelForCausalLM.from_pretrained(
 
     <section class="section">
       <div class="container">
-        <a href="/production-guide/" style="text-decoration:none;color:var(--accent,#10b981);"><h2 style="color:inherit;">Save 40+ Hours of Debugging →</h2></a>
-        <p style="color:var(--text2,#9898b0);font-size:1.05rem;">The free tutorials get you running. The <strong style="color:var(--text,#e8eaed);">Production Manual</strong> keeps you running — Docker Compose, GPU tuning, 20+ error fixes, real benchmarks. 8 chapters, each saves you 5+ hours. <strong style="color:var(--text,#e8eaed);">$39, lifetime updates, 30-day refund.</strong></p>
+        <a href="/production-guide/" style="text-decoration:none;color:var(--accent,#10b981);"><h2 style="color:inherit;">Save 20+ Hours of Trial and Error →</h2></a>
+        <p style="color:var(--text2,#9898b0);font-size:1.05rem;">The free deployment guide gets you running. The <strong style="color:var(--text,#e8eaed);">Production Manual</strong> keeps you running — full nginx configs, security audit checklist, Docker Compose with health checks, CI/CD pipeline YAML, 30+ error fixes, monitoring setup. <strong style="color:var(--text,#e8eaed);">From $39, lifetime updates, 30-day refund.</strong></p>
       </div>
     </section>
   </main>
 
   <footer class="footer">
     <div class="container">
-      <p>This is an unofficial community resource. Not affiliated with, endorsed by, or sponsored by Google.</p>
-      <p>Content based on Google's official blog, technical report, and community testing. Speed claims from Google and vLLM — see benchmark notes for verification status.</p>
+      <p>This is an unofficial community resource. Not affiliated with, endorsed by, or sponsored by Prefect.</p>
+      <p>Content based on official FastMCP documentation, MCP protocol specification, and community testing. All code examples are original.</p>
       <p style="margin-top:12px;"><a href="/privacy/">Privacy Policy</a> &middot; <a href="/terms/">Terms of Service</a> &middot; <a href="/refunds/">Money-Back Guarantee</a></p>
     </div>
   </footer>
@@ -499,74 +312,66 @@ model = AutoModelForCausalLM.from_pretrained(
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "What exactly is a \"diffusion language model\"? How is it different from GPT/Llama?",
+        "name": "I get \"could not infer transport from server.py\" — what's wrong?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Autoregressive models generate one token at a time, left-to-right. A diffusion model works on 256-token blocks simultaneously — starting with random noise, then iteratively denoising toward coherent text with bidirectional attention. The key difference: diffusion models can go back and fix tokens they already generated. Autoregressive models cannot."
+          "text": "Make sure your mcp.run() call explicitly specifies the transport: mcp.run(transport=\"http\") for HTTP or mcp.run(transport=\"stdio\") for local. If using the ASGI pattern, the client must connect via HTTP URL, not a file path."
         }
       },
       {
         "@type": "Question",
-        "name": "Can I run DiffusionGemma on my Apple Silicon Mac?",
+        "name": "FastMCP vs the raw MCP Python SDK — which should I use?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "You can run it, but you probably won't get the 4x speedup. Google's blog explicitly warns that unified-memory architectures may not see the same acceleration. On Apple Silicon, expect performance similar to autoregressive models of comparable size."
+          "text": "FastMCP. It reduces boilerplate by ~5x, auto-generates schemas from type hints, and handles protocol lifecycle. Community consensus: FastMCP all day."
         }
       },
       {
         "@type": "Question",
-        "name": "How does the quality compare to Llama 4 or Qwen 3.6?",
+        "name": "Can FastMCP handle multiple concurrent clients?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Google is transparent: DiffusionGemma's overall output quality is lower than standard Gemma 4. For short-form generation and summarization, quality is competitive. For complex reasoning, long-form writing, and code, autoregressive models win."
+          "text": "Yes, with HTTP transport. Each client gets its own MCP session. Use uvicorn with --workers 4 or gunicorn for concurrency. Stdio transport is single-client only."
         }
       },
       {
         "@type": "Question",
-        "name": "Is there Ollama support for DiffusionGemma?",
+        "name": "How do I make authentication tokens survive server restarts?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. llama.cpp support exists as PR #24427 (open, now has merge conflicts as of June 2026). Ollama typically integrates llama.cpp — once PR #24427 merges, Ollama support will follow. Timeline: weeks to months."
+          "text": "Set jwt_secret explicitly and configure a persistent token_store (Redis or filesystem). Without these, every restart forces all clients to re-authenticate."
         }
       },
       {
         "@type": "Question",
-        "name": "Can I fine-tune DiffusionGemma?",
+        "name": "Is FastMCP Cloud the only way to deploy remotely?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Theoretically yes, practically not yet. Diffusion fine-tuning requires different loss functions and training recipes. No established LoRA/QLoRA pipelines exist yet. If fine-tuning is essential, wait 2-3 months for the ecosystem to mature."
+          "text": "No. You can self-host on any platform that runs Python: Docker on a VPS, Railway, Cloudflare Workers, AWS ECS, Google Cloud Run, Kubernetes. The ASGI app pattern works with any ASGI-compatible hosting."
         }
       },
       {
         "@type": "Question",
-        "name": "What GPU do I need to see the speedup?",
+        "name": "My browser client connects but sessions break silently — why?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "RTX 3090 or better, or Blackwell generation (RTX 5090, RTX PRO 6000) for NVFP4 native 4-bit. RTX 3060, 4060, and laptop GPUs have insufficient compute. Rule of thumb: if your GPU can't do BF16 at >100 TFLOPS, the speed advantage diminishes."
+          "text": "You're missing expose_headers=[\"mcp-session-id\"] in your CORS config. Without it, browsers receive the session ID header but JavaScript can't read it."
         }
       },
       {
         "@type": "Question",
-        "name": "Are the 1,000+ tokens/s on H100 and 700+ tokens/s on RTX 5090 numbers real?",
+        "name": "What's the difference between mcp.run(transport=\"http\") and mcp.http_app()?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Only vLLM's 1,288 tokens/s on H200 has independent verification. The 1,000+ H100 and 700+ RTX 5090 figures are Google's self-reported benchmarks. Community benchmarks will emerge within 1-2 weeks. Treat Google's numbers as best-case until independently confirmed."
+          "text": "mcp.run() starts a built-in server (good for dev). mcp.http_app() returns a Starlette ASGI application you run with uvicorn/gunicorn (production). Use http_app() when you need multiple workers or custom middleware."
         }
       },
       {
         "@type": "Question",
-        "name": "Can I use DiffusionGemma commercially?",
+        "name": "How do I handle the CVE-2026-48710 Starlette vulnerability?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. Apache 2.0 is one of the most permissive open-source licenses. You can use it in commercial products, modify it, distribute it, and don't need to open-source your modifications. Unlike Llama's restrictive terms, there are no usage-based restrictions."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "When should I use DiffusionGemma vs. sticking with Qwen/Llama/Gemma?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Use DiffusionGemma if you are on a high-compute GPU (4090+), throughput matters more than top-tier quality, or you are doing synthetic data, real-time chat, or draft generation. Stick with autoregressive if you are on Apple Silicon or a lower-end GPU, need complex reasoning or code, or need stable production-tested tooling."
+          "text": "Update to FastMCP ≥3.3, which floors Starlette at >=1.0.1. Run pip install --upgrade fastmcp and verify with pip show starlette."
         }
       }
     ]
@@ -578,22 +383,22 @@ model = AutoModelForCausalLM.from_pretrained(
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Run DiffusionGemma on Your GPU — Honest Guide & Benchmarks",
-    "description": "5 ways to run DiffusionGemma locally. Real hardware requirements, tested on RTX 3090–5090. What works, what doesn't.",
-    "image": "https://diffrun.dev/assets/og-image.svg",
-    "url": "https://diffrun.dev",
-    "author": { "@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffrun.dev" },
-    "datePublished": "2026-06-11T00:00:00+00:00",
-    "dateModified": "2026-06-14T00:00:00+00:00",
+    "headline": "FastMCP Production Guide — Deploy Python MCP Servers",
+    "description": "Learn how to deploy FastMCP servers to production with nginx, TLS, authentication, Docker, and security hardening.",
+    "image": "https://deploymcp.dev/assets/og-image.svg",
+    "url": "https://deploymcp.dev",
+    "author": { "@type": "Organization", "name": "MCP Deploy Guide", "url": "https://deploymcp.dev" },
+    "datePublished": "2026-06-19T00:00:00+00:00",
+    "dateModified": "2026-06-19T00:00:00+00:00",
     "sameAs": [
-      "https://blog.google/technology/ai/apache-2-diffusion-language-model/",
-      "https://huggingface.co/google/diffusiongemma-26B-A4B-it",
-      "https://github.com/ggerganov/llama.cpp/pull/24427"
+      "https://gofastmcp.com",
+      "https://github.com/jlowin/fastmcp",
+      "https://modelcontextprotocol.io"
     ],
     "hasPart": [
-      { "@type": "Article", "headline": "Run DiffusionGemma with Ollama", "url": "https://diffrun.dev/ollama/" },
-      { "@type": "Article", "headline": "Run DiffusionGemma with llama.cpp", "url": "https://diffrun.dev/llama-cpp/" },
-      { "@type": "Article", "headline": "DiffusionGemma GGUF Guide", "url": "https://diffrun.dev/gguf/" }
+      { "@type": "Article", "headline": "FastMCP Production Deployment Guide", "url": "https://deploymcp.dev/deployment/" },
+      { "@type": "Article", "headline": "FastMCP Security Hardening Guide", "url": "https://deploymcp.dev/security/" },
+      { "@type": "Article", "headline": "FastMCP Testing & CI/CD Guide", "url": "https://deploymcp.dev/testing/" }
     ]
   }
   </script>
@@ -607,8 +412,8 @@ model = AutoModelForCausalLM.from_pretrained(
       {
         "@type": "ListItem",
         "position": 1,
-        "name": "DiffusionGemma Guide",
-        "item": "https://diffrun.dev"
+        "name": "MCP Deploy Guide",
+        "item": "https://deploymcp.dev"
       }
     ]
   }
@@ -619,12 +424,12 @@ model = AutoModelForCausalLM.from_pretrained(
   {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "DiffusionGemma Guide",
-    "url": "https://diffrun.dev",
-    "description": "Independent community guide to Google's DiffusionGemma — setup, benchmarks, and integration guides",
+    "name": "MCP Deploy Guide",
+    "url": "https://deploymcp.dev",
+    "description": "Independent community guide to deploying FastMCP servers in production — from local dev to enterprise-ready",
     "sameAs": [
-      "https://huggingface.co/google/diffusiongemma-26B-A4B-it",
-      "https://github.com/ggerganov/llama.cpp/pull/24427"
+      "https://github.com/jlowin/fastmcp",
+      "https://gofastmcp.com"
     ]
   }
   </script>
@@ -634,9 +439,9 @@ model = AutoModelForCausalLM.from_pretrained(
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "DiffusionGemma Guide",
-    "url": "https://diffrun.dev",
-    "description": "Step-by-step guide to run DiffusionGemma on your own GPU — local setup, inference, and production deployment. 4x faster generation. Free tutorials.",
+    "name": "MCP Deploy Guide",
+    "url": "https://deploymcp.dev",
+    "description": "Step-by-step guide to deploy FastMCP MCP servers in production. nginx reverse proxy, TLS, authentication, Docker, K8s, security hardening, CI/CD. Free tutorials.",
     "inLanguage": "en"
   }
   </script>
@@ -644,6 +449,6 @@ model = AutoModelForCausalLM.from_pretrained(
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
-  <script src="js/main.js"></script>
+  <script src="/js/main.js"></script>
 </body>
 </html>

@@ -189,7 +189,7 @@ body {
 .btn-outline:hover { background: var(--gray-50); border-color: var(--google-blue); }
 
 /* === Sections === */
-.section { padding: 80px 0; }
+.section { padding: 56px 0; }
 .section-alt { background: var(--bg-alt); }
 .section h2 {
   font-family: 'Google Sans', sans-serif;
@@ -224,11 +224,11 @@ body {
   color: var(--gray-700);
 }
 .section-lead {
-  font-size: 18px; color: var(--gray-700);
-  margin-bottom: 20px;
+  font-size: 16px; color: var(--text);
+  margin-bottom: 12px;
   line-height: 1.7;
 }
-.section p { margin-bottom: 16px; color: var(--text); }
+.section p { font-size: 16px; margin-bottom: 16px; color: var(--text); }
 
 /* === Badges === */
 .badge {
@@ -251,6 +251,19 @@ body {
   color: var(--gray-700);
   margin: 16px 0;
 }
+
+/* === Callout === */
+.callout {
+  background: var(--bg-alt);
+  border-left: 4px solid var(--google-blue);
+  padding: 16px;
+  margin: 20px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.callout pre { margin: 8px 0 0; }
+.callout.warn { border-left-color: #f59e0b; }
+.callout.danger { border-left-color: var(--google-red); }
+.callout.ok { border-left-color: var(--google-green); }
 
 /* === Tables === */
 .table-wrap { overflow-x: auto; margin: 24px 0; }
@@ -280,7 +293,7 @@ pre {
   overflow-x: auto;
 }
 pre code { font-family: 'Roboto Mono', 'Fira Code', monospace; font-size: 14px; }
-code { font-family: 'Roboto Mono', monospace; font-size: 14px; }
+code { font-family: 'Roboto Mono', monospace; font-size: 15px; }
 
 /* === Reasons Grid === */
 .reasons-grid {

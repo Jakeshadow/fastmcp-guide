@@ -8,11 +8,11 @@
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect x="80" y="80" width="1040" height="470" rx="24" fill="#ffffff" stroke="#dadce0" stroke-width="1"/>
-  <rect x="80" y="80" width="1040" height="6" rx="3" fill="#4285F4"/>
-  <text x="600" y="260" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="48" font-weight="700" fill="#202124">DiffusionGemma</text>
-  <text x="600" y="320" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#5f6368">How to Run Google's Diffusion LLM Locally</text>
-  <text x="600" y="400" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#4285F4" font-weight="500">vLLM · llama.cpp · Unsloth · HF Transformers</text>
-  <text x="600" y="470" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#9aa0a6">26B MoE · 3.8B Active · Apache 2.0 · 1000+ tokens/s</text>
-  <circle cx="80" cy="80" r="40" fill="#4285F4"/>
-  <text x="80" y="96" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="700" fill="#ffffff">DG</text>
+  <rect x="80" y="80" width="1040" height="6" rx="3" fill="#0078D4"/>
+  <text x="600" y="260" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="48" font-weight="700" fill="#202124">FastMCP Production Guide</text>
+  <text x="600" y="320" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#5f6368">Deploy Python MCP Servers to Production Securely</text>
+  <text x="600" y="400" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#0078D4" font-weight="500">nginx + TLS · Docker · Auth · K8s · CI/CD</text>
+  <text x="600" y="470" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#9aa0a6">FastMCP v3 · MIT Licensed · 1M+ Daily Downloads</text>
+  <circle cx="80" cy="80" r="40" fill="#0078D4"/>
+  <text x="80" y="96" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="700" fill="#ffffff">MD</text>
 </svg>

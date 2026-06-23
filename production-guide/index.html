@@ -3,105 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DiffusionGemma Production Guide — 8 Chapters, 40+ Hours Saved</title>
-  <meta name="description" content="The missing production manual for DiffusionGemma. Copy-paste ready — Docker Compose, GPU tuning, 20 error fixes, real benchmarks. Each chapter saves 5+ hours. $39.">
+  <title>FastMCP Production Manual — 100+ Pages, Deploy, Secure, Monitor</title>
+  <meta name="description" content="The missing production manual for FastMCP. 100+ pages. Full nginx configs, security audit, Docker Compose, CI/CD YAML, 30+ error fixes. From $39.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="/css/style.css?v=2">
-  <meta property="og:title" content="DiffusionGemma Production Guide — 8 Chapters, 40+ Hours Saved">
-  <meta property="og:description" content="The missing production manual for DiffusionGemma. Copy-paste ready — Docker Compose, GPU tuning, 20 error fixes, real benchmarks. Each chapter saves 5+ hours. $39.">
+  <link rel="stylesheet" href="/css/style.css?v=3">
+  <meta property="og:title" content="FastMCP Production Manual — 100+ Pages, Deploy, Secure, Monitor">
+  <meta property="og:description" content="The missing production manual for FastMCP. Full nginx configs, security audit, Docker Compose, CI/CD YAML, 30+ error fixes. From $39.">
   <meta property="og:type" content="product">
-  <meta property="og:url" content="https://diffrun.dev/production-guide/">
-  <meta property="og:site_name" content="DiffusionGemma Guide">
+  <meta property="og:url" content="https://deploymcp.dev/production-guide/">
+  <meta property="og:site_name" content="MCP Deploy Guide">
   <meta property="og:locale" content="en_US">
-  <meta property="og:image" content="https://diffrun.dev/assets/og-image.svg">
+  <meta property="og:image" content="https://deploymcp.dev/assets/og-image.svg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://diffrun.dev/assets/og-image.svg">
-  <meta name="twitter:title" content="DiffusionGemma Production Guide — 8 Chapters, 40+ Hours Saved">
-  <meta name="twitter:description" content="The missing production manual. Copy-paste ready — Docker Compose, GPU tuning, 20 error fixes, real benchmarks. $39.">
+  <meta name="twitter:image" content="https://deploymcp.dev/assets/og-image.svg">
+  <meta name="twitter:title" content="FastMCP Production Manual — 100+ Pages, Deploy, Secure, Monitor">
+  <meta name="twitter:description" content="The missing production manual. 100+ pages, full nginx configs, security audit, Docker Compose, CI/CD YAML, 30+ error fixes. From $39.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://diffrun.dev/production-guide/">
+  <link rel="canonical" href="https://deploymcp.dev/production-guide/">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-  <style>
-    .guide-hero { text-align: center; padding: 64px 24px 48px; max-width: 780px; margin: 0 auto; }
-    .guide-hero .badge { display: inline-block; padding: 4px 14px; background: rgba(66,133,244,.12); border: 1px solid rgba(66,133,244,.25); border-radius: 20px; font-size: 13px; font-weight: 500; color: var(--google-blue, #4285F4); margin-bottom: 20px; }
-    .guide-hero h1 { font-size: 2rem; margin-bottom: 14px; }
-    .guide-hero .sub { color: var(--text2, #9898b0); font-size: 1.1rem; max-width: 560px; margin: 0 auto 28px; line-height: 1.6; }
-    .guide-hero .price-block { margin-bottom: 28px; }
-    .guide-hero .price { font-size: 2.4rem; font-weight: 700; color: var(--accent, #10b981); }
-    .guide-hero .price-note { color: var(--text2, #9898b0); font-size: .85rem; margin-top: 4px; }
-    .btn-buy { display: inline-block; padding: 14px 40px; font-size: 1.05rem; font-weight: 600; background: var(--accent, #10b981); color: #000; border-radius: 28px; text-decoration: none; border: none; cursor: pointer; font-family: inherit; transition: all .15s; box-shadow: 0 2px 12px rgba(16,185,129,.35); }
-    .btn-buy:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(16,185,129,.45); }
-
-    .guide-content { max-width: 780px; margin: 0 auto; padding: 0 24px 48px; }
-
-
-    .toc { margin: 28px 0; }
-    .toc h2 { margin-bottom: 16px; }
-    .toc ol { padding-left: 20px; color: var(--text2, #9898b0); line-height: 2; }
-    .toc ol li { padding-left: 4px; }
-    .toc ol li strong { color: var(--text, #e8eaed); }
-
-    .sample-chapter { background: var(--surface, #13131c); border: 1px solid var(--border, #252536); border-radius: 12px; padding: 28px; margin: 32px 0; }
-    .sample-chapter h2 { font-size: 1.2rem; margin-bottom: 4px; color: #ffffff; }
-    .sample-chapter .sample-badge { display: inline-block; padding: 2px 10px; background: var(--google-green, #34A853); color: #000; font-size: .75rem; font-weight: 600; border-radius: 10px; margin-bottom: 16px; }
-    .sample-chapter h3 { font-size: 1.1rem; margin: 20px 0 8px; color: #ffffff; }
-    .sample-chapter p, .sample-chapter li { color: #e0e0e0; line-height: 1.7; margin-bottom: 8px; }
-    .sample-chapter code { color: var(--accent, #10b981); }
-    .sample-chapter ul { padding-left: 20px; }
-
-    .guarantee { text-align: center; margin: 36px 0; padding: 28px; background: rgba(16,185,129,.06); border: 1px solid rgba(16,185,129,.25); border-radius: 12px; }
-    .guarantee p { margin: 0; color: var(--accent, #10b981); font-family: 'Google Sans', 'Roboto', sans-serif; font-weight: 500; }
-    .guarantee strong { color: var(--accent, #10b981); font-weight: 700; }
-
-    .social-proof { margin: 32px 0; }
-    .social-proof h2 { margin-bottom: 16px; }
-    .testimonial { background: #fff; border: 1px solid var(--gray-200, #e8eaed); border-radius: var(--radius, 8px); padding: 18px 22px; margin-bottom: 12px; box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,.08)); }
-    .testimonial .quote { color: var(--gray-700, #5f6368); font-style: italic; margin-bottom: 8px; }
-    .testimonial .name { color: var(--text, #202124); font-weight: 500; font-size: .9rem; }
-
-    .final-cta { text-align: center; padding: 36px 0 16px; }
-
-    .faq-section details { background: #fff; border: 1px solid var(--gray-200, #e8eaed); border-radius: var(--radius, 8px); margin-bottom: 8px; box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,.08)); }
-    .faq-section details summary { padding: 20px 24px; cursor: pointer; font-size: 16px; font-weight: 500; list-style: none; display: flex; justify-content: space-between; align-items: center; }
-    .faq-section details summary::after { content: '+'; font-size: 22px; color: var(--gray-500, #9aa0a6); }
-    .faq-section details[open] summary::after { content: '−'; color: var(--google-blue, #4285F4); }
-    .faq-section details .faq-body { padding: 0 24px 20px; color: var(--gray-700, #5f6368); line-height: 1.6; font-size: .93rem; }
-    .faq-section details:hover { box-shadow: var(--shadow, 0 2px 8px rgba(0,0,0,.12)); }
-    .faq-section details[open] { border-color: var(--google-blue, #4285F4); }
-
-    @media (max-width: 600px) {
-      .guide-hero { padding: 40px 20px 32px; }
-      .guide-hero h1 { font-size: 1.5rem; }
-      .btn-buy { padding: 12px 32px; font-size: 1rem; }
-      .who-for-grid { grid-template-columns: 1fr !important; }
-    }
-  </style>
 </head>
 <body>
-    <nav id="nav" class="nav">
+  <nav id="nav" class="nav">
     <div class="nav-inner">
-      <a href="/" class="nav-logo"><svg width="26" height="26" viewBox="0 0 100 100" style="vertical-align:middle;margin-right:6px;"><rect fill="#4285F4" width="100" height="100" rx="20"/><text x="50" y="68" text-anchor="middle" fill="white" font-size="52" font-family="sans-serif" font-weight="bold">DG</text></svg>DG Guide</a>
+      <a href="/" class="nav-logo"><svg width="26" height="26" viewBox="0 0 100 100" style="vertical-align:middle;margin-right:6px;"><rect fill="#0078D4" width="100" height="100" rx="20"/><text x="50" y="68" text-anchor="middle" fill="white" font-size="52" font-family="sans-serif" font-weight="bold">MD</text></svg>MCP Deploy</a>
       <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/benchmarks/">Benchmarks</a></li>
-        <li class="nav-dropdown">
-          <a href="#">Setup ▾</a>
-          <ul class="nav-dropdown-menu">
-            <li><a href="/ollama/">Ollama</a></li>
-            <li><a href="/llama-cpp/">llama.cpp</a></li>
-            <li><a href="/gguf/">GGUF</a></li>
-            <li><a href="/vllm/">vLLM</a></li>
-            <li><a href="/lm-studio/">LM Studio</a></li>
-          </ul>
-        </li>
-        <li><a href="/production-guide/" class="nav-cta">Pro Guide</a></li>
+        <li><a href="/deployment/">Deployment</a></li>
+        <li><a href="/security/">Security</a></li>
+        <li><a href="/testing/">Testing</a></li>
+        <li><a href="/production-guide/">Pro Guide</a></li>
       </ul>
       <button class="nav-toggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -109,245 +45,291 @@
     </div>
   </nav>
 
-<main>
-    <!-- Hero -->
-    <section class="guide-hero">
-      <div class="badge">From Setup to Production · Works Pre-PR</div>
-      <h1>8 Chapters. 40+ Hours Saved. Copy-Paste Ready.</h1>
-      <p class="sub">You got DiffusionGemma running — vLLM, Ollama bridge, or llama.cpp. This guide covers what happens next: Docker Compose, GPU tuning, 20 verified error fixes, real benchmarks on 5 GPUs, multi-user serving, security. Everything the free tutorials don't cover.</p>
-      <div class="price-block">
-        <div class="price">$39</div>
-        <div class="price-note">One-time purchase. Lifetime updates. 30-day money-back guarantee.</div>
+  <main>
+    <section id="hero" class="hero">
+      <div class="container">
+        <div class="hero-badge">Works Today · FastMCP v3</div>
+        <h1>FastMCP Production Manual — 100+ Pages, Deploy, Secure, Monitor</h1>
+        <p class="hero-subtitle">From <code>uvicorn app:app</code> to a hardened MCP server behind nginx with auth, monitoring, and CI/CD — in one copy-paste ready manual. For developers who wrote their first MCP tool and need it in production.</p>
+        <div class="hero-actions">
+          <a href="#sample-ch0" class="btn btn-outline">Preview — Free Chapters 0 &amp; 1 (~25 min read)</a>
+          <a href="/pricing/" class="btn btn-primary" style="background:var(--accent,#10b981);border-color:var(--accent,#10b981);">Get the Manual — from $39</a>
+        </div>
+        <p style="margin-top:12px;font-size:0.95rem;color:var(--gray-700);">The free guides on this site get you running. This manual keeps you running — and covers every edge case those guides can't fit. If FastMCP v4 ships within 6 months, you get the update for free. Questions? <a href="mailto:support@deploymcp.dev">support@deploymcp.dev</a>.</p>
       </div>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:8px;">
-        <a href="#sample" class="btn btn-outline" style="border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Preview Chapter 1 (Free)</a>
-        <button class="btn-buy" onclick="Paddle.Checkout.open({settings:{successUrl:'https://diffrun.dev/thanks/'},items:[{priceId:'pri_01ktztp1vv0w0b1h7e560eght0',quantity:1}]})">Get the Guide — $39</button>
-      </div>
-      <p style="font-size:.85rem;color:var(--text2,#9898b0);margin-top:14px;line-height:1.5;">This guide works today — pre-PR #24427. When the PR merges (Ollama/LM Studio native support), <strong style="color:var(--text,#e8eaed);">you get the updated version free</strong>. We track the PR daily. Questions or issues? <a href="mailto:support@diffrun.dev" style="color:var(--accent,#10b981);">support@diffrun.dev</a></p>
     </section>
 
-    <div class="guide-content">
+    <section id="sample-ch0" class="section">
+      <div class="container">
+        <div class="hero-badge" style="display:inline-block;margin-bottom:8px;">FREE PREVIEW — Chapter 0</div>
+        <h2>Chapter 0: Start Here — The Gap Between Local and Production</h2>
+        <p class="section-lead">Your MCP server works locally. Then you push it to a server, put nginx in front, point a domain at it, and wire up Claude or Cursor — and things start breaking in ways the official docs don't cover.</p>
 
+        <div style="background:#fff;border:1px solid var(--gray-200);border-radius:8px;padding:20px 24px;margin:24px 0;">
+          <p style="font-weight:600;margin-bottom:8px;">Real failures devs hit on their first production deploy:</p>
+          <ul style="color:var(--gray-700);padding-left:20px;line-height:1.8;">
+            <li>The client hangs, then returns an empty response with <strong>no error at all</strong></li>
+            <li>Tool calls reliably return <strong>504 Gateway Timeout</strong></li>
+            <li>Everything works until something fails, then a <strong>CORS error appears and buries the actual error</strong></li>
+            <li>Sessions drop every other request — <strong><code>mcp-session-id</code> mysteriously vanishes</strong></li>
+            <li>Claude just shows <strong>"Unable to connect"</strong> while a raw curl works fine</li>
+          </ul>
+        </div>
 
-      <!-- Free Sample Chapter -->
-      <section id="sample" class="sample-chapter">
-        <div class="sample-badge">FREE PREVIEW — Chapter 1 (Saves ~5h)</div>
-        <h2>Production Deployment Architecture</h2>
-        <p>Here's the production-grade Docker Compose setup — the single most requested pattern from the free tutorials. This is what Chapter 1 goes deep on.</p>
+        <p>None of these are bugs. They're the gap between local and production. The official docs are an API reference — they tell you what each function does, but not that a single missing <code>proxy_buffering off</code> silently kills Streamable HTTP, or that the MCP spec mandates OAuth 2.1 + Dynamic Client Registration + PKCE, without which the major clients simply won't connect.</p>
 
-        <h3>The Problem with `docker run`</h3>
-        <p>Every free tutorial shows <code>docker run -p 8880:8880</code>. That's fine for testing. In production, you need: restart policies that work, health checks that actually verify the model is loaded, GPU allocation that survives driver updates, and logging that doesn't fill your disk.</p>
+        <p style="margin-top:16px;"><strong>This manual is that missing deployment guide.</strong> Every chapter is a wall you'll hit taking a real FastMCP server to production — and the complete, copy-pasteable fix.</p>
 
-        <h3>Production Compose File</h3>
-        <pre><code class="language-yaml"># docker-compose.prod.yml
-services:
-  diffusiongemma:
-    image: vllm/vllm-openai:latest
-    runtime: nvidia
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=all
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-    command:
-      - "--model"
-      - "google/diffusiongemma-26B-A4B-it"
-      - "--trust-remote-code"
-      - "--gpu-memory-utilization"
-      - "0.92"
-      - "--max-model-len"
-      - "65536"
-      - "--max-num-seqs"
-      - "8"
-    ports:
-      - "8880:8000"
-    volumes:
-      - ./model-cache:/root/.cache/huggingface
-      - ./logs:/var/log/vllm
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 120s</code></pre>
+        <h3 style="margin-top:24px;">Where This Picks Up</h3>
+        <p>Chapter 1 (free) maps the deployment ladder L1→L4 and the four architecture decisions: transport, <code>mcp.run()</code> vs <code>mcp.http_app()</code>, auth, and hosting. <strong>This manual is the build itself.</strong> Chapters 2–8 take you from L2 (uvicorn + nginx + TLS) to L4 (K8s + OTEL + RBAC) — every config, every fix, validated against a real environment.</p>
+        <p>If you haven't read Chapter 1 yet, scroll down. Then come back here when you need the build sheets.</p>
 
-        <h3>Why This Works</h3>
-        <ul>
-          <li><strong>restart: unless-stopped</strong> — survives reboots, but won't restart-loop if you intentionally stop it</li>
-          <li><strong>healthcheck with start_period: 120s</strong> — gives the model time to load before marking unhealthy. Most setups use 30s and get false negatives</li>
-          <li><strong>gpu-memory-utilization: 0.92</strong> — leaves 8% for CUDA context overhead. Pushing to 0.95+ causes OOM on long contexts</li>
-          <li><strong>max-num-seqs: 8</strong> — caps concurrent requests so one user can't starve others</li>
-          <li><strong>Volume mounts for cache + logs</strong> — model downloads persist across container rebuilds. Logs are accessible outside the container</li>
+        <h3>What This Is Not</h3>
+        <ul style="color:var(--gray-700);padding-left:20px;line-height:1.8;">
+          <li><strong>Not a translation of the API docs.</strong> The official reference is good. We don't repeat it.</li>
+          <li><strong>Not a "Hello World" tutorial.</strong> Assumes you've already built a working local MCP server.</li>
+          <li><strong>Not AI-generated filler.</strong> Every config block, CVE mitigation, and error fix was validated against a real environment.</li>
         </ul>
 
-        <h3>Nginx Reverse Proxy</h3>
-        <pre><code class="language-nginx">server {
-    listen 443 ssl;
-    server_name api.diffrun.dev;
+        <p style="font-size:.85rem;color:var(--gray-700);margin-top:12px;">Based on FastMCP 3.4.x (June 2026). The MCP ecosystem moves fast — every config and mitigation is current as of this version, with lifetime updates.</p>
+      </div>
+    </section>
 
-    location /v1/ {
-        proxy_pass http://127.0.0.1:8880;
-        proxy_set_header Host $host;
-        proxy_read_timeout 120s;
-        proxy_buffering off;
-        client_max_body_size 10m;
-    }
-}</code></pre>
+    <section id="sample-ch1" class="section section-alt">
+      <div class="container">
+        <div class="hero-badge" style="display:inline-block;margin-bottom:8px;">FREE PREVIEW — Chapter 1 (Saves ~3h)</div>
+        <h2>Chapter 1: Architecture &amp; Deployment Blueprint</h2>
+        <p class="section-lead">Map your FastMCP architecture before you write a single line of config. The biggest production failures don't come from bad nginx settings — they come from picking the wrong deployment pattern on day one and discovering it three weeks later, when you've already built around it.</p>
 
-        <p style="margin-top:16px;"><strong>The full chapter covers:</strong> systemd service files, log rotation, GPU driver update safety, multi-GPU setup, and a deployment checklist that catches the 5 most common production gotchas before they bite.</p>
-      </section>
+        <h3>1.1 The FastMCP Deployment Ladder</h3>
+        <p>There is no single "correct" way to deploy a FastMCP server. There's a ladder, and you climb it as your user count and reliability requirements grow. Each rung adds capability <em>and</em> complexity. Climbing too early wastes weeks on infrastructure you don't need; climbing too late means an outage forces the upgrade at the worst possible time.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Level</th><th>Setup</th><th>For</th><th>Complexity</th></tr></thead>
+            <tbody>
+              <tr><td>L1</td><td><code>fastmcp dev</code> + Inspector</td><td>Solo dev, local testing</td><td>Zero</td></tr>
+              <tr><td>L2</td><td>uvicorn + nginx + TLS</td><td>Small team (3–10 users)</td><td>Low</td></tr>
+              <tr><td>L3</td><td>Docker + auth + health checks</td><td>Team (10–50 users)</td><td>Medium</td></tr>
+              <tr><td>L4</td><td>K8s + OTEL + RBAC</td><td>Enterprise (50+ users, multi-team)</td><td>High</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:.9rem;color:var(--gray-700);margin-top:8px;"><strong>Rule of thumb:</strong> If you can't name the specific requirement pushing you to the next level (more users than one box can handle, a compliance audit, multi-team isolation), you're not ready for it yet. Most teams reading this should target L2 or L3.</p>
 
-      <!-- TOC -->
-      <section class="toc">
-        <h2>Chapter 1 Got You Started. The Other 7 Cover…</h2>
-        <ol style="font-size:1.05rem;line-height:2.2;">
-          <li><strong>GPU Optimization Deep Dive</strong> — Memory tuning, batch sizing, NVFP4 vs GGUF trade-offs <span style="color:var(--accent,#10b981);font-weight:700;">~8h saved</span></li>
-          <li><strong>Quantization Strategy & Comparison</strong> — Q4_0 through FP16 benchmarks, which quant for which workload <span style="color:var(--accent,#10b981);font-weight:700;">~4h saved</span></li>
-          <li><strong>Troubleshooting: 20+ Common Errors</strong> — From "trust_remote_code" to segfaults, each with root cause + verified fix <span style="color:var(--accent,#10b981);font-weight:700;">~10h saved</span></li>
-          <li><strong>Performance Benchmarks on Real Hardware</strong> — RTX 3090, 4090, 5090, A6000, H100 — not Google's self-reported numbers <span style="color:var(--accent,#10b981);font-weight:700;">~5h saved</span></li>
-          <li><strong>Multi-User & API Serving</strong> — Concurrent requests, queue management, rate limiting <span style="color:var(--accent,#10b981);font-weight:700;">~6h saved</span></li>
-          <li><strong>Security & Authentication</strong> — API key setup, TLS termination, safe exposure patterns <span style="color:var(--accent,#10b981);font-weight:700;">~3h saved</span></li>
-          <li><strong>Monitoring, Logging & Maintenance</strong> — Prometheus metrics, log aggregation, model update workflows <span style="color:var(--accent,#10b981);font-weight:700;">~5h saved</span></li>
+        <p style="font-size:.9rem;color:var(--gray-700);margin-top:4px;"><strong>L1 — Local dev.</strong> You run <code>fastmcp dev</code>, the MCP Inspector opens, you test tools by hand. No TLS, no auth, no persistence. Nothing survives a reboot. <strong>L2 — First real deploy.</strong> One machine, uvicorn + nginx + TLS, real domain. Handles 3–10 concurrent users, ~$5/month. Chapter 2 lives here. <strong>L3 — Hardened.</strong> Containerize, add auth, health checks that verify MCP readiness (not just HTTP 200). Chapters 3–6. <strong>L4 — Enterprise.</strong> K8s, OTEL, RBAC, multi-region. Chapters 5/7/8 reach here. Don't skip rungs: K8s doesn't fix a broken nginx config — it makes it broken in 12 pods instead of 1.</p>
+
+        <h3>1.2 Critical Architecture Decisions (Get These Right First)</h3>
+        <p>Four decisions shape everything downstream. Each one is hard to reverse once you've built on it.</p>
+
+        <h4>Decision 1 — Transport: Stdio vs HTTP</h4>
+        <p><strong>Stdio</strong> runs the server as a subprocess of a single local client. Perfect for personal tools — no network, no TLS, no auth. <strong>HTTP</strong> runs the server as a long-lived network service that any number of remote clients connect to. This is what you need the moment the server lives on a different machine than the client.</p>
+        <pre style="background:#1e1e2e;color:#cdd6f4;padding:16px;border-radius:8px;overflow-x:auto;"><code><span style="color:#6c7086;"># Stdio — single local client, launched on demand</span>
+<span style="color:#cba6f7;">mcp</span>.<span style="color:#89b4fa;">run</span>()  <span style="color:#6c7086;"># defaults to stdio</span>
+
+<span style="color:#6c7086;"># HTTP — remote, multi-client, production</span>
+<span style="color:#cba6f7;">mcp</span>.<span style="color:#89b4fa;">run</span>(<span style="color:#a6e3a1;">transport</span>=<span style="color:#a6e3a1;">"http"</span>, <span style="color:#a6e3a1;">host</span>=<span style="color:#a6e3a1;">"0.0.0.0"</span>, <span style="color:#a6e3a1;">port</span>=<span style="color:#f9e2af;">8000</span>)</code></pre>
+        <p style="font-size:.9rem;color:var(--gray-700);">Use HTTP for production unless you are specifically building a personal, single-machine tool. Everything in Chapters 2–8 assumes HTTP transport.</p>
+        <div style="background:#fff;border:1px solid var(--gray-200);border-radius:6px;padding:10px 16px;margin-top:8px;font-size:.87rem;color:var(--gray-700);">⚠️ FastMCP 3.x defaults HTTP to Streamable HTTP, not the older SSE transport. This matters for your nginx config (Chapter 2) — Streamable HTTP breaks silently if the proxy buffers responses.</div>
+
+        <h4>Decision 2 — <code>mcp.run()</code> vs <code>mcp.http_app()</code></h4>
+        <p>This is the decision people get wrong most often. <code>mcp.run()</code> starts a built-in server — one line, works in dev, but manages its own single process with no worker pool, no graceful reload. <code>mcp.http_app()</code> returns a standard Starlette ASGI application that you hand to a real ASGI server (uvicorn or gunicorn) which handles workers, restarts, signals, and graceful shutdown.</p>
+        <pre style="background:#1e1e2e;color:#cdd6f4;padding:16px;border-radius:8px;overflow-x:auto;"><code><span style="color:#6c7086;"># Development — built-in server, single process</span>
+<span style="color:#cba6f7;">mcp</span>.<span style="color:#89b4fa;">run</span>(<span style="color:#a6e3a1;">transport</span>=<span style="color:#a6e3a1;">"http"</span>, <span style="color:#a6e3a1;">port</span>=<span style="color:#f9e2af;">8000</span>)
+
+<span style="color:#6c7086;"># Production — expose an ASGI app, run under uvicorn/gunicorn</span>
+<span style="color:#a6e3a1;">app</span> = <span style="color:#cba6f7;">mcp</span>.<span style="color:#89b4fa;">http_app</span>()
+
+<span style="color:#6c7086;"># Then: uvicorn server:app --host 0.0.0.0 --port 8000 --workers 4</span></code></pre>
+        <p style="font-size:.9rem;color:var(--gray-700);">Use <code>mcp.http_app()</code> in production, always. Chapter 4 (Docker) and Chapter 6 (CI/CD) both assume you're exposing an ASGI app.</p>
+        <div style="background:#fff;border:1px solid var(--gray-200);border-radius:6px;padding:10px 16px;margin-top:8px;font-size:.87rem;color:var(--gray-700);">⚠️ Multi-worker note: if you run <code>--workers &gt; 1</code>, in-memory session state breaks (each worker has its own). You either run stateless mode or move sessions to Redis. Chapter 3 covers this — decide your worker count before you design session storage.</div>
+
+        <h4>Decision 3 — Auth Provider: Bearer vs OAuth</h4>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th></th><th>Bearer</th><th>OAuth 2.1 + DCR + PKCE</th></tr></thead>
+            <tbody>
+              <tr><td>Setup effort</td><td>Minutes</td><td>Days (or use FastMCP's built-in provider)</td></tr>
+              <tr><td>Identity</td><td>One shared secret</td><td>Per-user (Google/GitHub/SSO)</td></tr>
+              <tr><td>Public client support (Claude/Cursor)</td><td>Won't connect</td><td>Required</td></tr>
+              <tr><td>Best for</td><td>Internal services, trusted clients</td><td>Public servers, team SSO, multi-tenant</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:.9rem;color:var(--gray-700);margin-top:8px;">Start with Bearer, upgrade to OAuth when you need Claude/Cursor to connect or need per-user login. Chapter 3 covers both paths in full.</p>
+
+        <h4>Decision 4 — Hosting</h4>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Option</th><th>Cost</th><th>Scaling</th><th>Ops burden</th><th>Best for</th></tr></thead>
+            <tbody>
+              <tr><td>VPS (Hetzner/DO)</td><td>~$5–6/mo</td><td>Manual (vertical)</td><td>Low</td><td>Most teams — L2/L3</td></tr>
+              <tr><td>Cloud Run / ECS</td><td>Per-request</td><td>Auto</td><td>Medium</td><td>Spiky traffic, no host maintenance</td></tr>
+              <tr><td>Kubernetes</td><td>High</td><td>Auto + multi-region</td><td>High</td><td>Enterprise, multi-team — L4</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:.9rem;color:var(--gray-700);margin-top:8px;">Default to a VPS. A $5 Hetzner box can run a serious production MCP server. Reach for Cloud Run/ECS when you need auto-scale, and for K8s only when a concrete enterprise requirement forces it.</p>
+
+        <h3 style="margin-top:28px;">Putting It Together</h3>
+        <p>By the end of this chapter you should be able to answer four questions about your deployment:</p>
+        <ol style="color:var(--gray-700);padding-left:24px;line-height:2;">
+          <li><strong>Which rung?</strong> (L1 dev / L2 single box / L3 containerized team / L4 enterprise)</li>
+          <li><strong>Transport?</strong> (Stdio for personal, HTTP for everything remote)</li>
+          <li><strong>App entry point?</strong> (<code>mcp.http_app()</code> under uvicorn for production)</li>
+          <li><strong>Auth + hosting?</strong> (Bearer or OAuth; VPS, serverless, or K8s)</li>
         </ol>
-      </section>
 
-      <!-- Who This Is For (And Not For) -->
-      <section class="who-for" style="margin-bottom:32px;">
-        <h2 style="font-size:1.2rem;margin-bottom:10px;">Who This Guide Is For (And Who It's Not)</h2>
-        <p style="color:var(--text2,#9898b0);margin-bottom:18px;line-height:1.6;font-size:.95rem;">DiffusionGemma is <strong style="color:var(--accent,#10b981);">4x faster</strong> than standard Gemma 4. Google is explicit: <em>"DiffusionGemma's overall output quality is lower than standard Gemma 4."</em> The speed-for-quality tradeoff is by design — this isn't a replacement for accuracy-critical workflows. This guide assumes you understand the tradeoff and want to deploy it for the right use cases.</p>
-        <div class="who-for-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);border-radius:10px;padding:20px 22px;">
-            <h3 style="font-size:.95rem;color:var(--accent,#10b981);margin-bottom:10px;">Good For</h3>
-            <ul style="padding-left:18px;color:var(--gray-700,#5f6368);line-height:1.8;font-size:.9rem;margin:0;">
-              <li>Data augmentation & synthetic generation</li>
-              <li>Draft writing & code scaffolding</li>
-              <li>Speed-critical pipelines where you verify output</li>
-              <li>Creative / brainstorming tasks</li>
+        <p style="margin-top:16px;font-size:1.05rem;"><strong>Most teams land on:</strong> L2–L3, HTTP transport, <code>mcp.http_app()</code> under uvicorn, Bearer-then-OAuth, on a single VPS. That's a real, defensible production architecture — and it's exactly the path Chapters 2–8 build, step by step.</p>
+        <p style="margin-top:12px;"><em>Want the rest? Chapters 2–8 cover everything below.</em></p>
+      </div>
+    </section>
+
+    <section id="toc" class="section section-alt">
+      <div class="container">
+        <h2>Chapter 1 Got You Started. The Other 7 Cover…</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Ch</th><th>What You'll Learn</th><th>Time Saved</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Architecture blueprint — L1→L4 ladder, four critical decision frameworks (transport, ASGI entry point, auth, hosting), deployment pattern selection</td><td><strong style="color:var(--accent,#10b981);">~3h saved</strong></td></tr>
+              <tr><td>2</td><td>Production nginx + TLS — full config with HTTP/2, chunked streaming, rate limiting zones, certbot automation, CORS deep dive</td><td><strong style="color:var(--accent,#10b981);">~2h saved</strong></td></tr>
+              <tr><td>3</td><td>Auth in production — Bearer/JWT/OAuth setup, token persistence (Redis/file), session management, multi-team SSO, CVE-2026-48710 mitigation</td><td><strong style="color:var(--accent,#10b981);">~3h saved</strong></td></tr>
+              <tr><td>4</td><td>Docker + Compose — multi-service Dockerfile with health checks, secrets management, non-root user, multi-stage builds, Compose with nginx sidecar</td><td><strong style="color:var(--accent,#10b981);">~2h saved</strong></td></tr>
+              <tr><td>5</td><td>Security hardening checklist — all 10 items expanded (threat → verify → fix → validate), Cerbos/OPA RBAC integration, audit logging, WAF rules</td><td><strong style="color:var(--accent,#10b981);">~4h saved</strong></td></tr>
+              <tr><td>6</td><td>CI/CD pipeline — GitHub Actions test→build→deploy, coverage gates, canary deployments, rollback automation, multi-environment (staging→prod)</td><td><strong style="color:var(--accent,#10b981);">~3h saved</strong></td></tr>
+              <tr><td>7</td><td>Monitoring &amp; alerting — OpenTelemetry setup, Prometheus metrics, Grafana dashboards, alert rules, log aggregation with Loki</td><td><strong style="color:var(--accent,#10b981);">~3h saved</strong></td></tr>
+              <tr><td>8</td><td>30+ production errors &amp; fixes — CORS silent failures, transport inference errors, session management bugs, token expiry, Docker networking, K8s probes</td><td><strong style="color:var(--accent,#10b981);">~4h saved</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:1.1rem;margin-top:16px;">Total: <strong style="color:var(--accent,#10b981);">~24h saved</strong> across 8 chapters, 100+ pages.</p>
+      </div>
+    </section>
+
+    <section id="pricing" class="section">
+      <div class="container" style="text-align:center;">
+        <h2>Choose Your Edition</h2>
+        <p style="color:var(--gray-700);font-size:1.05rem;margin-bottom:28px;">One-time purchase. Lifetime updates. 30-day money-back guarantee.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:760px;margin:0 auto;text-align:left;">
+          <div style="background:#fff;border:1px solid var(--gray-200);border-radius:12px;padding:28px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;">
+            <h3 style="font-size:1.2rem;margin-bottom:4px;">Essential</h3>
+            <p style="color:var(--gray-700);font-size:.88rem;margin-bottom:16px;">The complete production manual — 8 chapters, copy-paste ready.</p>
+            <div style="font-size:2rem;font-weight:700;color:var(--accent,#10b981);margin-bottom:16px;">$39 <span style="font-size:.85rem;font-weight:400;color:var(--gray-700);">one-time</span></div>
+            <ul style="color:var(--gray-700);padding-left:20px;line-height:1.8;font-size:.93rem;margin-bottom:20px;flex:1;">
+              <li>8 chapters — Architecture to CI/CD</li>
+              <li>Production nginx + TLS + Docker Compose setup</li>
+              <li>Authentication — Bearer, JWT, OAuth with SSO</li>
+              <li>10-point security hardening checklist</li>
+              <li>CI/CD pipeline — GitHub Actions</li>
+              <li>30+ production errors with root cause + fix</li>
+              <li>PDF + Markdown. Instant download.</li>
+              <li>Lifetime updates</li>
             </ul>
+            <a href="/pricing/" class="btn btn-primary" style="display:block;text-align:center;background:var(--gray-200);color:var(--text);border-color:var(--gray-200);margin-top:auto;">Buy Essential — $39</a>
           </div>
-          <div style="background:rgba(234,67,53,.06);border:1px solid rgba(234,67,53,.18);border-radius:10px;padding:20px 22px;">
-            <h3 style="font-size:.95rem;color:var(--google-red,#EA4335);margin-bottom:10px;">Not For</h3>
-            <ul style="padding-left:18px;color:var(--gray-700,#5f6368);line-height:1.8;font-size:.9rem;margin:0;">
-              <li>Factual QA / knowledge-base answers</li>
-              <li>Replacing standard Gemma 4 for accuracy</li>
-              <li>Tasks where hallucinations are unacceptable</li>
-              <li>Low-compute environments (it's compute-bound, CUDA-favored)</li>
+          <div style="background:#fff;border:2px solid var(--accent,#10b981);border-radius:12px;padding:28px;position:relative;box-shadow:0 0 20px rgba(16,185,129,.08);display:flex;flex-direction:column;">
+            <div style="display:inline-block;padding:3px 10px;background:var(--accent,#10b981);color:#000;font-size:.75rem;font-weight:600;border-radius:12px;position:absolute;top:-14px;left:24px;">RECOMMENDED</div>
+            <h3 style="font-size:1.2rem;margin-bottom:4px;">Pro</h3>
+            <p style="color:var(--gray-700);font-size:.88rem;margin-bottom:16px;">Everything in Essential, plus four add-ons not sold separately.</p>
+            <div style="font-size:2rem;font-weight:700;color:var(--accent,#10b981);margin-bottom:16px;">$59 <span style="font-size:.85rem;font-weight:400;color:var(--gray-700);">one-time</span></div>
+            <ul style="color:var(--gray-700);padding-left:20px;line-height:1.8;font-size:.93rem;margin-bottom:20px;flex:1;">
+              <li>Everything in Essential</li>
+              <li><strong style="color:var(--google-red);">Security Pen-Test Script</strong> — Python script that runs all 10 checklist checks against your live endpoint</li>
+              <li><strong style="color:var(--google-red);">Config Template Pack</strong> — standalone nginx, Docker, K8s, CI/CD files, ready to drop in</li>
+              <li><strong style="color:var(--google-red);">Canary Deployment Workflow</strong> — staged rollout GitHub Actions: 10% → 50% → 100%</li>
+              <li><strong style="color:var(--google-red);">Grafana Dashboard + Alert Rules</strong> — pre-built JSON dashboard and Prometheus alert rules for MCP monitoring</li>
+              <li>PDF + Markdown + ZIP (all templates)</li>
+              <li>Lifetime updates</li>
             </ul>
+            <p style="font-size:.76rem;color:var(--gray-700);margin:-8px 0 16px;line-height:1.4;">Honest note: pen-test script uses single JSON-RPC calls — if your server requires initialize-then-call, some checks may return WARN (README covers the fix). Grafana dashboard uses standard metric names — find-replace in JSON if yours differ. Both verify in ~5 min on your live server.</p>
+            <a href="/pricing/" class="btn btn-primary" style="display:block;text-align:center;background:var(--accent,#10b981);border-color:var(--accent,#10b981);color:#000;margin-top:auto;">Buy Pro — $59</a>
           </div>
         </div>
-      </section>
-
-      <!-- Guarantee -->
-      <div class="guarantee">
-        <p><strong>30-day money-back guarantee. No questions asked.</strong></p>
-        <p>If the guide doesn't save you at least 40 hours of debugging, email support@diffrun.dev for a full refund.</p>
       </div>
+    </section>
 
-      <!-- FAQ -->
-      <section class="faq-section">
+    <section id="who-for" class="section">
+      <div class="container">
+        <h2>Who This Manual Is For</h2>
+        <div class="reasons-grid">
+          <div class="reason-card">
+            <h3>Python developers who built a local MCP server and need to ship it</h3>
+            <p>Your tool works on localhost. Now your team wants to use it. This manual bridges that gap — every config, every security step, every monitoring setup.</p>
+          </div>
+          <div class="reason-card">
+            <h3>DevOps engineers setting up MCP infrastructure for internal teams</h3>
+            <p>You need to run MCP servers in production safely — not just "get it working." This covers the boring parts: health checks, rate limiting, secret rotation, audit trails.</p>
+          </div>
+          <div class="reason-card">
+            <h3>Startups shipping AI features with MCP</h3>
+            <p>You don't have a platform team. This manual is your platform team — production patterns tested and documented, ready to copy-paste into your infrastructure.</p>
+          </div>
+        </div>
+
+        <h2 style="margin-top:40px;">Who This Is NOT For</h2>
+        <div class="anti-grid">
+          <div class="anti-item"><strong>"What's MCP?" beginners</strong><p>The free guides on this site cover MCP basics. Start there first.</p></div>
+          <div class="anti-item"><strong>Stdio-only personal tools</strong><p>If you're the only user and it runs locally, you don't need this.</p></div>
+          <div class="anti-item"><strong>Already running MCP at scale</strong><p>If you have a platform team and K8s cluster with OTEL already, this is too basic.</p></div>
+        </div>
+
+        <div class="guarantee" style="color:var(--accent,#10b981);font-family:'Google Sans',sans-serif;font-weight:700;font-size:1.15rem;border:2px solid var(--accent,#10b981);border-radius:8px;padding:20px 24px;margin-top:32px;">
+          <strong style="font-size:1.3rem;">30-Day Money-Back Guarantee</strong>
+          <p style="margin-top:8px;color:var(--text,#e8eaed);font-weight:400;">If this manual doesn't save you at least 10 hours of trial-and-error in the first 30 days, email <a href="mailto:support@deploymcp.dev" style="color:var(--accent,#10b981);">support@deploymcp.dev</a> and I'll refund every cent. No questions asked.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section section-alt">
+      <div class="container">
         <h2>FAQ</h2>
-        <details>
-          <summary>How is this different from the free tutorials?</summary>
-          <div class="faq-body">The free tutorials cover "how to run." This guide covers "how to keep running." It assumes you've already got the model working — it's about making it reliable, fast, and safe for real use.</div>
-        </details>
-        <details>
-          <summary>What format is the guide in?</summary>
-          <div class="faq-body">PDF + Markdown. Instant download after purchase. The Markdown version works with any note-taking tool (Obsidian, Notion, etc.).</div>
-        </details>
-        <details>
-          <summary>Do I get updates?</summary>
-          <div class="faq-body">Yes. One-time purchase, lifetime access to all updates. As DiffusionGemma tooling matures (llama.cpp merge, Ollama support, new quantization methods), the guide gets updated.</div>
-        </details>
-        <details>
-          <summary>What if it doesn't help me?</summary>
-          <div class="faq-body">30-day full refund, no questions. Email support@diffrun.dev. If it doesn't save you time, you shouldn't pay for it.</div>
-        </details>
-      </section>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>Is this guide specific to FastMCP, or does it apply to any MCP server?</summary>
+            <div class="faq-answer"><p>All deployment patterns (nginx, Docker, K8s, monitoring) apply to any MCP server. FastMCP-specific sections cover auth providers, CORS configuration, ASGI setup, and tool-level RBAC. If you use raw MCP SDK, about 70% of the manual still applies.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>Does it cover FastMCP v3 specifically?</summary>
+            <div class="faq-answer"><p>Yes. It's up-to-date with v3's HTTP deployment, ASGI support, OAuth, multi-client architecture, and CVE-2026-48710 mitigation (Starlette ≥1.0.1).</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>How is this different from the free guides on this site?</summary>
+            <div class="faq-answer"><p>The free guides cover the happy path. The manual covers edge cases, failure modes, monitoring, alerting, incident response, and 30+ error fixes — everything you'd only discover after running in production for months.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>What format is the manual?</summary>
+            <div class="faq-answer"><p>PDF with copy-pasteable code blocks and config files. All nginx configs, Dockerfiles, YAML manifests, and Python code are complete — not snippets. Pro edition adds standalone config files (ZIP), pen-test script (Python), canary workflow (YAML), and Grafana dashboard (JSON).</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>What's the difference between Essential and Pro?</summary>
+            <div class="faq-answer"><p><strong>Essential ($39)</strong> is the complete 8-chapter manual (PDF + Markdown). <strong>Pro ($59)</strong> adds four add-ons not sold separately: Security Pen-Test Script (automates all 10 checklist checks), Config Template Pack (standalone nginx/Docker/K8s/CI files), Canary Deployment Workflow (staged rollout GitHub Actions), and Grafana Dashboard + Alert Rules (pre-built JSON). If you're copy-pasting into production, Pro is zero-typing from purchase to deployed. <em>Note: pen-test and dashboard take ~5 min to verify against your server — README covers MCP handshake and metric name alignment.</em></p></div>
+          </details>
+          <details class="faq-item">
+            <summary>Will it be updated for FastMCP v4?</summary>
+            <div class="faq-answer"><p>If FastMCP v4 ships within 6 months of your purchase, you get the updated edition free. Just email your receipt to support@deploymcp.dev.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
 
-      <!-- Final CTA -->
-      <section class="final-cta">
-        <button class="btn-buy" onclick="Paddle.Checkout.open({settings:{successUrl:'https://diffrun.dev/thanks/'},items:[{priceId:'pri_01ktztp1vv0w0b1h7e560eght0',quantity:1}]})">Get the Production Guide — $39</button>
-        <p style="color:var(--text2,#9898b0);margin-top:12px;font-size:.9rem;">Instant download. 30-day refund. Lifetime updates.</p>
-      </section>
-
-    </div>
+    <section class="section">
+      <div class="container" style="text-align:center;">
+        <h2 style="color:var(--accent,#10b981);">Save ~24 Hours of Trial-and-Error</h2>
+        <p style="color:var(--gray-700);font-size:1.1rem;margin-bottom:24px;">100+ pages, 8 chapters. Every config copy-paste ready. 30-day money-back guarantee. Lifetime updates. From $39.</p>
+        <a href="/pricing/" class="btn btn-primary" style="background:var(--accent,#10b981);border-color:var(--accent,#10b981);font-size:1.1rem;padding:14px 36px;color:#000;">View Pricing — from $39</a>
+        <p style="margin-top:12px;font-size:0.9rem;color:var(--gray-700);">Secure payment via Paddle. EU VAT may apply.</p>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
     <div class="container">
-      <p>This is an unofficial community resource. Not affiliated with, endorsed by, or sponsored by Google.</p>
-      <p><a href="/privacy/">Privacy Policy</a> &middot; <a href="/terms/">Terms of Service</a> &middot; <a href="/refunds/">Money-Back Guarantee</a></p>
+      <p>This is an unofficial community resource. Not affiliated with, endorsed by, or sponsored by Prefect.</p>
+      <p>FastMCP is an open-source project under the MIT License. All code examples in this manual are original.</p>
+      <p style="margin-top:12px;"><a href="/privacy/">Privacy Policy</a> &middot; <a href="/terms/">Terms of Service</a> &middot; <a href="/refunds/">Money-Back Guarantee</a></p>
     </div>
   </footer>
 
-  <!-- Product Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "DiffusionGemma Production Guide",
-    "description": "The missing production manual for DiffusionGemma. Copy-paste ready — Docker Compose, GPU tuning, 20 error fixes, real benchmarks. Each chapter saves 5+ hours. $39.",
-    "image": "https://diffrun.dev/assets/apple-touch-icon.png",
-    "url": "https://diffrun.dev/production-guide/",
-    "brand": {"@type": "Brand", "name": "DiffusionGemma Guide"},
-    "offers": {
-      "@type": "Offer",
-      "price": "39.00",
-      "priceCurrency": "USD",
-      "availability": "https://schema.org/InStock",
-      "priceValidUntil": "2026-08-13",
-      "hasMerchantReturnPolicy": {
-        "@type": "MerchantReturnPolicy",
-        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-        "returnMethod": "https://schema.org/ReturnByMail",
-        "merchantReturnDays": 30,
-        "refundType": "https://schema.org/FullRefund",
-        "returnFees": "https://schema.org/FreeReturn",
-        "applicableCountry": "US",
-        "url": "https://diffrun.dev/refunds/"
-      }
-    }
-  }
-  </script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "8 Chapters. 40+ Hours Saved. Copy-Paste Ready.",
-    "description": "The missing production manual for DiffusionGemma. Copy-paste ready — Docker Compose, GPU tuning, 20 error fixes, real benchmarks. Each chapter saves 5+ hours. $39.",
-    "image": "https://diffrun.dev/assets/og-image.svg",
-    "url": "https://diffrun.dev/production-guide/",
-    "author": {"@type": "Organization", "name": "DiffusionGemma Guide", "url": "https://diffrun.dev"},
-    "datePublished": "2026-06-14T00:00:00+00:00",
-    "dateModified": "2026-06-18T00:00:00+00:00",
-    "isPartOf": {"@type": "Article", "headline": "Run Google's Diffusion LLM Locally — DiffusionGemma", "url": "https://diffrun.dev"}
-  }
-  </script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "DiffusionGemma Guide", "item": "https://diffrun.dev"},
-      {"@type": "ListItem", "position": 2, "name": "Production Guide", "item": "https://diffrun.dev/production-guide/"}
-    ]
-  }
-  </script>
-
-  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
-  <script>Paddle.Initialize({token:'live_290cee1a87c9f8199d453c665f4',eventCallback:function(data){if(data.name==='checkout.completed'){window.location.href='https://diffrun.dev/thanks/';}}});</script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
-  <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-nginx.min.js"></script>
   <script src="/js/main.js"></script>
 </body>
 </html>

@@ -21,22 +21,31 @@
     .thanks .hint { color: var(--text2, #9898b0); font-size: .93rem; margin-bottom: 36px; line-height: 1.5; }
     .btn-dl { display: inline-block; padding: 14px 36px; font-size: 1.05rem; font-weight: 600; background: var(--accent, #10b981); color: #000; border-radius: 24px; text-decoration: none; transition: all .15s; box-shadow: 0 2px 10px rgba(16,185,129,.3); }
     .btn-dl:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(16,185,129,.4); }
+    .btn-dl.secondary { background: var(--gray-200, #e5e5e5); box-shadow: none; margin-top: 12px; }
+    .btn-dl.secondary:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,.1); }
     .help { color: var(--text2, #9898b0); font-size: .82rem; margin-top: 40px; }
     .help a { color: var(--google-blue, #4285F4); }
+    .divider { width: 60px; height: 1px; background: var(--gray-200, #e5e5e5); margin: 24px auto; }
   </style>
 </head>
 <body>
   <nav id="nav" class="nav">
     <div class="nav-inner">
-      <a href="/" class="nav-logo">MCP Deploy Guide</a>
+      <a href="/" class="nav-logo"><svg width="26" height="26" viewBox="0 0 100 100" style="vertical-align:middle;margin-right:6px;"><rect fill="#0078D4" width="100" height="100" rx="20"/><text x="50" y="68" text-anchor="middle" fill="white" font-size="52" font-family="sans-serif" font-weight="bold">MD</text></svg>MCP Deploy</a>
     </div>
   </nav>
 
   <main class="thanks">
     <h1>Thanks for your purchase</h1>
-    <p class="hint">PDF + Markdown · Version 1.0 · June 2026<br>Lifetime updates included.</p>
+    <p class="hint">FastMCP Production Manual (Pro) · Version 1.0 · June 2026<br>8 chapters, 100+ pages + Pro assets. Lifetime updates included.</p>
+
     <a href="/downloads/fastmcp-manual-ch2-8-abc9.pdf" download class="btn-dl">Download Manual (PDF)</a>
-    <p style="margin-top:12px;font-size:.85rem;color:var(--text2,#9898b0);"><a href="/downloads/fastmcp-pro-assets-3134.zip" download style="color:var(--accent,#10b981);">Download Pro Assets (ZIP)</a></p>
+
+    <div class="divider"></div>
+
+    <a href="/downloads/fastmcp-pro-assets-3134.zip" download class="btn-dl secondary">Download Pro Assets (ZIP)</a>
+    <p style="font-size:.76rem;color:var(--text2,#9898b0);margin-top:8px;">Pen-test script · Config templates · Canary workflow · Grafana dashboard</p>
+
     <p class="help">Questions? <a href="mailto:support@deploymcp.dev">support@deploymcp.dev</a></p>
   </main>
 

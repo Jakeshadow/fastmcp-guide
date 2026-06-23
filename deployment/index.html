@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From Localhost to Production — 6 Steps — FastMCP Deployment</title>
+  <meta name="description" content="Your MCP server needs auth, TLS, and a reverse proxy before production. 6 steps from dev server to Docker + K8s.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="/css/style.css?v=3">
+  <meta property="og:title" content="From Localhost to Production — 6 Steps — FastMCP Deployment">
+  <meta property="og:description" content="Your MCP server needs auth, TLS, and a reverse proxy before production. 6 steps from dev to Docker + K8s.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://deploymcp.dev/deployment/">
+  <meta property="og:site_name" content="MCP Deploy Guide">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="From Localhost to Production — 6 Steps — FastMCP Deployment">
+  <meta name="twitter:description" content="Your MCP server needs auth, TLS, and a reverse proxy before production. 6 steps from dev to Docker + K8s.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://deploymcp.dev/deployment/">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+</head>
+<body>
+    <nav id="nav" class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo"><svg width="26" height="26" viewBox="0 0 100 100" style="vertical-align:middle;margin-right:6px;"><rect fill="#0078D4" width="100" height="100" rx="20"/><text x="50" y="68" text-anchor="middle" fill="white" font-size="52" font-family="sans-serif" font-weight="bold">MD</text></svg>MCP Deploy</a>
+      <ul class="nav-links">
+        <li><a href="/deployment/">Deployment</a></li>
+        <li><a href="/security/">Security</a></li>
+        <li><a href="/testing/">Testing</a></li>
+        <li><a href="/production-guide/">Pro Guide</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+<main>
+    <section id="hero" class="hero">
+      <div class="container">
+        <h1>From Localhost to Production — 6 Steps</h1>
+        <p class="hero-subtitle">Saves <strong>15+ hours</strong> — every config copy-paste ready, one afternoon to production.</p>
+        <div class="hero-actions">
+          <a href="#overview" class="btn btn-outline">View Steps ↓</a>
+          <a href="/production-guide/" class="btn btn-outline" style="border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Save 20+ Hours</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="overview" class="section">
+      <div class="container">
+        <h2>What You'll Build</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px;">
+          <a href="#step-1" class="reason-card" style="padding:20px;text-decoration:none;">
+            <h3 style="color:var(--google-blue);">1. Dev Server</h3>
+            <p style="font-size:14px;color:var(--gray-700);margin:0;">Hot-reload + MCP Inspector for local testing</p>
+          </a>
+          <a href="#step-2" class="reason-card" style="padding:20px;text-decoration:none;">
+            <h3 style="color:var(--google-blue);">2. HTTP & ASGI</h3>
+            <p style="font-size:14px;color:var(--gray-700);margin:0;">Switch from stdio to HTTP with uvicorn workers</p>
+          </a>
+          <a href="#step-3" class="reason-card" style="padding:20px;text-decoration:none;">
+            <h3 style="color:var(--google-blue);">3. nginx + TLS</h3>
+            <p style="font-size:14px;color:var(--gray-700);margin:0;">Reverse proxy with certbot auto-HTTPS</p>
+          </a>
+          <a href="#step-4" class="reason-card" style="padding:20px;text-decoration:none;">
+            <h3 style="color:var(--google-blue);">4. Auth</h3>
+            <p style="font-size:14px;color:var(--gray-700);margin:0;">Bearer tokens, JWT, OAuth SSO</p>
+          </a>
+          <a href="#step-5" class="reason-card" style="padding:20px;text-decoration:none;">
+            <h3 style="color:var(--google-blue);">5. Docker</h3>
+            <p style="font-size:14px;color:var(--gray-700);margin:0;">Containerized with health checks + compose</p>
+          </a>
+          <a href="#step-6" class="reason-card" style="padding:20px;text-decoration:none;">
+            <h3 style="color:var(--google-blue);">6. Kubernetes</h3>
+            <p style="font-size:14px;color:var(--gray-700);margin:0;">Production-grade with secrets + probes</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="step-1" class="section section-alt">
+      <div class="container">
+        <h2>Step 1: Local Development Server</h2>
+        <p>FastMCP's dev mode gives you hot-reload and the MCP Inspector for testing. This is your local-only phase — no network exposure.</p>
+        <pre><code class="language-bash">pip install "fastmcp>=3.0"
+fastmcp dev server.py</code></pre>
+        <p>The Inspector opens at <code>http://localhost:5173</code> — use it to test every tool, resource, and prompt before deploying.</p>
+      </div>
+    </section>
+
+    <section id="step-2" class="section">
+      <div class="container">
+        <h2>Step 2: HTTP Deployment with FastMCP v3</h2>
+        <p>Switch from stdio to HTTP with the ASGI app pattern — gives you control over workers, middleware, and process management:</p>
+        <pre><code class="language-python"># app.py
+from fastmcp import FastMCP
+
+mcp = FastMCP("ProductionServer")
+
+@mcp.tool()
+def search_docs(query: str) -> str:
+    """Search internal documentation."""
+    return f"Found results for: {query}"
+
+# Create ASGI app for uvicorn/gunicorn
+app = mcp.http_app()</code></pre>
+        <pre><code class="language-bash">uvicorn app:app --host 127.0.0.1 --port 8000 --workers 4</code></pre>
+        <p>Or with gunicorn for process management:</p>
+        <pre><code class="language-bash">gunicorn app:app -w 4 -k uvicorn.workers.UvicornWorker --bind 127.0.0.1:8000</code></pre>
+        <p>Your MCP endpoint is now at <code>http://127.0.0.1:8000/mcp</code>.</p>
+      </div>
+    </section>
+
+    <section id="step-3" class="section section-alt">
+      <div class="container">
+        <h2>Step 3: Reverse Proxy with nginx + TLS</h2>
+        <p class="section-lead"><strong>Never expose FastMCP directly to the internet.</strong> Put nginx in front with TLS.</p>
+        <pre><code class="language-nginx"># /etc/nginx/sites-available/mcp
+server {
+    listen 443 ssl http2;
+    server_name mcp.yourcompany.com;
+
+    ssl_certificate /etc/letsencrypt/live/mcp.yourcompany.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/mcp.yourcompany.com/privkey.pem;
+
+    location /mcp {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # MCP sessions can be long-lived
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+    }
+
+    location /health {
+        proxy_pass http://127.0.0.1:8000/health;
+    }
+}
+
+server {
+    listen 80;
+    server_name mcp.yourcompany.com;
+    return 301 https://$host$request_uri;
+}</code></pre>
+        <pre><code class="language-bash">sudo certbot --nginx -d mcp.yourcompany.com</code></pre>
+
+        <div class="callout warn">
+          <strong>CORS Trap:</strong> If browser-based clients connect to your MCP server, you MUST set <code>expose_headers</code>:
+          <pre style="margin-top:8px;"><code class="language-python">app = mcp.http_app(
+    cors_allow_origins=["https://your-app.com"],
+    cors_expose_headers=["mcp-session-id"],  # Without this, JS clients break silently
+)</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="step-4" class="section">
+      <div class="container">
+        <h2>Step 4: Authentication Layer</h2>
+        <p>FastMCP v3 supports Bearer tokens, JWT, and OAuth. For team use, start with Bearer token auth:</p>
+        <pre><code class="language-python">from fastmcp.server.auth import BearerAuthProvider
+import os
+
+auth = BearerAuthProvider(
+    token=os.environ["MCP_API_TOKEN"],
+    jwt_secret=os.environ.get("JWT_SECRET"),  # Survives restarts
+)
+
+mcp = FastMCP("SecureServer", auth=auth)</code></pre>
+
+        <h3>Enterprise OAuth (Google/GitHub/Azure SSO)</h3>
+        <pre><code class="language-python">from fastmcp.server.auth import OAuthProvider
+
+auth = OAuthProvider(
+    client_id=os.environ["OAUTH_CLIENT_ID"],
+    client_secret=os.environ["OAUTH_CLIENT_SECRET"],
+    authorize_url="https://accounts.google.com/o/oauth2/auth",
+    token_url="https://oauth2.googleapis.com/token",
+    jwt_secret=os.environ["JWT_SECRET"],
+    token_store="redis://localhost:6379/0",
+)
+
+mcp = FastMCP("EnterpriseServer", auth=auth)</code></pre>
+
+        <div class="callout danger">
+          <strong>Critical:</strong> Without <code>jwt_secret</code> and <code>token_store</code>, tokens are generated in-memory and lost on every restart. Every client must re-authenticate. Set these explicitly.
+        </div>
+      </div>
+    </section>
+
+    <section id="step-5" class="section section-alt">
+      <div class="container">
+        <h2>Step 5: Docker Deployment</h2>
+        <pre><code class="language-dockerfile">FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+RUN useradd -m mcpuser
+USER mcpuser
+EXPOSE 8000
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]</code></pre>
+        <pre><code class="language-yaml"># docker-compose.yml
+services:
+  mcp-server:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - MCP_API_TOKEN=${MCP_API_TOKEN}
+      - JWT_SECRET=${JWT_SECRET}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - mcp-server
+    restart: unless-stopped</code></pre>
+      </div>
+    </section>
+
+    <section id="step-6" class="section">
+      <div class="container">
+        <h2>Step 6: Kubernetes Deployment</h2>
+        <p>Use K8s when you need auto-scaling, rolling deployments, or multi-region. For most teams, Docker Compose is enough.</p>
+        <pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastmcp-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fastmcp-server
+  template:
+    metadata:
+      labels:
+        app: fastmcp-server
+    spec:
+      containers:
+        - name: fastmcp
+          image: your-registry/fastmcp-server:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: MCP_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mcp-secrets
+                  key: api-token
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: mcp-secrets
+                  key: jwt-secret
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"</code></pre>
+        <p>Pair with an Ingress controller (nginx-ingress, Traefik) for TLS termination and routing.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2>FAQ</h2>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>How do I monitor my MCP server in production?</summary>
+            <div class="faq-answer"><p>Add a <code>/health</code> endpoint (the nginx config above already proxies it), then point UptimeRobot, BetterStack, or Prometheus at it. FastMCP exposes <code>/mcp</code> for API calls and <code>/health</code> for liveness checks by default. For metrics, wrap the ASGI app with <code>prometheus-fastapi-instrumentator</code>.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>What happens to active sessions when the server restarts?</summary>
+            <div class="faq-answer"><p>They're lost unless you set <code>token_store</code> (Redis) and <code>jwt_secret</code>. With both set, JWT tokens survive restarts and clients reconnect transparently. Without them, every client must re-authenticate after a restart.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>Docker Compose vs Kubernetes — what should I start with?</summary>
+            <div class="faq-answer"><p>Start with Docker Compose. It handles 95% of MCP deployments — single server, TLS via nginx, health checks, auto-restart. Graduate to Kubernetes when you need multi-region, auto-scaling, or you already run a K8s cluster. The overhead is rarely worth it for a single MCP server.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>How do I handle TLS if I don't have a domain or can't use certbot?</summary>
+            <div class="faq-answer"><p>Use a self-signed cert for internal/VPN deployments, or put Cloudflare Tunnel in front (free, no certbot needed). For public deployments without certbot: buy a cert, use <code>ssl_certificate</code> and <code>ssl_certificate_key</code> pointing to your CA-signed files — the nginx config is identical otherwise.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <h2 style="color:var(--accent,#10b981);">Save 20+ Hours</h2>
+        <p>The Production Manual includes every config from this guide, plus 30+ error fixes, monitoring with Prometheus, and enterprise RBAC patterns. <strong>From $39, lifetime updates.</strong></p>
+        <a href="/production-guide/" class="btn btn-outline" style="margin-top:16px;border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Save 20+ Hours</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>This is an unofficial community resource. Not affiliated with, endorsed by, or sponsored by Prefect.</p>
+      <p style="margin-top:12px;"><a href="/privacy/">Privacy Policy</a> &middot; <a href="/terms/">Terms of Service</a> &middot; <a href="/refunds/">Money-Back Guarantee</a></p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

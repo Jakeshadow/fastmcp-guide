@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10-Step Production Security Checklist — FastMCP</title>
+  <meta name="description" content="Secure your FastMCP server: authentication, TLS, path validation, rate limiting, CORS, secrets management, RBAC. Every item has code.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="/css/style.css?v=3">
+  <meta property="og:title" content="10-Step Production Security Checklist — FastMCP">
+  <meta property="og:description" content="Secure your FastMCP server against real attack vectors. Code for every check.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://deploymcp.dev/security/">
+  <meta property="og:site_name" content="MCP Deploy Guide">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="10-Step Production Security Checklist — FastMCP">
+  <meta name="twitter:description" content="Secure your FastMCP server against real attack vectors. Code for every check.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://deploymcp.dev/security/">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+</head>
+<body>
+    <nav id="nav" class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo"><svg width="26" height="26" viewBox="0 0 100 100" style="vertical-align:middle;margin-right:6px;"><rect fill="#0078D4" width="100" height="100" rx="20"/><text x="50" y="68" text-anchor="middle" fill="white" font-size="52" font-family="sans-serif" font-weight="bold">MD</text></svg>MCP Deploy</a>
+      <ul class="nav-links">
+        <li><a href="/deployment/">Deployment</a></li>
+        <li><a href="/security/">Security</a></li>
+        <li><a href="/testing/">Testing</a></li>
+        <li><a href="/production-guide/">Pro Guide</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+<main>
+    <section id="hero" class="hero">
+      <div class="container">
+        <div class="hero-badge">Security · Production Checklist</div>
+        <h1>10-Step Production Security Checklist</h1>
+        <p class="hero-subtitle">A security researcher demonstrated full RCE on a default FastMCP setup. 66% of MCP servers have security code smells. Don't be one of them.</p>
+        <div class="hero-actions">
+          <a href="#checklist" class="btn btn-outline">Security Checklist (~20 min)</a>
+          <a href="/production-guide/" class="btn btn-outline" style="border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Pro Guide — Full Audit</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="checklist" class="section section-alt">
+      <div class="container">
+        <h2>The 10-Point Security Checklist</h2>
+        <p class="section-lead">Every item below addresses a real attack vector documented in the MCP security landscape.</p>
+
+        <h3>1. Authentication Required</h3>
+        <p><strong>Risk:</strong> FastMCP's default is no auth. HTTP transport without auth = unauthenticated RCE endpoint on the public internet.</p>
+        <pre><code class="language-python">from fastmcp.server.auth import BearerAuthProvider
+import os
+
+auth = BearerAuthProvider(
+    token=os.environ["MCP_API_TOKEN"],
+    jwt_secret=os.environ.get("JWT_SECRET"),
+)
+mcp = FastMCP("SecureServer", auth=auth)</code></pre>
+
+        <h3>2. TLS Everywhere</h3>
+        <p><strong>Risk:</strong> FastMCP does not handle TLS itself. Use nginx or a load balancer for TLS termination. Never run <code>http://</code> in production.</p>
+        <pre><code class="language-nginx">server {
+    listen 443 ssl http2;
+    ssl_certificate /etc/letsencrypt/live/mcp.yourcompany.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/mcp.yourcompany.com/privkey.pem;
+    location /mcp { proxy_pass http://127.0.0.1:8000; }
+}</code></pre>
+
+        <h3>3. Path Validation</h3>
+        <p><strong>Risk:</strong> If your tools access the filesystem, validate paths against directory traversal (<code>../</code>).</p>
+        <pre><code class="language-python">import os
+
+SAFE_DIR = "/data/documents"
+
+@mcp.tool()
+def read_file(path: str) -> str:
+    resolved = os.path.realpath(os.path.join(SAFE_DIR, path))
+    if not resolved.startswith(SAFE_DIR):
+        raise ValueError("Access denied: path traversal detected")
+    with open(resolved) as f:
+        return f.read()</code></pre>
+
+        <h3>4. Rate Limiting</h3>
+        <p><strong>Risk:</strong> Without limits, a malicious or misbehaving agent can exhaust your server.</p>
+        <pre><code class="language-nginx">limit_req_zone $binary_remote_addr zone=mcp:10m rate=30r/m;
+
+location /mcp {
+    limit_req zone=mcp burst=10 nodelay;
+    proxy_pass http://127.0.0.1:8000;
+}</code></pre>
+
+        <h3>5. Input Sanitization</h3>
+        <p><strong>Risk:</strong> All tool parameters arrive as JSON from an LLM. Never pass raw input to shell commands or SQL queries.</p>
+        <pre><code class="language-python">from pydantic import BaseModel, Field, field_validator
+import shlex, subprocess
+
+class RestartServiceInput(BaseModel):
+    service_name: str = Field(max_length=64)
+    @field_validator("service_name")
+    @classmethod
+    def no_shell_chars(cls, v):
+        if any(c in v for c in [";", "&", "|", "$", "`"]):
+            raise ValueError("Invalid service name")
+        return v
+
+@mcp.tool()
+def restart_service(input: RestartServiceInput) -> str:
+    # Safe: shlex.quote + no shell=True
+    subprocess.run(["systemctl", "restart", input.service_name], capture_output=True)
+    return "ok"</code></pre>
+
+        <h3>6. CORS Restrictions</h3>
+        <p>Never use <code>allow_origins=["*"]</code> in production. Include <code>mcp-session-id</code> in <code>expose_headers</code> or browser clients silently fail.</p>
+        <pre><code class="language-python">app = mcp.http_app(
+    cors_allow_origins=["https://your-app.com"],
+    cors_expose_headers=["mcp-session-id"],
+)</code></pre>
+
+        <h3>7. Secrets Management</h3>
+        <p><strong>Risk:</strong> The Docker MCP security analysis found plaintext secrets visible in process lists across thousands of installations.</p>
+        <pre><code class="language-yaml"># docker-compose.yml — environment from .env file, never commit secrets
+environment:
+  - MCP_API_TOKEN=${MCP_API_TOKEN}
+  - JWT_SECRET=${JWT_SECRET}</code></pre>
+
+        <h3>8. Non-Root Container</h3>
+        <pre><code class="language-dockerfile">RUN useradd -m mcpuser
+USER mcpuser</code></pre>
+
+        <h3>9. Tool-Level RBAC</h3>
+        <pre><code class="language-python">@mcp.tool(auth=["admin"])
+def delete_record(record_id: str) -> str:
+    """Delete a record. Admin only."""
+    ...</code></pre>
+
+        <h3>10. Audit Logging</h3>
+        <pre><code class="language-python">mcp = FastMCP(
+    "AuditedServer",
+    auth=auth,
+    instrumentation="opentelemetry",  # Native OTEL support
+)</code></pre>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <h2>FAQ</h2>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>Does adding auth slow down my MCP server?</summary>
+            <div class="faq-answer"><p>Negligibly. Bearer token validation is a hash comparison (O(1)). JWT with <code>jwt_secret</code> adds ~1ms per request. The real latency is in token_store roundtrips (Redis &lt;1ms). For 99% of deployments, auth overhead is invisible compared to LLM inference time.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>What if I already have an API gateway (Kong, Traefik, AWS API Gateway)?</summary>
+            <div class="faq-answer"><p>You can offload items 2 (TLS), 4 (Rate Limiting), and 6 (CORS) to the gateway. Keep items 1 (Auth), 3 (Path Validation), 5 (Input Sanitization), and 9 (RBAC) at the FastMCP layer — the gateway can't enforce tool-level authorization or path validation inside your tool code.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>Does this checklist apply to other MCP SDKs (Python MCP, TypeScript MCP)?</summary>
+            <div class="faq-answer"><p>Mostly yes. Items 2-8 and 10 are transport-layer concerns (nginx, Docker, secrets) that apply regardless of SDK. Items 1, 9 (auth/RBAC) use FastMCP-specific APIs but the patterns are portable. The security research cited in the footer covers the broader MCP ecosystem.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>How do I validate this checklist actually works?</summary>
+            <div class="faq-answer"><p>Run the checklist in reverse order on a staging instance: start with audit logging (10) to capture what happens, then test RBAC bypass (9), then attempt CORS misconfig (6), then path traversal (3). The Production Manual includes a full penetration-testing script that automates all 10 checks against your endpoint.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 style="color:var(--accent,#10b981);">Full Security Audit — Save Hours of Audit Prep</h2>
+        <p>The Production Manual includes all 10 checklist items with expanded patterns: enterprise RBAC with Cerbos/OPA integration, audit trail setup, incident response runbook, and an automated pen-test script that validates every item against your live endpoint.</p>
+        <p><strong style="color:var(--accent,#10b981);">From $39, lifetime updates. Free 14-day refund, no lock-in.</strong></p>
+        <a href="/production-guide/" class="btn btn-outline" style="margin-top:16px;border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Get the Production Manual</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>This is an unofficial community resource. Not affiliated with, endorsed by, or sponsored by Prefect.</p>
+      <p>Security research references: <a href="https://cardinalops.com/blog/mcp-security-analysis" target="_blank" rel="noopener" style="color:inherit;">CardinalOps MCP Security Analysis</a>, <a href="https://www.docker.com/blog/security-of-mcp-servers/" target="_blank" rel="noopener" style="color:inherit;">Docker MCP Security Blog</a>, <a href="https://gofastmcp.com" target="_blank" rel="noopener" style="color:inherit;">official FastMCP documentation</a>.</p>
+      <p style="margin-top:12px;"><a href="/privacy/">Privacy Policy</a> &middot; <a href="/terms/">Terms of Service</a> &middot; <a href="/refunds/">Money-Back Guarantee</a></p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

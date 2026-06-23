@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test & Deploy With Confidence — CI/CD for FastMCP</title>
+  <meta name="description" content="Test FastMCP servers with MCP Inspector and pytest. Full CI/CD pipeline with GitHub Actions: test, build Docker, deploy automatically.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="/css/style.css?v=3">
+  <meta property="og:title" content="Test & Deploy With Confidence — CI/CD for FastMCP">
+  <meta property="og:description" content="Test FastMCP servers with MCP Inspector and pytest. Full CI/CD pipeline: test, build Docker, deploy.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://deploymcp.dev/testing/">
+  <meta property="og:site_name" content="MCP Deploy Guide">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Test & Deploy With Confidence — CI/CD for FastMCP">
+  <meta name="twitter:description" content="Test FastMCP servers with MCP Inspector and pytest. Full CI/CD pipeline.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://deploymcp.dev/testing/">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+</head>
+<body>
+    <nav id="nav" class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo"><svg width="26" height="26" viewBox="0 0 100 100" style="vertical-align:middle;margin-right:6px;"><rect fill="#0078D4" width="100" height="100" rx="20"/><text x="50" y="68" text-anchor="middle" fill="white" font-size="52" font-family="sans-serif" font-weight="bold">MD</text></svg>MCP Deploy</a>
+      <ul class="nav-links">
+        <li><a href="/deployment/">Deployment</a></li>
+        <li><a href="/security/">Security</a></li>
+        <li><a href="/testing/">Testing</a></li>
+        <li><a href="/production-guide/">Pro Guide</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+<main>
+    <section id="hero" class="hero">
+      <div class="container">
+        <div class="hero-badge">Testing · CI/CD Pipeline</div>
+        <h1>Test & Deploy With Confidence</h1>
+        <p class="hero-subtitle">MCP Inspector for manual testing. pytest for automated tests. GitHub Actions for CI/CD. OpenTelemetry for monitoring.</p>
+        <div class="hero-actions">
+          <a href="#inspector" class="btn btn-outline">Inspector (~5 min)</a>
+          <a href="#pytest" class="btn btn-outline">pytest (~10 min)</a>
+          <a href="/production-guide/" class="btn btn-outline" style="border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Pro Guide</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="inspector" class="section section-alt">
+      <div class="container">
+        <h2>Testing with MCP Inspector</h2>
+        <p>MCP Inspector is a web UI that connects to your running server and lets you test every tool interactively.</p>
+        <pre><code class="language-bash">fastmcp dev server.py
+# Opens Inspector at http://localhost:5173</code></pre>
+        <p>Check: tool schemas render correctly, parameters validate, errors return proper MCP error codes.</p>
+      </div>
+    </section>
+
+    <section id="pytest" class="section">
+      <div class="container">
+        <h2>Automated Testing with pytest</h2>
+        <pre><code class="language-python"># tests/test_server.py
+import pytest
+from fastmcp import Client
+
+@pytest.fixture
+async def client():
+    async with Client("app:mcp") as c:
+        yield c
+
+@pytest.mark.asyncio
+async def test_search_docs(client):
+    result = await client.call_tool("search_docs", {"query": "deployment"})
+    assert "Found results" in result.text
+
+@pytest.mark.asyncio
+async def test_search_docs_empty_query(client):
+    with pytest.raises(Exception):
+        await client.call_tool("search_docs", {"query": ""})
+
+@pytest.mark.asyncio
+async def test_list_tools(client):
+    tools = await client.list_tools()
+    tool_names = [t.name for t in tools]
+    assert "search_docs" in tool_names</code></pre>
+        <pre><code class="language-bash">pytest tests/ -v --cov=. --cov-report=term-missing</code></pre>
+      </div>
+    </section>
+
+    <section id="cicd" class="section section-alt">
+      <div class="container">
+        <h2>CI/CD Pipeline — GitHub Actions</h2>
+        <pre><code class="language-yaml">name: Test & Deploy MCP Server
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: pytest tests/ -v --cov=. --cov-report=xml --cov-fail-under=80
+      - uses: codecov/codecov-action@v4
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t your-registry/fastmcp-server:${{ github.sha }} .
+      - name: Push to registry
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker push your-registry/fastmcp-server:${{ github.sha }}
+      - name: Deploy
+        run: |
+          ssh deploy@your-server "docker pull your-registry/fastmcp-server:${{ github.sha }} && docker compose up -d"</code></pre>
+        <p>Gate: tests must pass with ≥80% coverage before deployment. Push to main triggers auto-deploy.</p>
+      </div>
+    </section>
+
+    <section id="monitoring" class="section">
+      <div class="container">
+        <h2>Monitoring with OpenTelemetry</h2>
+        <p>FastMCP v3 has native OpenTelemetry support. Export to Prometheus/Grafana, Datadog, or any OTEL-compatible backend.</p>
+        <pre><code class="language-python">mcp = FastMCP("MonitoredServer", instrumentation="opentelemetry")</code></pre>
+        <pre><code class="language-bash">OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+OTEL_SERVICE_NAME=fastmcp-server</code></pre>
+        <div class="table-wrap" style="margin-top:24px;">
+          <table>
+            <thead><tr><th>Metric</th><th>What to watch</th></tr></thead>
+            <tbody>
+              <tr><td>Latency p50/p95/p99</td><td>Tool call duration distribution</td></tr>
+              <tr><td>Error rate</td><td>% of tool calls returning MCP errors</td></tr>
+              <tr><td>Tool call volume</td><td>Calls/minute per tool (detect abuse)</td></tr>
+              <tr><td>Auth failures</td><td>Failed authentication attempts (detect attacks)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2>FAQ</h2>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>Does this CI/CD pipeline work with GitLab CI or Bitbucket Pipelines?</summary>
+            <div class="faq-answer"><p>The YAML syntax differs but the structure is portable: test job → build Docker → push → deploy. The pytest commands, Dockerfile, and coverage thresholds are identical. The Pro Guide includes ready-to-use GitLab CI (<code>.gitlab-ci.yml</code>) and Bitbucket (<code>bitbucket-pipelines.yml</code>) templates with the same gates.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>How do I test before deploying — can I run this locally?</summary>
+            <div class="faq-answer"><p>Yes. Run <code>pytest tests/ -v --cov=. --cov-report=term-missing</code> locally before pushing. The GitHub Actions job mirrors this exactly — if it passes on your machine, it'll pass in CI. Use <code>fastmcp dev server.py</code> to open MCP Inspector locally and manually test tools before writing automated tests.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>Can I skip MCP Inspector and just use curl or a REST client?</summary>
+            <div class="faq-answer"><p>Not directly — MCP uses JSON-RPC over SSE or Streamable HTTP, not REST. Inspector is purpose-built for this protocol and shows tool schemas, errors, and responses in MCP format. The Pro Guide includes a pytest helper that wraps the MCP client for headless API-level testing if you prefer that to the GUI.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>How do I set up OpenTelemetry if I already use Datadog/Prometheus?</summary>
+            <div class="faq-answer"><p>Set <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> to your collector's ingest URL. For Datadog, add the Datadog Exporter to your OTEL Collector config. For Prometheus, use the OTLP-to-Prometheus bridge in the OTEL Collector. The Pro Guide includes collector configs for Datadog, Grafana Cloud, and self-hosted Prometheus.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <h2 style="color:var(--accent,#10b981);">Pipeline Ready in 30 Minutes</h2>
+        <p>The Production Manual includes all four testing layers with advanced patterns: canary deployments, multi-environment pipelines (staging → prod), Prometheus alert rules with thresholds, Datadog/Grafana OTEL collector configs, and incident response automation.</p>
+        <p><strong style="color:var(--accent,#10b981);">From $39, lifetime updates. Free 14-day refund, no lock-in.</strong></p>
+        <a href="/production-guide/" class="btn btn-outline" style="margin-top:16px;border-color:var(--accent,#10b981);color:var(--accent,#10b981);">Get the Production Manual</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>This is an unofficial community resource. Not affiliated with, endorsed by, or sponsored by Prefect.</p>
+      <p style="margin-top:12px;"><a href="/privacy/">Privacy Policy</a> &middot; <a href="/terms/">Terms of Service</a> &middot; <a href="/refunds/">Money-Back Guarantee</a></p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
