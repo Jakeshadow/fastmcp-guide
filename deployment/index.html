@@ -28,6 +28,31 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "HowTo",
+        "name": "Deploy FastMCP to Production — 6 Steps",
+        "description": "From local dev server to production Docker + Kubernetes. Every config copy-paste ready, one afternoon to production.",
+        "step": [
+          { "@type": "HowToStep", "position": 1, "name": "Local Development Server", "text": "fastmcp dev server.py — hot-reload and MCP Inspector for local testing." },
+          { "@type": "HowToStep", "position": 2, "name": "HTTP Deployment with ASGI", "text": "Switch from stdio to HTTP with mcp.http_app() and uvicorn workers for production serving." },
+          { "@type": "HowToStep", "position": 3, "name": "nginx + TLS Reverse Proxy", "text": "Reverse proxy with nginx and Let's Encrypt TLS. 300s proxy read timeout for long-lived MCP sessions." },
+          { "@type": "HowToStep", "position": 4, "name": "Authentication Layer", "text": "Add Bearer token auth, JWT tokens with Redis token store, or OAuth SSO for enterprise use." },
+          { "@type": "HowToStep", "position": 5, "name": "Docker Deployment", "text": "Containerize with Dockerfile, docker-compose.yml with health checks, nginx sidecar, and secrets via environment." },
+          { "@type": "HowToStep", "position": 6, "name": "Kubernetes Deployment", "text": "K8s Deployment with 3 replicas, secrets, readiness probes, resource limits, and Ingress routing." }
+        ]
+      },
+      {
+        "@type": "TechArticle",
+        "headline": "Deploy FastMCP to Production — 6 Steps",
+        "proficiencyLevel": "Intermediate"
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
     <nav id="nav" class="nav">
